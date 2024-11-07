@@ -3,8 +3,23 @@ window.resizeTo(window.screen.width/3,window.screen.height);
 window.onload = _=>{
 	initSearch()
 	initPopups()
-	initSelects()
+	initStreamTypeRadios()
 	startSearch("https://www.youtube.com/watch?v=Xoio2qensyw")
+	document.querySelector("#search-result .download").onclick = _=>{
+		let results = document.querySelector("#search-result")
+		let title = results.querySelector("[name=video-title]").value
+		let author = results.querySelector("[name=video-author]").value
+		let download_type = results.querySelector(".radio-tabs input:checked").value
+
+		let streams = {}
+		results.querySelectorAll(".stream-selectors > *:not(.hide)").forEach(stream_wrapper=>{
+			let name = stream_wrapper.getAttribute("name")
+			let itag = stream_wrapper.querySelector(".stream").getAttribute("itag")
+			streams[name] = itag
+		})
+
+		console.log(download_type, streams, title, author)
+	}
 }
 
 function initSearch(){
@@ -17,6 +32,21 @@ function initSearch(){
 		}
 	}
 	but.onclick = _=>{startSearch(input.value)}
+}
+
+function initStreamTypeRadios(){
+	document.querySelectorAll(".radio-tabs input").forEach(input=>{
+		input.onchange = _=>{
+			if (input.value == "video"){
+				document.querySelector('.stream-selectors [name="video"]').classList.remove("hide")
+				document.querySelector('.stream-selectors [name="audio"]').classList.remove("hide")
+			}
+			else if (input.value == "music"){
+				document.querySelector('.stream-selectors [name="video"]').classList.add("hide")
+				document.querySelector('.stream-selectors [name="audio"]').classList.remove("hide")
+			}
+		}
+	})
 }
 
 function initPopups(){
@@ -34,41 +64,16 @@ function initPopups(){
 		popup.querySelector(".close").onclick = _=>{
 			close()
 		}
-	})
-}
-function initSelects(){
-	document.querySelectorAll(".select").forEach(select=>{
-		initSelect(select)
-	})
-	document.body.onclick = e=>{
-		let target = e.target.closest(".select")
-		document.querySelectorAll(".select.open").forEach(select=>{
-			if (target != select){
-				select.classList.remove("open")
+		let left_menu = popup.querySelector(".left-menu")
+		if (left_menu){
+			let close = left_menu.querySelector(".close")
+			if (close){
+				close.onclick = _=>{
+					left_menu.classList.remove("open")
+				}
 			}
-		})
-	}
-}
-function initSelect(select){
-	let header = select.querySelector(".selected")
-	select.onclick = _=>{
-		select.classList.toggle("open")
-	}
-	function choose(element){
-		element.classList.add("hide")
-		let cloned = element.cloneNode(true);
-		header.innerHTML = ""
-		header.appendChild(cloned)
-	}
-	select.querySelectorAll(".list > *").forEach(item=>{
-		item.onclick = _=>{
-			select.querySelectorAll(".list > .hide").forEach(hidden=>{
-				hidden.classList.remove("hide")
-			})
-			choose(item)
 		}
 	})
-	choose(select.querySelector(".list > *"))	
 }
 
 async function startSearch(link){
@@ -76,7 +81,7 @@ async function startSearch(link){
 	document.querySelector(".loader").classList.add("anim")
 	document.querySelector(".search-container").classList.add("disabled")
 
-	let info = await eel.get_vid_info(link)()
+	let info = await eel.get_vid_info(link.trim())()
 
 	let popup = document.querySelector("#search-result")
 	popup.classList.add("show")
@@ -103,17 +108,39 @@ function processResults(results, element){
 }
 
 function createSelect(streams, type){
-	console.log(streams)
-	let select = document.createElement("div")
-	select.className = "select"
-	select.innerHTML = '<div class="selected"></div><div class="list"></div>'
-	let parrent = select.querySelector(".list")
+	let selected_el = document.createElement("div")
+	selected_el.setAttribute("name", type)
+	selected_el.appendChild(createStreamElement(streams[0], type))
+	document.querySelector(".stream-selectors").appendChild(selected_el)
+
+	let left_menu = document.querySelector("#search-result .left-menu")
+	let menu_el = document.createElement("div")
+	menu_el.className = "select"
+	menu_el.innerHTML = `<h3>Select a Stream:</h3>`
 	streams.forEach(stream=>{
-		let el = createStreamElement(stream, type)
-		parrent.appendChild(el)
+		let raw_stream = createStreamElement(stream, type)
+		let stream_el = raw_stream.cloneNode(true)
+		menu_el.appendChild(stream_el)
+		stream_el.onclick = _=>{
+			menu_el.querySelectorAll(".stream.selected").forEach(x=>{
+				x.classList.remove("selected")
+			})
+			stream_el.classList.add("selected")
+			selected_el.innerHTML = ""
+			selected_el.appendChild(raw_stream.cloneNode(true))
+			left_menu.classList.remove("open")
+		}
 	})
-	initSelect(select)
-	document.querySelector(".stream-selectors").appendChild(select)
+	left_menu.appendChild(menu_el)
+	menu_el.querySelector(`.stream[itag="${streams[0].itag}"]`).classList.add("selected")
+
+	selected_el.onclick = _=>{
+		left_menu.querySelectorAll(".select.show").forEach(x=>{
+			x.classList.remove("show")
+		})
+		left_menu.classList.add("open")
+		menu_el.classList.add("show")
+	}
 }
 function createStreamElement(stream, type){
 	let icon = type == "video" ? 'fa-video' : 'fa-music'
@@ -127,12 +154,11 @@ function createStreamElement(stream, type){
 				<span>${stream.quality}</span><span>(${stream.extra})</span>
 			</div>
 			<div class="container-details-tags">
-				<span>${humanFileSize(stream.filesize)}</span><span>${stream.codec}</span>
+				<span class="filesize">${humanFileSize(stream.filesize)}</span><span>${stream.codec}</span>
 			</div>
 		</div>`
 	return div;
 }
-
 function humanFileSize(size) {
 	var i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
 	return +((size / Math.pow(1024, i)).toFixed(2)) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];

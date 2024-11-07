@@ -126,12 +126,28 @@ body{
 .popup .close:hover{
 	transform: rotate(90deg);
 }
-/*.popup .content{
+
+.popup .left-menu{
+	background: inherit;
 	height: 100%;
-	display: flex;
-	flex-direction: column;
+	width: 100%;
+	position: absolute;
+	z-index: 2;
+	transform: translateX(-100%);
+	transition: 0.4s;
 	overflow: auto;
-}*/
+	padding: 10px;
+	scrollbar-width: thin;
+}
+.popup .left-menu.open{
+	transform: translateX(0);
+}
+.popup .left-menu h3{
+	text-align: center;
+	font-size: 16pt;
+	margin: 10px;
+	font-weight: bold;
+}
 
 
 .loader{
@@ -228,6 +244,17 @@ body{
 	padding: 5px;
 	border-radius: 15px;
 	user-select: none;
+	cursor: pointer;
+	position: relative;
+}
+.stream.selected:before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	margin: -2px;
+	border-radius: 17px;
+	background: linear-gradient(45deg, #c700ff, #00a3ff);
 }
 .stream .container{
 	background: #ff4f4f;
@@ -261,47 +288,77 @@ body{
 	font-size: 0.7em;
 	border-radius: 8px;
 }
+.stream .container-details .container-details-tags .filesize{
+	background: #00bb28;
+}
 
 
 .stream-selectors{
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: 5px;
 	margin: 0 10px;
 	border: 1px solid #1655da;
 	padding: 5px;
 	border-radius: 20px;
 }
-
-.select{
-	display: flex;
-	flex-direction: column;
-	position: relative;
-	cursor: pointer;
-}
-.select .list{
-	display: flex;
-	flex-direction: column;
-	position: absolute;
-	top: 100%;
-	left: 0;
-	right: 0;
-	transform: scaleY(0);
-	transform-origin: top center;
-	opacity: 0;
-	transition: 0.3s;
-	overflow-y: auto;
-	max-height: calc(300% + 8px);
-	scrollbar-width: thin;
-	gap: 3px;
-	margin-top: 3px;
-	z-index: 1;
-	background: white;
-}
-.select .list > .hide{
+.stream-selectors > .hide{
 	display: none;
 }
-.select.open .list{
-	transform: scaleY(1);
-	opacity: 1;
+
+.select{
+	display: none;
+}
+.select.show {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+
+#search-result .download{
+	padding: 8px 10px;
+	padding-left: 0;
+	font-size: 18px;
+	display: flex;
+	align-items: center;
+	border: none;
+	outline: none;
+	background: linear-gradient(
+		180deg,
+		rgb(56, 56, 56) 0%,
+		rgb(36, 36, 36) 66%,
+		rgb(41, 41, 41) 100%
+	);
+	color: rgb(218, 218, 218);
+	border-radius: 12px;
+	border: 2px solid grey;
+	margin: auto;
+	margin-top: 10px;
+	cursor: pointer;
+	position: relative;
+	overflow: hidden;
+	transition: 0.2s;
+}
+#search-result .download i{
+	position: absolute;
+	left: 0;
+	width: 32px;
+	transition: 0.2s;
+}
+#search-result .download span{
+	margin-left: 32px;
+	transition: 0.2s;
+}
+#search-result .download:hover i{
+	left: 50%;
+	transform: translateX(-50%) scale(1.25);
+}
+#search-result .download:hover span{
+	transform: translateX(100%);
+	opacity: 0;
+}
+#search-result .download:active{
+	transform: translateY(1px);
+	filter: drop-shadow(0 0 3px lime);
 }
