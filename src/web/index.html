@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>MyTube Downloader</title>
+	<link rel="icon" href="images/icon.png">
+	<script type="text/javascript" src="/eel.js"></script>
+	<link rel='stylesheet' href='https://use.fontawesome.com/releases/v6.2.1/css/all.css'>
+	<link rel="stylesheet" href="styles.css">
+	<script src="main.js"></script>
+</head>
+<body>
+
+<div class="header">
+	<div class="logo">
+		<img src="images/icon.png">
+		<span>MyTube</span>
+	</div>
+	<div class="settings-button">
+		<i class="fa-solid fa-gear"></i>
+	</div>
+</div>
+
+<div class="loader"></div>
+
+
+<div class="search-wrapper">
+	<div class="search-container">
+		<i class="fa-solid fa-magnifying-glass"></i>
+		<input placeholder="Search URL"/>
+	</div>
+</div>
+
+<div class="popup" id="search-result">
+	<div class="popup-wrapper">
+		<i class="fa-regular fa-circle-xmark close"></i>
+		<div class="content">
+			<img class="video-thumb">
+			<div class="metadata">
+				<span>Title:</span>
+				<span><input name="video-title" type="text" required></span>
+				<span>Author:</span>
+				<span><input name="video-author" type="text" required></span>
+			</div>
+			<hr>
+
+		<div class="radio-tabs">
+				<label>
+					<input type="radio" name="container-type" value="video" checked>
+					<span>Video</span>
+				</label>
+				<label>
+					<input type="radio" name="container-type" value="music">
+					<span>Music</span>
+				</label>
+			</div>
+
+			<div class="stream-selectors"></div>
+
+		</div>
+	</div>
+</div>
+
+
+</body>
+</html>
