@@ -5,8 +5,10 @@ window.onload = _=>{
 	initPopups()
 	initStreamTypeRadios()
 	startSearch("https://www.youtube.com/watch?v=Xoio2qensyw")
-	document.querySelector("#search-result .download").onclick = _=>{
+
+	document.querySelector("#search-result .download").onclick = async _=>{
 		let results = document.querySelector("#search-result")
+		let url = results.getAttribute("url")
 		let title = results.querySelector("[name=video-title]").value
 		let author = results.querySelector("[name=video-author]").value
 		let download_type = results.querySelector(".radio-tabs input:checked").value
@@ -18,7 +20,13 @@ window.onload = _=>{
 			streams[name] = itag
 		})
 
-		console.log(download_type, streams, title, author)
+		// console.log(url, download_type, streams, title, author)
+
+		let downloader_id = await eel.get_downloader_process(url, streams, {"title": title, "author": author})()
+		let file = await eel.download(downloader_id)()
+		console.log(file)
+
+		// console.log(eel.abort(downloader_id))
 	}
 }
 
@@ -85,11 +93,13 @@ async function startSearch(link){
 
 	let popup = document.querySelector("#search-result")
 	popup.classList.add("show")
+	popup.setAttribute("url", link.trim())
 	document.querySelector(".loader").classList.remove("anim")
 	document.querySelector(".search-container").classList.remove("disabled")
 	setTimeout(_=>{
 		const closeHandler = _=>{
 			popup.removeEventListener("close", closeHandler, true);
+			popup.removeAttribute("url")
 		}
 		popup.addEventListener("close", closeHandler, true)
 	}, 1000)
@@ -162,4 +172,9 @@ function createStreamElement(stream, type){
 function humanFileSize(size) {
 	var i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
 	return +((size / Math.pow(1024, i)).toFixed(2)) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+}
+
+eel.expose(download_progress)
+function download_progress(id, current, total){
+	console.log(id, current, total)
 }
