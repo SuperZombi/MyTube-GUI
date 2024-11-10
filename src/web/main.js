@@ -4,7 +4,7 @@ window.onload = _=>{
 	initSearch()
 	initPopups()
 	initStreamTypeRadios()
-	startSearch("https://www.youtube.com/watch?v=Xoio2qensyw")
+	// startSearch("https://www.youtube.com/watch?v=Xoio2qensyw")
 
 	document.querySelector("#search-result .download").onclick = async _=>{
 		let results = document.querySelector("#search-result")

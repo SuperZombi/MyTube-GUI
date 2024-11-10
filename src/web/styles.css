@@ -362,3 +362,55 @@ body{
 	transform: translateY(1px);
 	filter: drop-shadow(0 0 3px lime);
 }
+
+
+
+
+#downloads-list{
+	display: flex;
+	flex-direction: column;
+	padding: 20px;
+}
+#downloads-list .download-item{
+	height: 150px;
+	background: black;
+	color: white;
+	position: relative;
+	border-radius: 20px;
+	overflow: hidden;
+}
+#downloads-list .download-item .cover{
+	inset: 0;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	object-fit: cover;
+	opacity: 0.75;
+}
+#downloads-list .download-item .info{
+	position: absolute;
+	inset: 0;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-end;
+	padding: 12px;
+	box-shadow: 0 0 25px black inset;
+}
+#downloads-list .download-item .author{
+	font-size: 0.9rem;
+}
+#downloads-list .download-item .time{
+	font-family: monospace;
+}
+#downloads-list .download-item .abort i{
+	color: red;
+	background: white;
+	font-size: 32px;
+	border-radius: 50%;
+	cursor: pointer;
+	transition: 0.15s;
+}
+#downloads-list .download-item .abort i:hover{
+	transform: rotate(90deg);
+}
