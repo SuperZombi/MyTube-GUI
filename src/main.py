@@ -7,7 +7,7 @@ import re
 import subprocess
 from threading import Thread
 
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 
 
 # ---- Required Functions ----

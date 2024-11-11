@@ -1,4 +1,10 @@
 window.resizeTo(window.screen.width/3,window.screen.height);
+const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
+if (darkThemeMq.matches) {
+	document.documentElement.setAttribute("theme", "dark")
+} else {
+	document.documentElement.setAttribute("theme", "light")
+}
 
 window.onload = _=>{
 	initSearch()

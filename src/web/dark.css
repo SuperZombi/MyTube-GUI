@@ -1,0 +1,40 @@
+[theme="dark"]:root {
+	--body-color: #1b1a1f;
+	--text-color: white;
+}
+
+[theme="dark"]{
+	.version{
+		background: grey;
+	}
+	.search-container {
+		background: #282c35;
+	}
+	.search-container input {
+		color: white;
+	}
+	.search-container i:hover{
+		background: #414656;
+	}
+	#search-result input[type="text"]{
+		background: #282c35;
+		color: white;
+	}
+	.stream{
+		background: #414656;
+	}
+	.radio-tabs label:hover{
+		background: #0053ff;
+		color: white;
+	}
+	.radio-tabs label:has(input:checked){
+		background: #0038ae;
+		color: white;
+	}
+	#downloads-list .download-item .open-file{
+		color: lightgrey;
+	}
+	#downloads-list .download-item .open-file:hover{
+		color: grey;
+	}
+}

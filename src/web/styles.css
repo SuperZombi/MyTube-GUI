@@ -1,12 +1,17 @@
+* {
+	box-sizing: border-box;
+}
+:root {
+	--body-color: white;
+	--text-color: black;
+}
 body{
 	margin: 0;
 	padding: 0;
 	font-family: sans-serif;
+	background: var(--body-color);
+	color: var(--text-color);
 }
-* {
-	box-sizing: border-box;
-}
-
 
 .header{
 	display: flex;
@@ -47,7 +52,7 @@ body{
 .search-container {
 	display: flex;
 	align-items: center;
-	background-color: #eee;
+	background: #eee;
 	width: 300px;
 	border-radius: 25px;
 	font-size: 16px;
@@ -98,7 +103,7 @@ body{
 	background: rgb(0, 0, 0, 0.5);
 }
 .popup .popup-wrapper {
-	background: white;
+	background: var(--body-color);
 	width: 85dvw;
 	height: 85dvh;
 	max-width: 800px;
