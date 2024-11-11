@@ -99,7 +99,7 @@ body{
 }
 .popup .popup-wrapper {
 	background: white;
-	width: 80dvw;
+	width: 85dvw;
 	height: 85dvh;
 	max-width: 800px;
 	top: 50%;
@@ -370,14 +370,26 @@ body{
 	display: flex;
 	flex-direction: column;
 	padding: 20px;
+	gap: 10px;
 }
 #downloads-list .download-item{
+	--percent: 0;
 	height: 150px;
 	background: black;
 	color: white;
 	position: relative;
 	border-radius: 20px;
 	overflow: hidden;
+	user-select: none;
+	animation: apear-left 0.5s ease;
+}
+#downloads-list .download-item .progress{
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(90deg, transparent, white);
+	opacity: 0.4;
+	transform: translateX(calc(-1% * (100 - var(--percent))));
+	transition: 0.1s ease-in-out;
 }
 #downloads-list .download-item .cover{
 	inset: 0;
@@ -400,8 +412,18 @@ body{
 #downloads-list .download-item .author{
 	font-size: 0.9rem;
 }
-#downloads-list .download-item .time{
+#downloads-list .download-item .sub{
 	font-family: monospace;
+	display: flex;
+	gap: 6px;
+}
+#downloads-list .download-item .time{
+	color: yellow;
+}
+#downloads-list .download-item .percent::before{
+	color: lime;
+	counter-reset: variable var(--percent);
+	content: '[' counter(variable) '%]';
 }
 #downloads-list .download-item .abort i{
 	color: red;
@@ -413,4 +435,15 @@ body{
 }
 #downloads-list .download-item .abort i:hover{
 	transform: rotate(90deg);
+}
+
+@keyframes apear-left{
+	from {
+		transform: translateX(-100%);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
 }

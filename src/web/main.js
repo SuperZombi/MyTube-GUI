@@ -20,11 +20,12 @@ window.onload = _=>{
 			streams[name] = itag
 		})
 
-		// console.log(url, download_type, streams, title, author)
+		let data = await eel.get_downloader_process(url, streams, {"title": title, "author": author})()
+		document.querySelector("#search-result .close").click();
+		createDownloadElement(data.id, data.title, data.author, data.thumb, data.time)
 
-		let downloader_id = await eel.get_downloader_process(url, streams, {"title": title, "author": author})()
-		let file = await eel.download(downloader_id)()
-		console.log(file)
+		// let file = await eel.download(downloader_id)()
+		// console.log(file)
 
 		// console.log(eel.abort(downloader_id))
 	}
@@ -110,7 +111,7 @@ function processResults(results, element){
 	let img = element.querySelector(".video-thumb")
 	img.src = results.thumb
 	let title = element.querySelector("[name=video-title]")
-	title.value = results.name
+	title.value = results.title
 	let author = element.querySelector("[name=video-author]")
 	author.value = results.author
 	document.querySelector(".stream-selectors").innerHTML = ""
@@ -173,6 +174,29 @@ function createStreamElement(stream, type){
 function humanFileSize(size) {
 	var i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
 	return +((size / Math.pow(1024, i)).toFixed(2)) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+}
+
+
+function createDownloadElement(id, title, author, cover, time){
+	let div = document.createElement('div');
+	div.className = "download-item"
+	div.innerHTML = `
+		<img class="cover" src="${cover}"><div class="progress"></div>
+		<div class="info">
+			<div>
+				<div class="title">${title}</div>
+				<div class="author">${author}</div>
+				<div class="sub">
+					<div class="time">${time}</div><div class="percent"></div>
+				</div>
+			</div>
+			<div class="abort"><i class="fa-solid fa-circle-xmark"></i></div>
+		</div>
+	`
+	div.querySelector(".abort").onclick = _=>{
+		console.log("Abort", id)
+	}
+	document.querySelector("#downloads-list").appendChild(div)
 }
 
 eel.expose(download_progress)

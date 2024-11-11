@@ -1,5 +1,4 @@
 import eel
-import time
 import sys, os
 import MyTube
 import asyncio
@@ -11,6 +10,15 @@ def resource_path(relative_path):
 	""" Get absolute path to resource, works for dev and for PyInstaller """
 	base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
 	return os.path.join(base_path, relative_path)
+
+def strtime(seconds):
+	hours = seconds // 3600
+	minutes = (seconds % 3600) // 60
+	seconds = seconds % 60
+	string = ""
+	if hours > 0: string += f"{hours:02}:"
+	string += f"{minutes:02}:{seconds:02}"
+	return string
 
 
 def streams_to_list(streams):
@@ -32,15 +40,19 @@ def streams_to_list(streams):
 
 
 CACHED_QUERIES = {}
+def get_yt_obj(url):
+	obj = CACHED_QUERIES.get(url, None)
+	if not obj:
+		obj = MyTube.YouTube(url)
+		CACHED_QUERIES[url] = obj
+	return obj
+
+
 @eel.expose
 def get_vid_info(url):
-	if CACHED_QUERIES.get(url):
-		yt = CACHED_QUERIES[url]
-	else:
-		yt = MyTube.YouTube(url)
-		CACHED_QUERIES[url] = yt
+	yt = get_yt_obj(url)
 	data = {
-		"name": yt.title,
+		"title": yt.title,
 		"author": yt.author,
 		"thumb": yt.thumbnail.url,
 		"streams": {
@@ -71,7 +83,7 @@ def download(downloader_id):
 
 @eel.expose
 def get_downloader_process(url, streams, metadata):
-	yt = CACHED_QUERIES[url]
+	yt = get_yt_obj(url)
 	video = None
 	audio = None
 	if streams.get('video'):
@@ -82,10 +94,16 @@ def get_downloader_process(url, streams, metadata):
 	new_metadata = yt.metadata
 	new_metadata.update(metadata)
 
-	downloader = yt.download(video=video, audio=audio)
+	downloader = yt.download(video=video, audio=audio, metadata=new_metadata)
 	id = uuid.uuid4().hex
 	DOWNLOADERS[id] = downloader
-	return id
+	return {
+		"id": id,
+		"title": new_metadata.get("title"),
+		"author": new_metadata.get("author"),
+		"thumb": yt.thumbnail.url,
+		"time": strtime(yt.duration)
+	}
 
 @eel.expose
 def abort(downloader_id):
