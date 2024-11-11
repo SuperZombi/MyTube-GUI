@@ -1,5 +1,5 @@
 <h1 align="center">MyTube GUI</h1>
-<h3 align="center">YouTube Media Downloader.</h3>
+<h3 align="center">YouTube Media Downloader</h3>
 <p align="center">
     <img src="github/images/icon.png" height="128px">
 </p>
