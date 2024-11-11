@@ -42,7 +42,7 @@ body{
 .search-wrapper {
 	display: flex;
 	justify-content: center;
-	margin-top: 10px;
+	margin-top: 20px;
 }
 .search-container {
 	display: flex;
@@ -370,7 +370,7 @@ body{
 	display: flex;
 	flex-direction: column;
 	padding: 20px;
-	gap: 10px;
+	gap: 20px;
 }
 #downloads-list .download-item{
 	--percent: 0;
