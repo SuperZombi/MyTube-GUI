@@ -4,6 +4,7 @@ window.onload = _=>{
 	initSearch()
 	initPopups()
 	initStreamTypeRadios()
+	initSettings()
 
 	document.querySelector("#search-result .download").onclick = async _=>{
 		let results = document.querySelector("#search-result")
@@ -123,7 +124,6 @@ async function startSearch(link){
 		popup.classList.add("show")
 		document.querySelector(".loader").classList.remove("anim")
 		document.querySelector(".search-container").classList.remove("disabled")
-		console.log(info.error)
 		popup.querySelector(".text").innerText = info.error
 	}
 }
@@ -138,6 +138,14 @@ function processResults(results, element){
 	document.querySelector(".stream-selectors").innerHTML = ""
 	createSelect(results.streams.video, "video")
 	createSelect(results.streams.audio, "audio")
+	let radio_input = null
+	if (results.type == "music"){
+		radio_input = document.querySelector(".radio-tabs input[value=music]")
+	} else {
+		radio_input = document.querySelector(".radio-tabs input[value=video]")
+	}
+	radio_input.checked = true;
+	radio_input.onchange();
 }
 
 function createSelect(streams, type){
@@ -149,7 +157,15 @@ function createSelect(streams, type){
 	let left_menu = document.querySelector("#search-result .left-menu")
 	let menu_el = document.createElement("div")
 	menu_el.className = "select"
-	menu_el.innerHTML = `<h3>Select a Stream:</h3>`
+	if (type == "video"){
+		menu_el.innerHTML = `<h3>Select the Video:</h3>`
+	}
+	else if (type == "audio"){
+		menu_el.innerHTML = `<h3>Select the Audio:</h3>`
+	}
+	else {
+		menu_el.innerHTML = `<h3>Select the Stream:</h3>`
+	}
 	streams.forEach(stream=>{
 		let raw_stream = createStreamElement(stream, type)
 		let stream_el = raw_stream.cloneNode(true)
@@ -184,7 +200,7 @@ function createStreamElement(stream, type){
 		<div class="container"><i class="fa-solid ${icon}"></i></div>
 		<div class="container-details">
 			<div class="container-details-head">
-				<span>${stream.quality}</span><span>(${stream.extra})</span>
+				<span>${stream.quality}</span>${stream.extra ? `<span>(${stream.extra})` : ""}</span>
 			</div>
 			<div class="container-details-tags">
 				<span class="filesize">${humanFileSize(stream.filesize)}</span><span>${stream.codec}</span>
@@ -229,4 +245,12 @@ eel.expose(download_progress)
 function download_progress(id, current, total){
 	let el = document.querySelector(`#downloads-list .download-item[id="${id}"]`)
 	el.style.setProperty("--percent", Math.round(current * 100 / total));
+}
+
+
+function initSettings(){
+	document.querySelector(".settings-button").onclick = _=>{
+		let popup = document.querySelector("#settings")
+		popup.classList.add("show")
+	}
 }

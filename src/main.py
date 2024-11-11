@@ -62,6 +62,7 @@ def get_vid_info(url):
 			"title": yt.title,
 			"author": yt.author,
 			"thumb": yt.thumbnail.url,
+			"type": yt.type,
 			"streams": {
 				"video": streams_to_list(yt.streams.filter(only_video=True, no_muxed=True).order_by("res", "fps")),
 				"audio": streams_to_list(yt.streams.filter(only_audio=True).order_by("abr"))

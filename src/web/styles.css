@@ -63,7 +63,7 @@ body{
 }
 .search-container input {
 	width: 100%;
-	padding: 12px 12px 12px 0;
+	padding: 12px 0 12px 0;
 	font-size: inherit;
 	background: transparent;
 	border: none;
