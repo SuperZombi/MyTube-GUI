@@ -4,6 +4,8 @@ import MyTube
 import asyncio
 import uuid
 import re
+import subprocess
+from threading import Thread
 
 
 # ---- Required Functions ----
@@ -81,13 +83,18 @@ class ProgressMyTube:
 
 
 DOWNLOADERS = {}
-async def download_async(downloader_id):
-	downloader = DOWNLOADERS[downloader_id]
-	return await downloader("downloads", on_progress=ProgressMyTube(downloader_id))
-
 @eel.expose
 def download(downloader_id):
-	return asyncio.run(download_async(downloader_id))
+	downloader = DOWNLOADERS[downloader_id]
+	downloader.FFMPEG = resource_path("ffmpeg.exe")
+	def handler():
+		file = asyncio.run(downloader("downloads", on_progress=ProgressMyTube(downloader_id)))
+		if downloader.can_download:
+			eel.finish_download(downloader_id, file)
+		else:
+			eel.abort_download(downloader_id)
+
+	Thread(target=handler, daemon=True).start()
 
 
 @eel.expose
@@ -115,10 +122,13 @@ def get_downloader_process(url, streams, metadata):
 	}
 
 @eel.expose
-def abort(downloader_id):
+def abort_download(downloader_id):
 	downloader = DOWNLOADERS.get(downloader_id)
-	if downloader:
-		downloader.abort()
+	if downloader: downloader.abort()
+
+@eel.expose
+def open_output_file(file):
+	subprocess.run(["explorer", '/select,', file])
 
 
 eel.init(resource_path("web"))

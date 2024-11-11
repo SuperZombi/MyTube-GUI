@@ -23,15 +23,22 @@ window.onload = _=>{
 		let data = await eel.get_downloader_process(url, streams, {"title": title, "author": author})()
 		document.querySelector("#search-result .close").click();
 		createDownloadElement(data.id, data.title, data.author, data.thumb, data.time)
-
-		let file = await eel.download(data.id)()
-		let item = document.querySelector(`#downloads-list .download-item[id="${data.id}"]`)
-		item.classList.add("finished")
-		item.setAttribute("file", file)
-
-		// console.log(eel.abort(downloader_id))
+		eel.download(data.id)
 	}
 }
+
+eel.expose(finish_download)
+function finish_download(id, result){
+	let item = document.querySelector(`#downloads-list .download-item[id="${id}"]`)
+	item.classList.add("finished")
+	item.setAttribute("file", result)
+}
+eel.expose(abort_download)
+function abort_download(id){
+	let item = document.querySelector(`#downloads-list .download-item[id="${id}"]`)
+	item.classList.add("finished", "aborted")
+}
+
 
 function initSearch(){
 	let el = document.querySelector(".search-container")
@@ -233,10 +240,10 @@ function createDownloadElement(id, title, author, cover, time){
 		</div>
 	`
 	div.querySelector(".abort").onclick = _=>{
-		console.log("Abort", id)
+		eel.abort_download(id)
 	}
 	div.querySelector(".open-file").onclick = _=>{
-		console.log("Open file", div.getAttribute("file"))
+		eel.open_output_file(div.getAttribute("file"))
 	}
 	document.querySelector("#downloads-list").appendChild(div)
 }

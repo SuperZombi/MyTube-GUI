@@ -455,6 +455,15 @@ body{
 #downloads-list .download-item.finished .open-file{
 	display: block;
 }
+#downloads-list .download-item.finished{
+	order: 2;
+}
+#downloads-list .download-item.aborted{
+	filter: grayscale(1);
+}
+#downloads-list .download-item.aborted .open-file{
+	display: none;
+}
 
 @keyframes apear-left{
 	from {
