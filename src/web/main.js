@@ -112,12 +112,12 @@ async function startSearch(link){
 	document.querySelector(".search-container").classList.add("disabled")
 
 	let info = await eel.get_vid_info(link.trim())()
-	if (info.success){
+	document.querySelector(".loader").classList.remove("anim")
+	document.querySelector(".search-container").classList.remove("disabled")
+	if (info){
 		let popup = document.querySelector("#search-result")
 		popup.classList.add("show")
 		popup.setAttribute("url", link.trim())
-		document.querySelector(".loader").classList.remove("anim")
-		document.querySelector(".search-container").classList.remove("disabled")
 		setTimeout(_=>{
 			const closeHandler = _=>{
 				popup.removeEventListener("close", closeHandler, true);
@@ -126,12 +126,6 @@ async function startSearch(link){
 			popup.addEventListener("close", closeHandler, true)
 		}, 1000)
 		processResults(info, popup.querySelector(".content"))
-	} else{
-		let popup = document.querySelector("#error-popup")
-		popup.classList.add("show")
-		document.querySelector(".loader").classList.remove("anim")
-		document.querySelector(".search-container").classList.remove("disabled")
-		popup.querySelector(".text").innerText = info.error
 	}
 }
 
@@ -220,6 +214,22 @@ function humanFileSize(size) {
 	return +((size / Math.pow(1024, i)).toFixed(2)) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
 }
 
+eel.expose(displayError)
+function displayError(message){
+	let popup = document.querySelector("#error-popup")
+	let area = popup.querySelector(".content")
+	let el = document.createElement("div")
+	el.className = "text"
+	el.innerText = message
+	area.appendChild(el)
+	popup.classList.add("show")
+	const errorHandler = _=>{
+		popup.removeEventListener("close", errorHandler, true);
+		area.innerHTML = ""
+	}
+	popup.addEventListener("close", errorHandler, true)
+}
+
 
 function createDownloadElement(id, title, author, cover, time){
 	let div = document.createElement('div');
@@ -255,9 +265,12 @@ function download_progress(id, current, total){
 }
 
 
-function initSettings(){
+async function initSettings(){
 	document.querySelector(".settings-button").onclick = _=>{
 		let popup = document.querySelector("#settings")
 		popup.classList.add("show")
 	}
+	let area = document.querySelector("#settings .content")
+	let app_ver = await eel.get_app_version()()
+	document.querySelector("#app_version").innerHTML = app_ver
 }

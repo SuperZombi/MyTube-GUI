@@ -7,6 +7,8 @@ import re
 import subprocess
 from threading import Thread
 
+__version__ = "0.0.1"
+
 
 # ---- Required Functions ----
 def resource_path(relative_path):
@@ -26,6 +28,13 @@ def strtime(seconds):
 def strip_ansi_codes(text):
 	ansi_escape = re.compile(r'\x1B[@-_][0-?]*[ -/]*[@-~]')
 	return ansi_escape.sub('', text)
+
+def raiseError(msg):
+	eel.displayError(strip_ansi_codes(msg))
+
+@eel.expose
+def get_app_version():
+	return __version__
 
 
 def streams_to_list(streams):
@@ -60,7 +69,6 @@ def get_vid_info(url):
 	try:
 		yt = get_yt_obj(url)
 		return {
-			"success": True,
 			"title": yt.title,
 			"author": yt.author,
 			"thumb": yt.thumbnail.url,
@@ -71,7 +79,7 @@ def get_vid_info(url):
 			}
 		}
 	except Exception as e:
-		return {"success": False,"error": strip_ansi_codes(str(e))}
+		raiseError(str(e))
 
 
 
@@ -88,11 +96,14 @@ def download(downloader_id):
 	downloader = DOWNLOADERS[downloader_id]
 	downloader.FFMPEG = resource_path("ffmpeg.exe")
 	def handler():
-		file = asyncio.run(downloader("downloads", on_progress=ProgressMyTube(downloader_id)))
-		if downloader.can_download:
-			eel.finish_download(downloader_id, file)
-		else:
-			eel.abort_download(downloader_id)
+		try:
+			asyncio.run(downloader(
+				"downloads", on_progress=ProgressMyTube(downloader_id),
+				on_success=lambda f: eel.finish_download(downloader_id, f),
+				on_abort=lambda:eel.abort_download(downloader_id)
+			))
+		except Exception as e:
+			raiseError(str(e))
 
 	Thread(target=handler, daemon=True).start()
 
