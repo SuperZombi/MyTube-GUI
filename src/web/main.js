@@ -113,6 +113,7 @@ function processResults(results, element){
 	title.value = results.name
 	let author = element.querySelector("[name=video-author]")
 	author.value = results.author
+	document.querySelector(".stream-selectors").innerHTML = ""
 	createSelect(results.streams.video, "video")
 	createSelect(results.streams.audio, "audio")
 }
