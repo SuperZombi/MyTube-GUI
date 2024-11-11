@@ -4,7 +4,6 @@ window.onload = _=>{
 	initSearch()
 	initPopups()
 	initStreamTypeRadios()
-	// startSearch("https://www.youtube.com/watch?v=Xoio2qensyw")
 
 	document.querySelector("#search-result .download").onclick = async _=>{
 		let results = document.querySelector("#search-result")
@@ -24,8 +23,10 @@ window.onload = _=>{
 		document.querySelector("#search-result .close").click();
 		createDownloadElement(data.id, data.title, data.author, data.thumb, data.time)
 
-		// let file = await eel.download(downloader_id)()
-		// console.log(file)
+		let file = await eel.download(data.id)()
+		let item = document.querySelector(`#downloads-list .download-item[id="${data.id}"]`)
+		item.classList.add("finished")
+		item.setAttribute("file", file)
 
 		// console.log(eel.abort(downloader_id))
 	}
@@ -33,14 +34,26 @@ window.onload = _=>{
 
 function initSearch(){
 	let el = document.querySelector(".search-container")
-	let but = el.querySelector("i")
+	let search_but = el.querySelector(".search")
 	let input = el.querySelector("input")
 	input.onkeydown = e=>{
 		if (e.keyCode == 13){
 			startSearch(input.value)
 		}
 	}
-	but.onclick = _=>{startSearch(input.value)}
+	search_but.onclick = _=>{startSearch(input.value)}
+
+	let clipboard = el.querySelector(".paste")
+	clipboard.onclick = _=>{
+		navigator.permissions.query({ name: "clipboard-read" }).then((result) => {
+			if (result.state === "granted" || result.state === "prompt") {
+				navigator.clipboard.readText().then((clipText) => {
+					input.value = clipText
+					search_but.click()
+				})
+			}
+		})
+	}
 }
 
 function initStreamTypeRadios(){
@@ -91,20 +104,28 @@ async function startSearch(link){
 	document.querySelector(".search-container").classList.add("disabled")
 
 	let info = await eel.get_vid_info(link.trim())()
-
-	let popup = document.querySelector("#search-result")
-	popup.classList.add("show")
-	popup.setAttribute("url", link.trim())
-	document.querySelector(".loader").classList.remove("anim")
-	document.querySelector(".search-container").classList.remove("disabled")
-	setTimeout(_=>{
-		const closeHandler = _=>{
-			popup.removeEventListener("close", closeHandler, true);
-			popup.removeAttribute("url")
-		}
-		popup.addEventListener("close", closeHandler, true)
-	}, 1000)
-	processResults(info, popup.querySelector(".content"))
+	if (info.success){
+		let popup = document.querySelector("#search-result")
+		popup.classList.add("show")
+		popup.setAttribute("url", link.trim())
+		document.querySelector(".loader").classList.remove("anim")
+		document.querySelector(".search-container").classList.remove("disabled")
+		setTimeout(_=>{
+			const closeHandler = _=>{
+				popup.removeEventListener("close", closeHandler, true);
+				popup.removeAttribute("url")
+			}
+			popup.addEventListener("close", closeHandler, true)
+		}, 1000)
+		processResults(info, popup.querySelector(".content"))
+	} else{
+		let popup = document.querySelector("#error-popup")
+		popup.classList.add("show")
+		document.querySelector(".loader").classList.remove("anim")
+		document.querySelector(".search-container").classList.remove("disabled")
+		console.log(info.error)
+		popup.querySelector(".text").innerText = info.error
+	}
 }
 
 function processResults(results, element){
@@ -180,6 +201,7 @@ function humanFileSize(size) {
 function createDownloadElement(id, title, author, cover, time){
 	let div = document.createElement('div');
 	div.className = "download-item"
+	div.setAttribute("id", id)
 	div.innerHTML = `
 		<img class="cover" src="${cover}"><div class="progress"></div>
 		<div class="info">
@@ -191,15 +213,20 @@ function createDownloadElement(id, title, author, cover, time){
 				</div>
 			</div>
 			<div class="abort"><i class="fa-solid fa-circle-xmark"></i></div>
+			<div class="open-file"><i class="fa-solid fa-folder"></i></div>
 		</div>
 	`
 	div.querySelector(".abort").onclick = _=>{
 		console.log("Abort", id)
+	}
+	div.querySelector(".open-file").onclick = _=>{
+		console.log("Open file", div.getAttribute("file"))
 	}
 	document.querySelector("#downloads-list").appendChild(div)
 }
 
 eel.expose(download_progress)
 function download_progress(id, current, total){
-	console.log(id, current, total)
+	let el = document.querySelector(`#downloads-list .download-item[id="${id}"]`)
+	el.style.setProperty("--percent", Math.round(current * 100 / total));
 }

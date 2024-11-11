@@ -3,6 +3,7 @@ import sys, os
 import MyTube
 import asyncio
 import uuid
+import re
 
 
 # ---- Required Functions ----
@@ -19,6 +20,10 @@ def strtime(seconds):
 	if hours > 0: string += f"{hours:02}:"
 	string += f"{minutes:02}:{seconds:02}"
 	return string
+
+def strip_ansi_codes(text):
+	ansi_escape = re.compile(r'\x1B[@-_][0-?]*[ -/]*[@-~]')
+	return ansi_escape.sub('', text)
 
 
 def streams_to_list(streams):
@@ -50,17 +55,20 @@ def get_yt_obj(url):
 
 @eel.expose
 def get_vid_info(url):
-	yt = get_yt_obj(url)
-	data = {
-		"title": yt.title,
-		"author": yt.author,
-		"thumb": yt.thumbnail.url,
-		"streams": {
-			"video": streams_to_list(yt.streams.filter(only_video=True, no_muxed=True).order_by("res", "fps")),
-			"audio": streams_to_list(yt.streams.filter(only_audio=True).order_by("abr"))
+	try:
+		yt = get_yt_obj(url)
+		return {
+			"success": True,
+			"title": yt.title,
+			"author": yt.author,
+			"thumb": yt.thumbnail.url,
+			"streams": {
+				"video": streams_to_list(yt.streams.filter(only_video=True, no_muxed=True).order_by("res", "fps")),
+				"audio": streams_to_list(yt.streams.filter(only_audio=True).order_by("abr"))
+			}
 		}
-	}
-	return data
+	except Exception as e:
+		return {"success": False,"error": strip_ansi_codes(str(e))}
 
 
 
@@ -74,7 +82,7 @@ class ProgressMyTube:
 DOWNLOADERS = {}
 async def download_async(downloader_id):
 	downloader = DOWNLOADERS[downloader_id]
-	file = await downloader("downloads", on_progress=ProgressMyTube(downloader_id))
+	return await downloader("downloads", on_progress=ProgressMyTube(downloader_id))
 
 @eel.expose
 def download(downloader_id):

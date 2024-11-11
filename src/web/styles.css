@@ -42,7 +42,7 @@ body{
 .search-wrapper {
 	display: flex;
 	justify-content: center;
-	margin-top: 6px;
+	margin-top: 10px;
 }
 .search-container {
 	display: flex;
@@ -180,7 +180,7 @@ body{
 
 
 #search-result .video-thumb{
-	height: 160px;
+	height: 180px;
 	width: 100%;
 	object-fit: contain;
 	background: black;
@@ -389,7 +389,7 @@ body{
 	background: linear-gradient(90deg, transparent, white);
 	opacity: 0.4;
 	transform: translateX(calc(-1% * (100 - var(--percent))));
-	transition: 0.1s ease-in-out;
+	transition: 0.5s ease-in-out;
 }
 #downloads-list .download-item .cover{
 	inset: 0;
@@ -411,6 +411,7 @@ body{
 }
 #downloads-list .download-item .author{
 	font-size: 0.9rem;
+	color: lightgrey;
 }
 #downloads-list .download-item .sub{
 	font-family: monospace;
@@ -436,6 +437,24 @@ body{
 #downloads-list .download-item .abort i:hover{
 	transform: rotate(90deg);
 }
+#downloads-list .download-item .open-file{
+	font-size: 24px;
+	cursor: pointer;
+	transition: 0.15s;
+	display: none;
+}
+#downloads-list .download-item .open-file:hover{
+	color: lightgrey;
+}
+#downloads-list .download-item.finished .progress,
+#downloads-list .download-item.finished .percent,
+#downloads-list .download-item.finished .abort
+{
+	display: none;
+}
+#downloads-list .download-item.finished .open-file{
+	display: block;
+}
 
 @keyframes apear-left{
 	from {
@@ -446,4 +465,27 @@ body{
 		transform: translateX(0);
 		opacity: 1;
 	}
+}
+
+
+#error-popup .popup-wrapper{
+	height: fit-content;
+}
+#error-popup .text {
+	padding: 12px 20px;
+	margin: 30px 10px;
+	position: relative;
+	font-family: monospace;
+	background: linear-gradient(90deg, rgb(255, 0, 0, 0.1), transparent);
+	border-radius: 5px 0 0 5px;
+}
+#error-popup .text::before{
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 5px;
+	background: red;
+	border-radius: 10px 0 0 10px;
 }
