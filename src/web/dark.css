@@ -1,6 +1,7 @@
 [theme="dark"]:root {
 	--body-color: #1b1a1f;
 	--text-color: white;
+	color-scheme: dark;
 }
 
 [theme="dark"]{
@@ -21,7 +22,7 @@
 		color: white;
 	}
 	.stream{
-		background: #414656;
+		background: #313541;
 	}
 	.radio-tabs label:hover{
 		background: #0053ff;
