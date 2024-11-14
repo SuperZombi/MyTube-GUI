@@ -3,66 +3,39 @@ import sys, os
 import MyTube
 import asyncio
 import uuid
-import re
+import json
 import subprocess
 from threading import Thread
+from utils import *
 
-__version__ = "0.0.2"
 
+__version__ = "0.0.3"
+@eel.expose
+def get_app_version(): return __version__
 
-# ---- Required Functions ----
-def resource_path(relative_path):
-	""" Get absolute path to resource, works for dev and for PyInstaller """
-	base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
-	return os.path.join(base_path, relative_path)
-
-def strtime(seconds):
-	hours = seconds // 3600
-	minutes = (seconds % 3600) // 60
-	seconds = seconds % 60
-	string = ""
-	if hours > 0: string += f"{hours:02}:"
-	string += f"{minutes:02}:{seconds:02}"
-	return string
-
-def strip_ansi_codes(text):
-	ansi_escape = re.compile(r'\x1B[@-_][0-?]*[ -/]*[@-~]')
-	return ansi_escape.sub('', text)
 
 def raiseError(msg):
 	eel.displayError(strip_ansi_codes(msg))
 
-@eel.expose
-def get_app_version():
-	return __version__
 
-
-def streams_to_list(streams):
-	output = []
-	for stream in streams:
-		data = {"itag": stream.itag, "filesize": stream.filesize}
-		if stream.isVideo:
-			data["quality"] = f"{stream.res}p"
-			data["extra"] = f"{stream.fps}fps"
-			data["codec"] = stream.videoCodec.split(".")[0]
-			data["extension"] = stream.videoExt
-		elif stream.isAudio:
-			data["quality"] = f"{stream.abr}kbps"
-			data["extra"] = stream.lang
-			data["codec"] = stream.audioCodec.split(".")[0]
-			data["extension"] = stream.audioExt
-		output.append(data)
-	return output
+COOKIES_FILE = "cookies.json"
+COOKIES_DATA = None
+def get_cookies():
+	global COOKIES_DATA
+	if not COOKIES_DATA:
+		if os.path.exists(COOKIES_FILE):
+			with open(COOKIES_FILE, 'r') as f:
+				COOKIES_DATA = json.loads(f.read())
+	return COOKIES_DATA
 
 
 CACHED_QUERIES = {}
 def get_yt_obj(url):
 	obj = CACHED_QUERIES.get(url, None)
 	if not obj:
-		obj = MyTube.YouTube(url)
+		obj = MyTube.YouTube(url, cookies=get_cookies())
 		CACHED_QUERIES[url] = obj
 	return obj
-
 
 @eel.expose
 def get_vid_info(url):
@@ -80,7 +53,6 @@ def get_vid_info(url):
 		}
 	except Exception as e:
 		raiseError(str(e))
-
 
 
 class ProgressMyTube:
@@ -140,6 +112,24 @@ def abort_download(downloader_id):
 @eel.expose
 def open_output_file(file):
 	subprocess.run(["explorer", '/select,', file])
+
+
+@eel.expose
+def is_user_logined():
+	return os.path.exists(COOKIES_FILE)
+@eel.expose
+def logout_user():
+	if os.path.exists(COOKIES_FILE): os.remove(COOKIES_FILE)
+@eel.expose
+def login_user():
+	try:
+		cookies = get_user_cookies()
+		if cookies:
+			with open(COOKIES_FILE, 'w') as f:
+				f.write(json.dumps(cookies))
+			return True
+	except:
+		None
 
 
 eel.init(resource_path("web"))

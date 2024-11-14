@@ -11,6 +11,7 @@ window.onload = _=>{
 	initPopups()
 	initStreamTypeRadios()
 	initSettings()
+	initAccountLogin()
 
 	document.querySelector("#search-result .download").onclick = async _=>{
 		let results = document.querySelector("#search-result")
@@ -271,6 +272,51 @@ function download_progress(id, current, total){
 }
 
 
+function Toast(message, color=null){
+	let el = document.querySelector("#snackbar")
+	el.innerHTML = message
+	el.classList.add("show")
+	if (color == "ok"){
+		el.classList.add("success")
+	}
+	setTimeout(_=>{
+		el.classList.remove("show", "success", "danger")
+	}, 3000);
+}
+
+async function logout_user(){
+	if (confirm("Are you sure want to log out?")){
+		await eel.logout_user()
+		initLoginButton(false)
+	}
+}
+async function login_user(){
+	let result = await eel.login_user()()
+	if (result){
+		Toast("Login successfully", "ok")
+		initLoginButton(true)
+	}
+}
+function initLoginButton(logined=false){
+	let button = document.querySelector("#login_button")
+	let text = button.querySelector("span")
+	let icon = button.querySelector("i")
+	if (logined){
+		text.innerHTML = "Sign out"
+		icon.className = "fa-solid fa-right-from-bracket"
+		button.classList.add("danger")
+		button.onclick = _=>{logout_user()}
+	} else {
+		text.innerHTML = "Sign in"
+		icon.className = "fa-solid fa-right-to-bracket"
+		button.classList.remove("danger")
+		button.onclick = _=>{login_user()}
+	}
+}
+async function initAccountLogin(){
+	let logined = await eel.is_user_logined()()
+	initLoginButton(logined)
+}
 async function initSettings(){
 	document.querySelector(".settings-button").onclick = _=>{
 		let popup = document.querySelector("#settings")
