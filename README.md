@@ -29,6 +29,7 @@
 ## Advantages:
 * Choice of video and audio streams in high quality.
 * Choice of language of audio streams.
+* Authorization for accessing age-restricted and account-required content.
 
 
 ## 💲Donate
