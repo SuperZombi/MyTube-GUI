@@ -102,9 +102,10 @@ body{
 	color: #fff;
 	cursor: pointer;
 	font-size: 15px;
-	padding: 10px 20px;
+	padding: 8px 14px;
 	transition: all 0.15s ease-in-out;
 	user-select: none;
+	margin: auto;
 }
 .simple-button:hover {
 	background: #1C84FF;
@@ -121,11 +122,45 @@ body{
 .simple-button.danger:active{
 	background: #b30000;
 }
+.simple-button[disabled]{
+	cursor: not-allowed;
+	filter: grayscale(1);
+}
 
-#settings .row{
+.tiny-button {
+	cursor: pointer;
+	border-radius: 8px;
+	border: 0;
+	width: 30px;
+	height: 30px;
+	flex-shrink: 0;
 	display: flex;
 	align-items: center;
-	justify-content: space-evenly;
+	justify-content: center;
+	background: #eee;
+	color: #ffbf00;
+	transition: 0.15s;
+}
+.tiny-button:hover{
+	background: #ddd;
+}
+.tiny-button:active{
+	background: #ccc;
+}
+
+#settings .grid{
+	margin: 10px;
+	display: grid;
+	grid-template-rows: 1fr 1fr;
+	grid-template-columns: 1fr 1fr;
+	align-items: center;
+	justify-items: center;
+	row-gap: 12px;
+	font-size: 18px;
+}
+#settings .row {
+	display: flex;
+	gap: 5px;
 }
 
 
@@ -241,13 +276,24 @@ body{
 	justify-items: stretch;
 	user-select: none;
 }
-#search-result input[type="text"]{
-	width: 100%;
-	font-size: inherit;
+input[type="text"]{
+	font-size: 1rem;
 	padding: 4px 8px;
 	border-radius: 8px;
 	border: 1px solid grey;
 	outline: none;
+	width: 100%;
+}
+#search-result input[type="text"]{
+	width: 100%;
+}
+
+select {
+	font-size: 1rem;
+	min-width: 100px;
+	padding: 5px;
+	border-radius: 8px;
+	cursor: pointer;
 }
 
 

@@ -75,15 +75,28 @@
 		<div class="content">
 			<h3>Version: <span class="version" id="app_version"></span></h3>
 			<hr>
-			<div class="row">
-				<h2>
-					<i class="fa-solid fa-circle-user" style="margin-right:5px;"></i>
+			<div class="grid">
+				<div>
+					<i class="fa-solid fa-circle-user" style="vertical-align:text-top;"></i>
 					<span>Account</span>
-				</h2>
+				</div>
 				<button class="simple-button" id="login_button">
 					<span>Sign in</span>
 					<i class="fa-solid fa-right-to-bracket"></i>
 				</button>
+
+				<span>Theme</span>
+				<select name="theme">
+					<option value="auto" selected>Auto</option>
+					<option value="light">Light</option>
+					<option value="dark">Dark</option>
+				</select>
+					
+				<span>Output Folder</span>
+				<div class="row">
+					<input type="text" dir="rtl" name="output_folder" readonly>
+					<button class="tiny-button" id="output_folder"><i class="fa-solid fa-folder"></i></button>
+				</div>
 			</div>
 		</div>
 	</div>

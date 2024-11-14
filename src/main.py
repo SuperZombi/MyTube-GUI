@@ -5,13 +5,43 @@ import asyncio
 import uuid
 import json
 import subprocess
+from tkinter import Tk
+from tkinter.filedialog import askdirectory
 from threading import Thread
 from utils import *
 
 
-__version__ = "0.0.3"
+__version__ = "0.0.4"
 @eel.expose
 def get_app_version(): return __version__
+
+SETTINGS_FILE = "app.settings.json"
+SETTINGS = {
+	"output_folder": os.path.join(os.getcwd(), "downloads"),
+	"theme": "auto"
+}
+@eel.expose
+def request_settings(): return SETTINGS
+def load_settings():
+	if os.path.exists(SETTINGS_FILE):
+		with open(SETTINGS_FILE, 'r', encoding='utf-8') as f:
+			loaded = json.loads(f.read())
+			SETTINGS.update(loaded)
+@eel.expose
+def change_setting(name, value):
+	SETTINGS.update({name: value})
+	with open(SETTINGS_FILE, 'w', encoding='utf-8') as f:
+		f.write(json.dumps(SETTINGS, indent=4, ensure_ascii=False))
+load_settings()
+
+
+@eel.expose
+def request_folder():
+	root = Tk()
+	root.withdraw()
+	root.wm_attributes('-topmost', 1)
+	folder = askdirectory(parent=root)
+	return folder
 
 
 def raiseError(msg):

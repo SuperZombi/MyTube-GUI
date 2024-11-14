@@ -1,16 +1,10 @@
 window.resizeTo(window.screen.width/3,window.screen.height);
-const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
-if (darkThemeMq.matches) {
-	document.documentElement.setAttribute("theme", "dark")
-} else {
-	document.documentElement.setAttribute("theme", "light")
-}
-
+applyTheme()
 window.onload = _=>{
+	initSettings()
 	initSearch()
 	initPopups()
 	initStreamTypeRadios()
-	initSettings()
 	initAccountLogin()
 
 	document.querySelector("#search-result .download").onclick = async _=>{
@@ -93,11 +87,11 @@ function initPopups(){
 			popup.classList.remove("show")
 			popup.dispatchEvent(event);
 		}
-		popup.onclick = e=>{
-			if (!e.target.closest(".popup-wrapper")){
-				close()
-			}
-		}
+		// popup.onclick = e=>{
+		// 	if (!e.target.closest(".popup-wrapper")){
+		// 		close()
+		// 	}
+		// }
 		popup.querySelector(".close").onclick = _=>{
 			close()
 		}
@@ -291,11 +285,14 @@ async function logout_user(){
 	}
 }
 async function login_user(){
+	let button = document.querySelector("#login_button")
+	button.disabled = true
 	let result = await eel.login_user()()
 	if (result){
 		Toast("Login successfully", "ok")
 		initLoginButton(true)
 	}
+	button.disabled = false
 }
 function initLoginButton(logined=false){
 	let button = document.querySelector("#login_button")
@@ -317,6 +314,19 @@ async function initAccountLogin(){
 	let logined = await eel.is_user_logined()()
 	initLoginButton(logined)
 }
+function applyTheme(name="auto"){
+	if (name == "auto"){
+		const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
+		if (darkThemeMq.matches) {
+			document.documentElement.setAttribute("theme", "dark")
+		} else {
+			document.documentElement.setAttribute("theme", "light")
+		}
+	}
+	else {
+		document.documentElement.setAttribute("theme", name)
+	}
+}
 async function initSettings(){
 	document.querySelector(".settings-button").onclick = _=>{
 		let popup = document.querySelector("#settings")
@@ -325,4 +335,25 @@ async function initSettings(){
 	let area = document.querySelector("#settings .content")
 	let app_ver = await eel.get_app_version()()
 	document.querySelector("#app_version").innerHTML = app_ver
+
+	let SETTINGS = await eel.request_settings()()
+	
+	let theme_sel = area.querySelector('[name="theme"]')
+	theme_sel.value = SETTINGS.theme
+	applyTheme(SETTINGS.theme)
+	theme_sel.onchange = async _=>{
+		applyTheme(theme_sel.value)
+		await eel.change_setting("theme", theme_sel.value)
+	}
+
+	let out_but = area.querySelector("#output_folder")
+	let out_inp = area.querySelector('input[name="output_folder"]')
+	out_inp.value = SETTINGS.output_folder
+	out_but.onclick = async _=>{
+		let answ = await eel.request_folder()()
+		if (answ){
+			await eel.change_setting("output_folder", answ)
+			out_inp.value = answ
+		}
+	}
 }

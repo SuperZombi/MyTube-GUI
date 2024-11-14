@@ -17,7 +17,7 @@
 	.search-container i:hover{
 		background: #414656;
 	}
-	#search-result input[type="text"]{
+	input[type="text"]{
 		background: #282c35;
 		color: white;
 	}
@@ -37,5 +37,14 @@
 	}
 	#downloads-list .download-item .open-file:hover{
 		color: grey;
+	}
+	.tiny-button {
+		background: #666;
+	}
+	.tiny-button:hover{
+		background: #555;
+	}
+	.tiny-button:active{
+		background: #444;
 	}
 }
