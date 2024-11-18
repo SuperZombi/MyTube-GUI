@@ -4,7 +4,7 @@
     <img src="github/images/icon.png" height="128px">
 </p>
 <p align="center">
-    <img src="https://shields.io/badge/version-0.0.4-blue"><br>
+    <img src="https://shields.io/badge/version-0.0.5-blue"><br>
     <a href="#donate"><img src="https://shields.io/badge/💲-Support_the_Project-2ea043"></a>
 </p>
 <p align="center">

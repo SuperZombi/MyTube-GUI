@@ -1,0 +1,34 @@
+{
+	"search_placeholder": "Пошук за посиланням",
+	"search_action": "Шукати",
+	"search_paste": "Вставити посилання",
+	"search_clear": "Очистити",
+
+	"settings_button": "Налаштування",
+	"version": "Версія",
+	"close": "Закрити",
+
+	"theme": "Тема",
+	"theme_auto": "Авто",
+	"theme_light": "Світла",
+	"theme_dark": "Темна",
+
+	"language": "Мова",
+	"account": "Акаунт",
+	"account_signin": "Увійти",
+	"account_signout": "Вийти",
+	"login_success_msg": "Авторизація пройшла успішно!",
+	"confirm_logout": "Ви впевнені, що бажаєте вийти?",
+
+	"output_folder": "Папка збереження",
+	"select": "Вибрати",
+
+	"stream_video": "Відео",
+	"stream_music": "Музика",
+	"video_title": "Назва",
+	"video_author": "Автор",
+	"download_button": "Завантажити",
+
+	"abort_download": "Скасувати",
+	"open_file": "Відкрити файл"
+}

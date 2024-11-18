@@ -1,5 +1,6 @@
 window.resizeTo(window.screen.width/3,window.screen.height);
 applyTheme()
+var LANG = new Language_Engine()
 window.onload = _=>{
 	initSettings()
 	initSearch()
@@ -24,26 +25,33 @@ window.onload = _=>{
 		let data = await eel.get_downloader_process(url, streams, {"title": title, "author": author})()
 		document.querySelector("#search-result .close").click();
 		createDownloadElement(data.id, data.title, data.author, data.thumb, data.time)
+		document.querySelector(".search-container input").value = ""
 		eel.download(data.id)
 	}
 }
 
+function getDownloadItem(id){
+	return document.querySelector(`#downloads-list .download-item[id="${id}"]`)
+}
+eel.expose(download_progress)
+function download_progress(id, current, total){
+	getDownloadItem(id).style.setProperty("--percent", Math.round(current * 100 / total));
+}
 eel.expose(finish_download)
 function finish_download(id, result){
-	let item = document.querySelector(`#downloads-list .download-item[id="${id}"]`)
+	let item = getDownloadItem(id)
 	item.classList.add("finished")
 	item.setAttribute("file", result)
 }
 eel.expose(abort_download)
 function abort_download(id){
-	let item = document.querySelector(`#downloads-list .download-item[id="${id}"]`)
-	item.classList.add("finished", "aborted")
+	getDownloadItem(id).classList.add("finished", "aborted")
 }
-
 
 function initSearch(){
 	let el = document.querySelector(".search-container")
 	let search_but = el.querySelector(".search")
+	let del_but = el.querySelector(".close")
 	let input = el.querySelector("input")
 	input.onkeydown = e=>{
 		if (e.keyCode == 13){
@@ -51,6 +59,7 @@ function initSearch(){
 		}
 	}
 	search_but.onclick = _=>{startSearch(input.value)}
+	del_but.onclick = _=>{input.value=""}
 
 	let clipboard = el.querySelector(".paste")
 	clipboard.onclick = _=>{
@@ -75,33 +84,6 @@ function initStreamTypeRadios(){
 			else if (input.value == "music"){
 				document.querySelector('.stream-selectors [name="video"]').classList.add("hide")
 				document.querySelector('.stream-selectors [name="audio"]').classList.remove("hide")
-			}
-		}
-	})
-}
-
-function initPopups(){
-	const event = new Event("close");
-	document.querySelectorAll(".popup").forEach(popup=>{
-		function close(){
-			popup.classList.remove("show")
-			popup.dispatchEvent(event);
-		}
-		// popup.onclick = e=>{
-		// 	if (!e.target.closest(".popup-wrapper")){
-		// 		close()
-		// 	}
-		// }
-		popup.querySelector(".close").onclick = _=>{
-			close()
-		}
-		let left_menu = popup.querySelector(".left-menu")
-		if (left_menu){
-			let close = left_menu.querySelector(".close")
-			if (close){
-				close.onclick = _=>{
-					left_menu.classList.remove("open")
-				}
 			}
 		}
 	})
@@ -194,15 +176,30 @@ function createSelect(streams, type){
 	}
 }
 function createStreamElement(stream, type){
-	let icon = type == "video" ? 'fa-video' : 'fa-music'
 	let div = document.createElement("div")
 	div.className = "stream"
 	div.setAttribute("itag", stream.itag)
+
+	let icon, quality, extra = "";
+	if (type == "video"){
+		icon = 'fa-video'
+		quality = `${stream.quality}<sub>p</sub>`
+		if (stream.extra){
+			extra = `<span>•</span><span>${stream.extra}<sub>fps</sub></span>`
+		}
+	}
+	else if (type == "audio"){
+		icon = 'fa-music'
+		quality = `${stream.quality}<sub>kbps</sub>`
+		if (stream.extra){
+			extra = `<span>•</span><span style="font-size:smaller">${stream.extra.toUpperCase()}</span>`
+		}
+	}
 	div.innerHTML = `
 		<div class="container"><i class="fa-solid ${icon}"></i></div>
 		<div class="container-details">
 			<div class="container-details-head">
-				<span>${stream.quality}</span>${stream.extra ? `<span>(${stream.extra})` : ""}</span>
+				<span>${quality}</span>${extra}
 			</div>
 			<div class="container-details-tags">
 				<span class="filesize">${humanFileSize(stream.filesize)}</span><span>${stream.codec}</span>
@@ -210,27 +207,6 @@ function createStreamElement(stream, type){
 		</div>`
 	return div;
 }
-function humanFileSize(size) {
-	var i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
-	return +((size / Math.pow(1024, i)).toFixed(2)) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
-}
-
-eel.expose(displayError)
-function displayError(message){
-	let popup = document.querySelector("#error-popup")
-	let area = popup.querySelector(".content")
-	let el = document.createElement("div")
-	el.className = "text"
-	el.innerText = message
-	area.appendChild(el)
-	popup.classList.add("show")
-	const errorHandler = _=>{
-		popup.removeEventListener("close", errorHandler, true);
-		area.innerHTML = ""
-	}
-	popup.addEventListener("close", errorHandler, true)
-}
-
 
 function createDownloadElement(id, title, author, cover, time){
 	let div = document.createElement('div');
@@ -250,36 +226,21 @@ function createDownloadElement(id, title, author, cover, time){
 			<div class="open-file"><i class="fa-solid fa-folder"></i></div>
 		</div>
 	`
-	div.querySelector(".abort").onclick = _=>{
+	let abort_but = div.querySelector(".abort")
+	LANG.set(abort_but, "abort_download", "title")
+	abort_but.onclick = _=>{
 		eel.abort_download(id)
 	}
-	div.querySelector(".open-file").onclick = _=>{
+	let open_file_but = div.querySelector(".open-file")
+	LANG.set(open_file_but, "open_file", "title")
+	open_file_but.onclick = _=>{
 		eel.open_output_file(div.getAttribute("file"))
 	}
 	document.querySelector("#downloads-list").appendChild(div)
 }
 
-eel.expose(download_progress)
-function download_progress(id, current, total){
-	let el = document.querySelector(`#downloads-list .download-item[id="${id}"]`)
-	el.style.setProperty("--percent", Math.round(current * 100 / total));
-}
-
-
-function Toast(message, color=null){
-	let el = document.querySelector("#snackbar")
-	el.innerHTML = message
-	el.classList.add("show")
-	if (color == "ok"){
-		el.classList.add("success")
-	}
-	setTimeout(_=>{
-		el.classList.remove("show", "success", "danger")
-	}, 3000);
-}
-
 async function logout_user(){
-	if (confirm("Are you sure want to log out?")){
+	if (confirm(LANG.get("confirm_logout", "Are you sure?"))){
 		await eel.logout_user()
 		initLoginButton(false)
 	}
@@ -289,7 +250,7 @@ async function login_user(){
 	button.disabled = true
 	let result = await eel.login_user()()
 	if (result){
-		Toast("Login successfully", "ok")
+		Toast(LANG.get("login_success_msg", "Login successfully"), "ok")
 		initLoginButton(true)
 	}
 	button.disabled = false
@@ -299,12 +260,12 @@ function initLoginButton(logined=false){
 	let text = button.querySelector("span")
 	let icon = button.querySelector("i")
 	if (logined){
-		text.innerHTML = "Sign out"
+		LANG.set(text, "account_signout")
 		icon.className = "fa-solid fa-right-from-bracket"
 		button.classList.add("danger")
 		button.onclick = _=>{logout_user()}
 	} else {
-		text.innerHTML = "Sign in"
+		LANG.set(text, "account_signin")
 		icon.className = "fa-solid fa-right-to-bracket"
 		button.classList.remove("danger")
 		button.onclick = _=>{login_user()}
@@ -314,19 +275,7 @@ async function initAccountLogin(){
 	let logined = await eel.is_user_logined()()
 	initLoginButton(logined)
 }
-function applyTheme(name="auto"){
-	if (name == "auto"){
-		const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
-		if (darkThemeMq.matches) {
-			document.documentElement.setAttribute("theme", "dark")
-		} else {
-			document.documentElement.setAttribute("theme", "light")
-		}
-	}
-	else {
-		document.documentElement.setAttribute("theme", name)
-	}
-}
+
 async function initSettings(){
 	document.querySelector(".settings-button").onclick = _=>{
 		let popup = document.querySelector("#settings")
@@ -337,14 +286,23 @@ async function initSettings(){
 	document.querySelector("#app_version").innerHTML = app_ver
 
 	let SETTINGS = await eel.request_settings()()
-	
-	let theme_sel = area.querySelector('[name="theme"]')
-	theme_sel.value = SETTINGS.theme
-	applyTheme(SETTINGS.theme)
-	theme_sel.onchange = async _=>{
-		applyTheme(theme_sel.value)
-		await eel.change_setting("theme", theme_sel.value)
+
+	let selects_actions = {
+		"theme": val=>{applyTheme(val)},
+		"language": async val=>{
+			let lang_data = await eel.get_lang_data(val)();
+			LANG.update(lang_data)
+		}
 	}
+
+	area.querySelectorAll('select').forEach(select=>{
+		select.value = SETTINGS[select.name]
+		selects_actions[select.name](SETTINGS[select.name])
+		select.onchange = async _=>{
+			selects_actions[select.name](select.value)
+			await eel.change_setting(select.name, select.value)
+		}
+	})
 
 	let out_but = area.querySelector("#output_folder")
 	let out_inp = area.querySelector('input[name="output_folder"]')

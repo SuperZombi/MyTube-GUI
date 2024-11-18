@@ -27,12 +27,12 @@ def streams_to_list(streams):
 	for stream in streams:
 		data = {"itag": stream.itag, "filesize": stream.filesize}
 		if stream.isVideo:
-			data["quality"] = f"{stream.res}p"
-			data["extra"] = f"{stream.fps}fps"
+			data["quality"] = stream.res
+			data["extra"] = stream.fps
 			data["codec"] = stream.videoCodec.split(".")[0]
 			data["extension"] = stream.videoExt
 		elif stream.isAudio:
-			data["quality"] = f"{stream.abr}kbps"
+			data["quality"] = stream.abr
 			data["extra"] = stream.lang
 			data["codec"] = stream.audioCodec.split(".")[0]
 			data["extension"] = stream.audioExt

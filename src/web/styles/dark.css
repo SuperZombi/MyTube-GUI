@@ -36,7 +36,7 @@
 		color: lightgrey;
 	}
 	#downloads-list .download-item .open-file:hover{
-		color: grey;
+		color: darkgrey;
 	}
 	.tiny-button {
 		background: #666;

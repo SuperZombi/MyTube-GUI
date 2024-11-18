@@ -1,0 +1,34 @@
+{
+	"search_placeholder": "Поиск по ссылке",
+	"search_action": "Искать",
+	"search_paste": "Вставить ссылку",
+	"search_clear": "Очистить",
+
+	"settings_button": "Настройки",
+	"version": "Версия",
+	"close": "Закрыть",
+
+	"theme": "Тема",
+	"theme_auto": "Авто",
+	"theme_light": "Светлая",
+	"theme_dark": "Тёмная",
+
+	"language": "Язык",
+	"account": "Аккаунт",
+	"account_signin": "Войти",
+	"account_signout": "Выйти",
+	"login_success_msg": "Авторизация прошла успешно!",
+	"confirm_logout": "Вы уверены, что хотите выйти?",
+
+	"output_folder": "Папка сохранения",
+	"select": "Выбрать",
+
+	"stream_video": "Видео",
+	"stream_music": "Музыка",
+	"video_title": "Название",
+	"video_author": "Автор",
+	"download_button": "Скачать",
+
+	"abort_download": "Отменить",
+	"open_file": "Открыть файл"
+}

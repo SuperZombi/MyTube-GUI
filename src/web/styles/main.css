@@ -90,6 +90,16 @@ body{
 	background: #ccc;
 }
 
+.search-container .close{
+	display: none;
+}
+.search-container input:not(:placeholder-shown) ~ .paste{
+	display: none;
+}
+.search-container input:not(:placeholder-shown) ~ .close{
+	display: flex;
+}
+
 
 
 .simple-button {
@@ -258,7 +268,7 @@ body{
 
 
 #search-result .video-thumb{
-	height: 180px;
+	height: 200px;
 	width: 100%;
 	object-fit: contain;
 	background: black;
@@ -286,6 +296,9 @@ input[type="text"]{
 }
 #search-result input[type="text"]{
 	width: 100%;
+}
+input[type="text"][readonly]{
+	cursor: not-allowed;
 }
 
 select {
@@ -365,10 +378,11 @@ select {
 	font-size: 0.9em;
 	display: flex;
 	gap: 4px;
+	align-items: center;
 }
 .stream .container-details .container-details-tags{
 	display: flex;
-	gap: 3px;
+	gap: 4px;
 }
 .stream .container-details .container-details-tags > *{
 	color: white;
@@ -379,6 +393,10 @@ select {
 }
 .stream .container-details .container-details-tags .filesize{
 	background: #00bb28;
+}
+.stream sub{
+	vertical-align: text-bottom;
+	font-size: smaller;
 }
 
 
@@ -457,7 +475,7 @@ select {
 
 #downloads-list{
 	display: flex;
-	flex-direction: column;
+	flex-direction: column-reverse;
 	padding: 20px;
 	gap: 20px;
 }
@@ -531,6 +549,7 @@ select {
 	cursor: pointer;
 	transition: 0.15s;
 	display: none;
+	filter: drop-shadow(0 0 1px black);
 }
 #downloads-list .download-item .open-file:hover{
 	color: lightgrey;
@@ -545,11 +564,11 @@ select {
 	display: block;
 }
 #downloads-list .download-item.finished{
-	order: 1;
+	order: -1;
 }
 #downloads-list .download-item.aborted{
 	filter: grayscale(1);
-	order: 2;
+	order: -2;
 }
 #downloads-list .download-item.aborted .open-file{
 	display: none;

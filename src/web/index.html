@@ -7,9 +7,10 @@
 	<link rel="icon" href="images/icon.png">
 	<script type="text/javascript" src="/eel.js"></script>
 	<link rel='stylesheet' href='https://use.fontawesome.com/releases/v6.2.1/css/all.css'>
-	<link rel="stylesheet" href="styles.css">
-	<link rel="stylesheet" href="dark.css">
-	<script src="main.js"></script>
+	<link rel="stylesheet" href="styles/main.css">
+	<link rel="stylesheet" href="styles/dark.css">
+	<script src="scripts/utils.js"></script>
+	<script src="scripts/main.js"></script>
 </head>
 <body>
 
@@ -18,7 +19,7 @@
 		<img src="images/icon.png">
 		<span>MyTube</span>
 	</div>
-	<div class="settings-button">
+	<div class="settings-button" lang_title="settings_button">
 		<i class="fa-solid fa-gear"></i>
 	</div>
 </div>
@@ -28,9 +29,10 @@
 
 <div class="search-wrapper">
 	<div class="search-container">
-		<i class="fa-solid fa-magnifying-glass search"></i>
-		<input placeholder="Search URL"/>
-		<i class="fa-regular fa-clipboard paste"></i>
+		<i class="fa-solid fa-magnifying-glass search" lang_title="search_action"></i>
+		<input placeholder="Search URL" lang_placeholder="search_placeholder"/>
+		<i class="fa-regular fa-clipboard paste" lang_title="search_paste"></i>
+		<i class="fa-solid fa-xmark close" lang_title="search_clear"></i>
 	</div>
 </div>
 
@@ -38,16 +40,20 @@
 
 <div class="popup" id="search-result">
 	<div class="popup-wrapper">
-		<i class="fa-regular fa-circle-xmark close"></i>
+		<i class="fa-regular fa-circle-xmark close" lang_title="close"></i>
 		<div class="left-menu">
-			<i class="fa-regular fa-circle-xmark close"></i>
+			<i class="fa-regular fa-circle-xmark close" lang_title="close"></i>
 		</div>
 		<div class="content">
 			<img class="video-thumb">
 			<div class="metadata">
-				<span>Title:</span>
+				<span>
+					<span lang_="video_title">Title</span>:
+				</span>
 				<span><input name="video-title" type="text" required></span>
-				<span>Author:</span>
+				<span>
+					<span lang_="video_author">Author</span>:
+				</span>
 				<span><input name="video-author" type="text" required></span>
 			</div>
 			<hr>
@@ -55,47 +61,62 @@
 			<div class="radio-tabs">
 				<label>
 					<input type="radio" name="container-type" value="video" checked>
-					<span>Video</span>
+					<span lang_="stream_video">Video</span>
 				</label>
 				<label>
 					<input type="radio" name="container-type" value="music">
-					<span>Music</span>
+					<span lang_="stream_music">Music</span>
 				</label>
 			</div>
 
 			<div class="stream-selectors"></div>
-			<button class="download"><i class="fa-solid fa-circle-down"></i><span>Download</span></button>
+			<button class="download"><i class="fa-solid fa-circle-down"></i><span lang_="download_button">Download</span></button>
 		</div>
 	</div>
 </div>
 
 <div class="popup" id="settings">
 	<div class="popup-wrapper">
-		<i class="fa-regular fa-circle-xmark close"></i>
+		<i class="fa-regular fa-circle-xmark close" lang_title="close"></i>
 		<div class="content">
-			<h3>Version: <span class="version" id="app_version"></span></h3>
+			<h3><span lang_="version">Version</span>:<span class="version" id="app_version" style="margin-left:6px"></span></h3>
+			<hr>
+			<div class="grid">
+				<span>
+					<i class="fa-solid fa-brush"></i>
+					<span lang_="theme">Theme</span>
+				</span>
+				<select name="theme">
+					<option value="auto" lang_="theme_auto" selected>Auto</option>
+					<option value="light" lang_="theme_light">Light</option>
+					<option value="dark" lang_="theme_dark">Dark</option>
+				</select>
+
+				<span>
+					<i class="fa-solid fa-globe"></i>
+					<span lang_="language">Language</span>
+				</span>
+				<select name="language">
+					<option value="en" selected>English</option>
+					<option value="ru">Русский</option>
+					<option value="uk">Українська</option>
+				</select>
+			</div>
 			<hr>
 			<div class="grid">
 				<div>
 					<i class="fa-solid fa-circle-user" style="vertical-align:text-top;"></i>
-					<span>Account</span>
+					<span lang_="account">Account</span>
 				</div>
 				<button class="simple-button" id="login_button">
 					<span>Sign in</span>
 					<i class="fa-solid fa-right-to-bracket"></i>
 				</button>
-
-				<span>Theme</span>
-				<select name="theme">
-					<option value="auto" selected>Auto</option>
-					<option value="light">Light</option>
-					<option value="dark">Dark</option>
-				</select>
 					
-				<span>Output Folder</span>
+				<span lang_="output_folder">Output Folder</span>
 				<div class="row">
 					<input type="text" dir="rtl" name="output_folder" readonly>
-					<button class="tiny-button" id="output_folder"><i class="fa-solid fa-folder"></i></button>
+					<button class="tiny-button" id="output_folder" lang_title="select"><i class="fa-solid fa-folder"></i></button>
 				</div>
 			</div>
 		</div>
@@ -104,7 +125,7 @@
 
 <div class="popup" id="error-popup">
 	<div class="popup-wrapper">
-		<i class="fa-regular fa-circle-xmark close"></i>
+		<i class="fa-regular fa-circle-xmark close" lang_title="close"></i>
 		<div class="content"></div>
 	</div>
 </div>

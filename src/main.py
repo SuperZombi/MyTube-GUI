@@ -11,14 +11,15 @@ from threading import Thread
 from utils import *
 
 
-__version__ = "0.0.4"
+__version__ = "0.0.5"
 @eel.expose
 def get_app_version(): return __version__
 
 SETTINGS_FILE = "app.settings.json"
 SETTINGS = {
 	"output_folder": os.path.join(os.getcwd(), "downloads"),
-	"theme": "auto"
+	"theme": "auto",
+	"language": "en"
 }
 @eel.expose
 def request_settings(): return SETTINGS
@@ -33,6 +34,13 @@ def change_setting(name, value):
 	with open(SETTINGS_FILE, 'w', encoding='utf-8') as f:
 		f.write(json.dumps(SETTINGS, indent=4, ensure_ascii=False))
 load_settings()
+
+@eel.expose
+def get_lang_data(lang_code):
+	lang_file = resource_path(os.path.join("locales", lang_code+".json"))
+	if os.path.exists(lang_file):
+		with open(lang_file, 'r', encoding='utf-8') as f:
+			return json.loads(f.read())
 
 
 @eel.expose

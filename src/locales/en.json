@@ -1,0 +1,34 @@
+{
+	"search_placeholder": "Search URL",
+	"search_action": "Search",
+	"search_paste": "Paste URL",
+	"search_clear": "Clear",
+
+	"settings_button": "Settings",
+	"version": "Version",
+	"close": "Close",
+
+	"theme": "Theme",
+	"theme_auto": "Auto",
+	"theme_light": "Light",
+	"theme_dark": "Dark",
+
+	"language": "Language",
+	"account": "Account",
+	"account_signin": "Sign in",
+	"account_signout": "Sign out",
+	"login_success_msg": "Login successfully!",
+	"confirm_logout": "Are you sure want to log out?",
+
+	"output_folder": "Output Folder",
+	"select": "Select",
+
+	"stream_video": "Video",
+	"stream_music": "Music",
+	"video_title": "Title",
+	"video_author": "Author",
+	"download_button": "Download",
+
+	"abort_download": "Abort",
+	"open_file": "Open file"
+}
