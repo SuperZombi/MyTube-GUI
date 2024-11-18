@@ -108,7 +108,7 @@ def download(downloader_id):
 	def handler():
 		try:
 			asyncio.run(downloader(
-				"downloads", on_progress=ProgressMyTube(downloader_id),
+				SETTINGS.get("output_folder"), on_progress=ProgressMyTube(downloader_id),
 				on_success=lambda f: eel.finish_download(downloader_id, f),
 				on_abort=lambda:eel.abort_download(downloader_id)
 			))
