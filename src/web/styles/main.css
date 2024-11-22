@@ -28,6 +28,11 @@ body{
 	align-items: center;
 	gap: 5px;
 	user-select: none;
+	color: var(--text-color);
+	text-decoration: none;
+}
+.logo:hover{
+	text-decoration: underline;
 }
 .logo img{
 	height: 60%;
@@ -474,10 +479,12 @@ select {
 
 
 #downloads-list{
+	--gaping: 20px;
 	display: flex;
 	flex-direction: column-reverse;
 	padding: 20px;
-	gap: 20px;
+	gap: var(--gaping);
+	overflow: hidden;
 }
 #downloads-list .download-item{
 	--percent: 0;
@@ -489,6 +496,17 @@ select {
 	overflow: hidden;
 	user-select: none;
 	animation: apear-left 0.5s ease;
+	transition: 0.5s ease;
+}
+#downloads-list .download-item.disappear{
+	transform: translateX(100%);
+	opacity: 0;
+}
+#downloads-list .download-item.hide{
+	max-height: 0;
+	padding: 0;
+	margin-top: calc(var(--gaping) / 2 * -1);
+	margin-bottom: calc(var(--gaping) / 2 * -1);
 }
 #downloads-list .download-item .progress{
 	position: absolute;
@@ -574,6 +592,50 @@ select {
 	display: none;
 }
 
+
+#downloads-list .ads{
+	height: auto;
+	padding: 15px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	background: #eee;
+	color: black;
+	max-height: calc-size(min-content, size);
+	order: 1;
+}
+#downloads-list .ads .ads-content{
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 5px;
+	text-align: center;
+}
+#downloads-list .ads .action{
+	width: auto;
+	padding: 10px 20px;
+	background: green;
+	color: white;
+	position: relative;
+	overflow: hidden;
+	transition: 0.25s;
+}
+#downloads-list .ads .action:hover{
+	padding: 10px 50px;
+	box-shadow: inset 0 0 5px rgb(255, 255, 255, 0.75);
+}
+#downloads-list .ads .action::after{
+	content: '';
+	background: rgb(255, 255, 255, 0.3);
+	height: 200%;
+	width: 10px;
+	position: absolute;
+	rotate: 30deg;
+	animation: 5s glare infinite;
+}
+
+
 @keyframes apear-left{
 	from {
 		transform: translateX(-100%);
@@ -582,6 +644,16 @@ select {
 	to {
 		transform: translateX(0);
 		opacity: 1;
+	}
+}
+@keyframes glare{
+	0%, 40%{
+		left: 0;
+		transform: translateX(-200%);
+	}
+	60%, 100%{
+		left: 100%;
+		transform: translateX(100%);
 	}
 }
 
@@ -613,6 +685,22 @@ select {
 	background: lightgrey;
 	padding: 4px 6px;
 	border-radius: 12px;
+	user-select: none;
+}
+#update_avalible{
+	display: none;
+	vertical-align: middle;
+	color: lime;
+}
+#update_avalible.show{
+	display: inline-block;
+}
+#update_avalible i {
+	border-radius: 50%;
+	box-shadow: 0 0 2px black;
+}
+#update_avalible:hover{
+	color: #00c000;
 }
 #settings .content{
 	text-align: center;

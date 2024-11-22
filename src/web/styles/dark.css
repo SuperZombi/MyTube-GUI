@@ -38,6 +38,10 @@
 	#downloads-list .download-item .open-file:hover{
 		color: darkgrey;
 	}
+	#downloads-list .ads{
+		background: black;
+		color: white;
+	}
 	.tiny-button {
 		background: #666;
 	}

@@ -7,6 +7,7 @@ window.onload = _=>{
 	initPopups()
 	initStreamTypeRadios()
 	initAccountLogin()
+	check_updates()
 
 	document.querySelector("#search-result .download").onclick = async _=>{
 		let results = document.querySelector("#search-result")
@@ -24,8 +25,9 @@ window.onload = _=>{
 
 		let data = await eel.get_downloader_process(url, streams, {"title": title, "author": author})()
 		document.querySelector("#search-result .close").click();
-		createDownloadElement(data.id, data.title, data.author, data.thumb, data.time)
 		document.querySelector(".search-container input").value = ""
+		await checkDonateNotification()
+		createDownloadElement(data.id, data.title, data.author, data.thumb, data.time)
 		eel.download(data.id)
 	}
 }
@@ -239,6 +241,64 @@ function createDownloadElement(id, title, author, cover, time){
 	document.querySelector("#downloads-list").appendChild(div)
 }
 
+
+function AdsTemplate(name){
+	if (name == "donate"){
+		createAdElement(
+			LANG.get("donate_text"),
+			LANG.get("donate_button", "Donate"),
+			close=>{
+				window.open("https://donatello.to/super_zombi","_blank")
+				close()
+			}
+		)
+	}
+}
+function createAdElement(text, action_text="", action=null){
+	let div = document.createElement('div');
+	div.className = "download-item ads"
+	div.innerHTML = `
+		<div class="ads-content">
+			<div class="text">${text}</div>
+			${action_text ? `<div class="tiny-button action">${action_text}</div>` : ""}
+		</div>
+		<div class="abort"><i class="fa-solid fa-circle-xmark"></i></div>
+	`
+	const close = function(){
+		div.classList.add("disappear")
+		setTimeout(_=>{div.classList.add("hide")}, 500)
+		setTimeout(_=>{div.remove()}, 1000)
+	}
+	let close_but = div.querySelector(".abort")
+	close_but.onclick = close
+	if (action){
+		let act_but = div.querySelector(".action")
+		if (act_but){
+			act_but.onclick = _=>{action(close)}
+		}
+	}
+	document.querySelector("#downloads-list").appendChild(div)
+}
+async function checkDonateNotification(){
+	function checkLastNotificationTime(){
+		let currentTime = Math.floor(Date.now() / 1000);
+		let lastNotificationTime = localStorage.getItem('lastNotificationTime');
+		if (!lastNotificationTime || (currentTime - lastNotificationTime > 12*60*60)) {
+			return true;
+		} else { return false; }
+	}
+	function after(){
+		let currentTime = Math.floor(Date.now() / 1000);
+		localStorage.setItem('lastNotificationTime', currentTime);
+	}
+	if (checkLastNotificationTime()){
+		AdsTemplate("donate")
+		after()
+		await sleep(1000)
+	}
+}
+
+
 async function logout_user(){
 	if (confirm(LANG.get("confirm_logout", "Are you sure?"))){
 		await eel.logout_user()
@@ -274,6 +334,15 @@ function initLoginButton(logined=false){
 async function initAccountLogin(){
 	let logined = await eel.is_user_logined()()
 	initLoginButton(logined)
+}
+
+async function check_updates(){
+	let avaliable = await eel.check_updates()()
+	if (avaliable){
+		let el = document.querySelector("#update_avalible")
+		el.classList.add("show")
+		LANG.set(el, "update_avalible", "title")
+	}
 }
 
 async function initSettings(){

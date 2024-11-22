@@ -4,6 +4,17 @@ import time
 import undetected_chromedriver as uc
 
 
+class Version:
+	def __init__(self, version:str):
+		self.version_str = version
+		self.version_arr = version.split('.')
+		self.version_value = int("".join(self.version_arr))
+	def __str__(self):return self.version_str
+	def __repr__(self):return str(self)
+	def __lt__(self, other): return self.version_value < other
+	def __gt__(self, other): return self.version_value > other
+
+
 def resource_path(relative_path):
 	""" Get absolute path to resource, works for dev and for PyInstaller """
 	base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))

@@ -6,6 +6,7 @@
 
 	"settings_button": "Settings",
 	"version": "Version",
+	"update_avalible": "Update available!",
 	"close": "Close",
 
 	"theme": "Theme",
@@ -30,5 +31,8 @@
 	"download_button": "Download",
 
 	"abort_download": "Abort",
-	"open_file": "Open file"
+	"open_file": "Open file",
+
+	"donate_button": "Donate",
+	"donate_text": "Enjoying this free program?<br>Support development with a small donation!"
 }

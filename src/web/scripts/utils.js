@@ -1,3 +1,6 @@
+function sleep(ms){
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
 function applyTheme(name="auto"){
 	if (name == "auto"){
 		const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");

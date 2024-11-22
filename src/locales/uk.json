@@ -6,6 +6,7 @@
 
 	"settings_button": "Налаштування",
 	"version": "Версія",
+	"update_avalible": "Доступне оновлення!",
 	"close": "Закрити",
 
 	"theme": "Тема",
@@ -30,5 +31,8 @@
 	"download_button": "Завантажити",
 
 	"abort_download": "Скасувати",
-	"open_file": "Відкрити файл"
+	"open_file": "Відкрити файл",
+
+	"donate_button": "Пожертвувати",
+	"donate_text": "Подобається ця програма?<br>Підтримайте розробку донатом!"
 }

@@ -5,13 +5,14 @@ import asyncio
 import uuid
 import json
 import subprocess
+import requests
 from tkinter import Tk
 from tkinter.filedialog import askdirectory
 from threading import Thread
 from utils import *
 
 
-__version__ = "0.0.5"
+__version__ = "0.0.6"
 @eel.expose
 def get_app_version(): return __version__
 
@@ -41,6 +42,15 @@ def get_lang_data(lang_code):
 	if os.path.exists(lang_file):
 		with open(lang_file, 'r', encoding='utf-8') as f:
 			return json.loads(f.read())
+
+
+@eel.expose
+def check_updates():
+	r = requests.get('https://api.github.com/repos/SuperZombi/MyTube-GUI/releases/latest')
+	if r.ok:
+		remote_version = Version(r.json()['tag_name'])
+		current_version = Version(__version__)
+		if remote_version > current_version: return True
 
 
 @eel.expose
