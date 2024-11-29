@@ -1,0 +1,85 @@
+{
+ "version": "auto-py-to-exe-configuration_v1",
+ "pyinstallerOptions": [
+  {
+   "optionDest": "noconfirm",
+   "value": true
+  },
+  {
+   "optionDest": "filenames",
+   "value": "C:/Users/rost/Python/MyTube Downloader/GUI/main.py"
+  },
+  {
+   "optionDest": "onefile",
+   "value": true
+  },
+  {
+   "optionDest": "console",
+   "value": false
+  },
+  {
+   "optionDest": "icon_file",
+   "value": "C:/Users/rost/Python/MyTube Downloader/GUI/icon.ico"
+  },
+  {
+   "optionDest": "name",
+   "value": "MyTube Downloader"
+  },
+  {
+   "optionDest": "upx_dir",
+   "value": "C:/Users/rost/Python/auto-py-to-exe-master/upx"
+  },
+  {
+   "optionDest": "clean_build",
+   "value": false
+  },
+  {
+   "optionDest": "strip",
+   "value": false
+  },
+  {
+   "optionDest": "noupx",
+   "value": false
+  },
+  {
+   "optionDest": "disable_windowed_traceback",
+   "value": false
+  },
+  {
+   "optionDest": "version_file",
+   "value": "C:/Users/rost/Python/MyTube Downloader/GUI/ver.txt"
+  },
+  {
+   "optionDest": "uac_admin",
+   "value": false
+  },
+  {
+   "optionDest": "uac_uiaccess",
+   "value": false
+  },
+  {
+   "optionDest": "argv_emulation",
+   "value": false
+  },
+  {
+   "optionDest": "bootloader_ignore_signals",
+   "value": false
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/rost/Python/MyTube Downloader/GUI/web;web/"
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/rost/Python/MyTube Downloader/GUI/ffmpeg.exe;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/rost/Python/MyTube Downloader/GUI/locales;locales/"
+  }
+ ],
+ "nonPyinstallerOptions": {
+  "increaseRecursionLimit": true,
+  "manualArguments": ""
+ }
+}
