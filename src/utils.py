@@ -20,6 +20,11 @@ def resource_path(relative_path):
 	base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
 	return os.path.join(base_path, relative_path)
 
+def get_downloads_folder():
+	downloads = os.path.join(os.path.expanduser("~"), "Downloads")
+	if os.path.exists(downloads): return downloads
+	return os.path.join(os.getcwd(), "downloads")
+
 def strtime(seconds):
 	hours = seconds // 3600
 	minutes = (seconds % 3600) // 60

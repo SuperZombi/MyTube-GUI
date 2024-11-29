@@ -18,7 +18,7 @@ def get_app_version(): return __version__
 
 SETTINGS_FILE = "app.settings.json"
 SETTINGS = {
-	"output_folder": os.path.join(os.getcwd(), "downloads"),
+	"output_folder": get_downloads_folder(),
 	"theme": "auto",
 	"language": "en"
 }
