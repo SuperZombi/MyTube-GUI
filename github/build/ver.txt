@@ -15,8 +15,9 @@ VSVersionInfo(
       StringTable(
         u'040904B0',
         [
+        StringStruct(u'FileDescription', u'MyTube Downloader'),
         StringStruct(u'FileVersion', u'0.0.7'),
-        StringStruct(u'ProductName', u'MyTube Downloader'),
+        StringStruct(u'ProductName', u'MyTube'),
         StringStruct(u'ProductVersion', u'0.0.7')])
       ]), 
     VarFileInfo([VarStruct(u'Translation', [0, 1200])])
