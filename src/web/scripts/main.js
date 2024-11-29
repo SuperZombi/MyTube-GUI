@@ -35,20 +35,36 @@ window.onload = _=>{
 function getDownloadItem(id){
 	return document.querySelector(`#downloads-list .download-item[id="${id}"]`)
 }
+
 eel.expose(download_progress)
 function download_progress(id, current, total){
-	getDownloadItem(id).style.setProperty("--percent", Math.round(current * 100 / total));
+	let item = getDownloadItem(id)
+	item.style.setProperty("--percent", Math.round(current * 100 / total));
+	item.setAttribute("status", "download")
 }
+
+eel.expose(ffmpeg_progress)
+function ffmpeg_progress(id, current, total){
+	let item = getDownloadItem(id)
+	item.style.setProperty("--percent", Math.round(current * 100 / total));
+	item.setAttribute("status", "ffmpeg")
+}
+
 eel.expose(finish_download)
 function finish_download(id, result){
 	let item = getDownloadItem(id)
 	item.classList.add("finished")
 	item.setAttribute("file", result)
+	item.removeAttribute("status")
 }
+
 eel.expose(abort_download)
 function abort_download(id){
-	getDownloadItem(id).classList.add("finished", "aborted")
+	let item = getDownloadItem(id)
+	item.classList.add("finished", "aborted")
+	item.removeAttribute("status")
 }
+
 
 function initSearch(){
 	let el = document.querySelector(".search-container")
@@ -221,7 +237,9 @@ function createDownloadElement(id, title, author, cover, time){
 				<div class="title">${title}</div>
 				<div class="author">${author}</div>
 				<div class="sub">
-					<div class="time">${time}</div><div class="percent"></div>
+					<div class="time">${time}</div>
+					<div class="percent"></div>
+					<div class="status"></div>
 				</div>
 			</div>
 			<div class="abort"><i class="fa-solid fa-circle-xmark"></i></div>
@@ -258,7 +276,7 @@ function createAdElement(text, action_text="", action=null){
 	let div = document.createElement('div');
 	div.className = "download-item ads"
 	div.innerHTML = `
-		<div class="ads-content">
+		<div class="content">
 			<div class="text">${text}</div>
 			${action_text ? `<div class="tiny-button action">${action_text}</div>` : ""}
 		</div>

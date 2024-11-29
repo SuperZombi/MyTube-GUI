@@ -12,7 +12,7 @@ from threading import Thread
 from utils import *
 
 
-__version__ = "0.0.6"
+__version__ = "0.0.7"
 @eel.expose
 def get_app_version(): return __version__
 
@@ -109,6 +109,12 @@ class ProgressMyTube:
 	async def __call__(self, current, total):
 		eel.download_progress(self.id, current, total)
 
+class FFmpegProgress:
+	def __init__(self, downloader_id):
+		self.id = downloader_id
+	async def __call__(self, current, total):
+		eel.ffmpeg_progress(self.id, current, total)
+
 
 DOWNLOADERS = {}
 @eel.expose
@@ -118,7 +124,9 @@ def download(downloader_id):
 	def handler():
 		try:
 			asyncio.run(downloader(
-				SETTINGS.get("output_folder"), on_progress=ProgressMyTube(downloader_id),
+				SETTINGS.get("output_folder"),
+				on_progress=ProgressMyTube(downloader_id),
+				ffmpeg_progress=FFmpegProgress(downloader_id),
 				on_success=lambda f: eel.finish_download(downloader_id, f),
 				on_abort=lambda:eel.abort_download(downloader_id)
 			))

@@ -551,6 +551,22 @@ select {
 	counter-reset: variable var(--percent);
 	content: '[' counter(variable) '%]';
 }
+
+#downloads-list .download-item .status{
+	position: relative;
+	font-family: 'FontAwesome';
+}
+#downloads-list .download-item[status="download"] .status::before{
+	position: absolute;
+	content: "\f063";
+	animation: downloading 1.2s ease infinite;
+}
+#downloads-list .download-item[status="ffmpeg"] .status::before{
+	position: absolute;
+	content: "\f110";
+	animation: rotating 2s linear infinite;
+}
+
 #downloads-list .download-item .abort i{
 	color: red;
 	background: white;
@@ -604,7 +620,7 @@ select {
 	max-height: calc-size(min-content, size);
 	order: 1;
 }
-#downloads-list .ads .ads-content{
+#downloads-list .ads .content{
 	width: 100%;
 	display: flex;
 	flex-direction: column;
@@ -655,6 +671,24 @@ select {
 		left: 100%;
 		transform: translateX(100%);
 	}
+}
+@keyframes downloading {
+	0% {
+		transform: translateY(-100%);
+		opacity: 0;
+	}
+	40%, 70% {
+		transform: translateY(0);
+		opacity: 1;
+	}
+	100% {
+		transform: translateY(100%);
+		opacity: 0;
+	}
+}
+@keyframes rotating {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
 }
 
 
