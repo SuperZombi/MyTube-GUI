@@ -19,7 +19,7 @@
   },
   {
    "optionDest": "icon_file",
-   "value": "C:/Users/rost/Python/MyTube Downloader/GUI/icon.ico"
+   "value": "C:/Users/rost/Python/MyTube Downloader/GUI/build/icon.ico"
   },
   {
    "optionDest": "name",
@@ -47,7 +47,7 @@
   },
   {
    "optionDest": "version_file",
-   "value": "C:/Users/rost/Python/MyTube Downloader/GUI/ver.txt"
+   "value": "C:/Users/rost/Python/MyTube Downloader/GUI/build/ver.txt"
   },
   {
    "optionDest": "uac_admin",
