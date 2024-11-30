@@ -12,11 +12,12 @@ from threading import Thread
 from utils import *
 
 
-__version__ = "0.0.7"
+__version__ = "0.7.1"
 @eel.expose
 def get_app_version(): return __version__
 
-SETTINGS_FILE = "app.settings.json"
+APPDATA = local()
+SETTINGS_FILE = os.path.join(APPDATA, "app.settings.json")
 SETTINGS = {
 	"output_folder": get_downloads_folder(),
 	"theme": "auto",
@@ -66,7 +67,7 @@ def raiseError(msg):
 	eel.displayError(strip_ansi_codes(msg))
 
 
-COOKIES_FILE = "cookies.json"
+COOKIES_FILE = os.path.join(APPDATA, "cookies.json")
 COOKIES_DATA = None
 def get_cookies():
 	global COOKIES_DATA

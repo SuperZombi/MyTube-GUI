@@ -25,6 +25,17 @@ def get_downloads_folder():
 	if os.path.exists(downloads): return downloads
 	return os.path.join(os.getcwd(), "downloads")
 
+def local():
+	try:
+		with open('test.tmp', 'w') as f:
+			f.write('test')
+		os.remove('test.tmp')
+		return os.getcwd()
+	except IOError:
+		data_dir = os.path.join(os.getenv('APPDATA'), 'MyTube')
+		os.makedirs(data_dir, exist_ok=True)
+		return data_dir
+
 def strtime(seconds):
 	hours = seconds // 3600
 	minutes = (seconds % 3600) // 60

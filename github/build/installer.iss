@@ -6,8 +6,8 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{D4F2B9A2-8809-43BF-B170-9F0B52508B00}
 AppName=MyTube Downloader
-AppVersion=0.0.7
-;AppVerName=MyTube Downloader 0.0.7
+AppVersion=0.7.1
+;AppVerName=MyTube Downloader 0.7.1
 AppPublisher=Super Zombi
 AppPublisherURL=https://github.com/SuperZombi/MyTube-GUI
 AppSupportURL=https://github.com/SuperZombi/MyTube-GUI
@@ -55,6 +55,7 @@ Name: "{autodesktop}\MyTube Downloader"; Filename: "{app}\MyTube Downloader.exe"
 [UninstallDelete]
 Type: files; Name: "{app}\app.settings.json"
 Type: files; Name: "{app}\cookies.json"
+Type: filesandordirs; Name: "{userappdata}\MyTube"
 
 [Run]
 Filename: "{app}\MyTube Downloader.exe"; Description: "{cm:LaunchProgram,MyTube Downloader}"; Flags: nowait postinstall skipifsilent
