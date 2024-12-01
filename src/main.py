@@ -12,7 +12,7 @@ from threading import Thread
 from utils import *
 
 
-__version__ = "0.7.1"
+__version__ = "0.7.2"
 @eel.expose
 def get_app_version(): return __version__
 
@@ -88,6 +88,7 @@ def get_yt_obj(url):
 
 @eel.expose
 def get_vid_info(url):
+	if "playlist" in url: return raiseError("Playlists are not supported!")
 	try:
 		yt = get_yt_obj(url)
 		return {
@@ -190,4 +191,8 @@ def login_user():
 
 
 eel.init(resource_path("web"))
-eel.start("index.html", port=0)
+for browser in ['chrome', 'edge', 'default']:
+	try:
+		eel.start("index.html", mode=browser, port=8090)
+		break
+	except Exception: None

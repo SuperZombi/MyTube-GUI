@@ -194,7 +194,7 @@ body{
 	background: var(--body-color);
 	width: 85dvw;
 	height: 85dvh;
-	max-width: 800px;
+	max-width: 650px;
 	top: 50%;
 	position: absolute;
 	left: 50%;
@@ -203,6 +203,11 @@ body{
 	scale: 0;
 	transition: 0.5s;
 	overflow: hidden;
+}
+.popup .popup-wrapper .content{
+	height: 100%;
+	overflow-y: auto;
+	scrollbar-width: thin;
 }
 .popup.show .popup-wrapper{
 	scale: 1;
@@ -445,8 +450,7 @@ select {
 	color: rgb(218, 218, 218);
 	border-radius: 12px;
 	border: 2px solid grey;
-	margin: auto;
-	margin-top: 10px;
+	margin: 10px auto;
 	cursor: pointer;
 	position: relative;
 	overflow: hidden;
