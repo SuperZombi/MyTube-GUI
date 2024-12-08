@@ -10,9 +10,10 @@ from tkinter import Tk
 from tkinter.filedialog import askdirectory
 from threading import Thread
 from utils import *
+import traceback
 
 
-__version__ = "0.7.2"
+__version__ = "0.7.3"
 @eel.expose
 def get_app_version(): return __version__
 
@@ -63,8 +64,11 @@ def request_folder():
 	return folder
 
 
-def raiseError(msg):
-	eel.displayError(strip_ansi_codes(msg))
+def raiseError(msg, traceback=""):
+	eel.displayError(
+		strip_ansi(str(msg)),
+		strip_ansi(str(traceback))
+	)
 
 
 COOKIES_FILE = os.path.join(APPDATA, "cookies.json")
@@ -102,7 +106,7 @@ def get_vid_info(url):
 			}
 		}
 	except Exception as e:
-		raiseError(str(e))
+		raiseError(e, traceback.format_exc())
 
 
 class ProgressMyTube:
@@ -133,7 +137,7 @@ def download(downloader_id):
 				on_abort=lambda:eel.abort_download(downloader_id)
 			))
 		except Exception as e:
-			raiseError(str(e))
+			raiseError(e, traceback.format_exc())
 
 	Thread(target=handler, daemon=True).start()
 
@@ -190,9 +194,13 @@ def login_user():
 		None
 
 
-eel.init(resource_path("web"))
-for browser in ['chrome', 'edge', 'default']:
-	try:
-		eel.start("index.html", mode=browser, port=8090)
-		break
-	except Exception: None
+def run():
+	for browser in ['chrome', 'edge', 'default']:
+		try:
+			eel.start("index.html", mode=browser, port=8090)
+			return
+		except Exception: None
+
+if __name__ == "__main__":
+	eel.init(resource_path("web"))
+	run()

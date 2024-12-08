@@ -208,6 +208,7 @@ body{
 	height: 100%;
 	overflow-y: auto;
 	scrollbar-width: thin;
+	max-height: 86vh;
 }
 .popup.show .popup-wrapper{
 	scale: 1;
@@ -699,15 +700,22 @@ select {
 #error-popup .popup-wrapper{
 	height: fit-content;
 }
-#error-popup .text {
+#error-popup .content {
+	padding: 20px;
+	padding-top: 30px;
+}
+#error-popup code {
 	padding: 12px 20px;
-	margin: 20px 10px;
 	position: relative;
 	font-family: monospace;
 	background: linear-gradient(90deg, rgb(255, 0, 0, 0.1), transparent);
 	border-radius: 5px 0 0 5px;
+	display: block;
+	white-space: pre;
+	overflow-x: auto;
+	scrollbar-width: thin;
 }
-#error-popup .text::before{
+#error-popup code::before{
 	content: '';
 	position: absolute;
 	top: 0;

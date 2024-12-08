@@ -45,7 +45,7 @@ def strtime(seconds):
 	string += f"{minutes:02}:{seconds:02}"
 	return string
 
-def strip_ansi_codes(text):
+def strip_ansi(text):
 	ansi_escape = re.compile(r'\x1B[@-_][0-?]*[ -/]*[@-~]')
 	return ansi_escape.sub('', text)
 

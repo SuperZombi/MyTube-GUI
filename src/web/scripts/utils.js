@@ -111,13 +111,28 @@ function initPopups(){
 }
 
 eel.expose(displayError)
-function displayError(message){
+function displayError(message, traceback=""){
 	let popup = document.querySelector("#error-popup")
 	let area = popup.querySelector(".content")
-	let el = document.createElement("div")
-	el.className = "text"
-	el.innerText = message
-	area.appendChild(el)
+
+	let error_short = document.createElement("code")
+	error_short.style.whiteSpace = "normal"
+	error_short.innerText = message
+	area.appendChild(error_short)
+
+	if (traceback){
+		let details = document.createElement("details")
+		details.innerHTML = `
+			<summary style="display:flex;margin-top:10px">
+				<div class="simple-button">${LANG.get("details","Details")}</div>
+			</summary>
+		`
+		let error_detail = document.createElement("code")
+		error_detail.style.marginTop = "10px"
+		error_detail.innerText = traceback
+		details.appendChild(error_detail)
+		area.appendChild(details)
+	}
 	popup.classList.add("show")
 	const errorHandler = _=>{
 		popup.removeEventListener("close", errorHandler, true);
