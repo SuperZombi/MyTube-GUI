@@ -1,14 +1,15 @@
 <h1 align="center">MyTube GUI</h1>
 <h3 align="center">YouTube Media Downloader</h3>
 <p align="center">
+    (User Interface for <a href="https://github.com/SuperZombi/MyTube">MyTube</a>)
+</p>
+<p align="center">
     <img src="github/images/icon.png" height="128px">
 </p>
 <p align="center">
     <img src="https://shields.io/badge/version-0.7.4-blue"><br>
-    <a href="#donate"><img src="https://shields.io/badge/💲-Support_the_Project-2ea043"></a>
-</p>
-<p align="center">
-    User Interface for <a href="https://github.com/SuperZombi/MyTube">MyTube</a>.
+    <a href="https://github.com/SuperZombi/MyTube-GUI/releases/latest"><img src="https://shields.io/badge/⇩-Download-2ea043"></a><br/>
+    <a href="#donate"><img src="https://shields.io/badge/💲-Support_Project-2ea043"></a>
 </p>
 
 <p align="center">
