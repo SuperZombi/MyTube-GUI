@@ -166,7 +166,6 @@ body{
 #settings .grid{
 	margin: 10px;
 	display: grid;
-	grid-template-rows: 1fr 1fr;
 	grid-template-columns: 1fr 1fr;
 	align-items: center;
 	justify-items: center;
@@ -314,7 +313,7 @@ input[type="text"][readonly]{
 
 select {
 	font-size: 1rem;
-	min-width: 100px;
+	min-width: 110px;
 	padding: 5px;
 	border-radius: 8px;
 	cursor: pointer;

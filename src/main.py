@@ -13,7 +13,7 @@ from utils import *
 import traceback
 
 
-__version__ = "0.7.4"
+__version__ = "0.7.5"
 @eel.expose
 def get_app_version(): return __version__
 
@@ -95,14 +95,29 @@ def get_vid_info(url):
 	if "playlist" in url: return raiseError("Playlists are not supported!")
 	try:
 		yt = get_yt_obj(url)
+		video_streams = yt.streams.filter(only_video=True, no_muxed=True).order_by("res", "fps")
+		audio_streams = yt.streams.filter(only_audio=True).order_by("abr")
+
+		def filter_streams(streams, kwargs):
+			temp = streams.filter(**kwargs)
+			return temp if len(temp) > 0 else streams
+
+		temp_videos = video_streams
+		if SETTINGS.get("video_quality", "").isnumeric():
+			prefer_q = int(SETTINGS.get("video_quality"))
+			temp_videos = filter_streams(temp_videos, {"max_res": prefer_q})
+
 		return {
 			"title": yt.title,
 			"author": yt.author,
 			"thumb": yt.thumbnail.url,
 			"type": yt.type,
 			"streams": {
-				"video": streams_to_list(yt.streams.filter(only_video=True, no_muxed=True).order_by("res", "fps")),
-				"audio": streams_to_list(yt.streams.filter(only_audio=True).order_by("abr"))
+				"video": streams_to_list(video_streams),
+				"audio": streams_to_list(audio_streams)
+			},
+			"select": {
+				"video": stream_to_json(temp_videos.first())
 			}
 		}
 	except Exception as e:

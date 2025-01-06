@@ -138,8 +138,8 @@ function processResults(results, element){
 	let author = element.querySelector("[name=video-author]")
 	author.value = results.author
 	document.querySelector(".stream-selectors").innerHTML = ""
-	createSelect(results.streams.video, "video")
-	createSelect(results.streams.audio, "audio")
+	createSelect(results.streams.video, "video", results.select.video)
+	createSelect(results.streams.audio, "audio", results.select.audio)
 	let radio_input = null
 	if (results.type == "music"){
 		radio_input = document.querySelector(".radio-tabs input[value=music]")
@@ -150,10 +150,10 @@ function processResults(results, element){
 	radio_input.onchange();
 }
 
-function createSelect(streams, type){
+function createSelect(streams, type, default_stream=null){
 	let selected_el = document.createElement("div")
 	selected_el.setAttribute("name", type)
-	selected_el.appendChild(createStreamElement(streams[0], type))
+	selected_el.appendChild(createStreamElement(default_stream || streams[0], type))
 	document.querySelector(".stream-selectors").appendChild(selected_el)
 
 	let left_menu = document.querySelector("#search-result .left-menu")
@@ -183,7 +183,9 @@ function createSelect(streams, type){
 		}
 	})
 	left_menu.appendChild(menu_el)
-	menu_el.querySelector(`.stream[itag="${streams[0].itag}"]`).classList.add("selected")
+
+	let default_itag = default_stream ? default_stream.itag : streams[0].itag;
+	menu_el.querySelector(`.stream[itag="${default_itag}"]`).classList.add("selected")
 
 	selected_el.onclick = _=>{
 		left_menu.querySelectorAll(".select.show").forEach(x=>{
@@ -374,19 +376,21 @@ async function initSettings(){
 
 	let SETTINGS = await eel.request_settings()()
 
-	let selects_actions = {
-		"theme": val=>{applyTheme(val)},
-		"language": async val=>{
+	let selects_actions = async (action, val)=>{
+		if (action === "theme"){applyTheme(val)}
+		else if (action === "language"){
 			let lang_data = await eel.get_lang_data(val)();
 			LANG.update(lang_data)
 		}
 	}
 
 	area.querySelectorAll('select').forEach(select=>{
-		select.value = SETTINGS[select.name]
-		selects_actions[select.name](SETTINGS[select.name])
+		if (SETTINGS[select.name]){
+			select.value = SETTINGS[select.name]
+			selects_actions(select.name, SETTINGS[select.name])
+		}
 		select.onchange = async _=>{
-			selects_actions[select.name](select.value)
+			selects_actions(select.name, select.value)
 			await eel.change_setting(select.name, select.value)
 		}
 	})

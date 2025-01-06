@@ -108,6 +108,26 @@
 			</div>
 			<hr>
 			<div class="grid">
+				<span>
+					<i class="fa-solid fa-video"></i>
+					<span>Video quality</span>
+				</span>
+				<select name="video_quality">
+					<option value="max" selected>Best</option>
+					<option value="1080">1080</option>
+					<option value="720">720</option>
+				</select>
+			</div>
+			<hr>
+			<div class="grid">
+				<span lang_="output_folder">Output Folder</span>
+				<div class="row">
+					<input type="text" dir="rtl" name="output_folder" readonly>
+					<button class="tiny-button" id="output_folder" lang_title="select"><i class="fa-solid fa-folder"></i></button>
+				</div>
+			</div>
+			<hr>
+			<div class="grid">
 				<div>
 					<i class="fa-solid fa-circle-user" style="vertical-align:text-top;"></i>
 					<span lang_="account">Account</span>
@@ -116,12 +136,6 @@
 					<span>Sign in</span>
 					<i class="fa-solid fa-right-to-bracket"></i>
 				</button>
-					
-				<span lang_="output_folder">Output Folder</span>
-				<div class="row">
-					<input type="text" dir="rtl" name="output_folder" readonly>
-					<button class="tiny-button" id="output_folder" lang_title="select"><i class="fa-solid fa-folder"></i></button>
-				</div>
 			</div>
 		</div>
 	</div>

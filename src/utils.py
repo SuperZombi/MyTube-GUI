@@ -49,22 +49,22 @@ def strip_ansi(text):
 	ansi_escape = re.compile(r'\x1B[@-_][0-?]*[ -/]*[@-~]')
 	return ansi_escape.sub('', text)
 
+def stream_to_json(stream):
+	data = {"itag": stream.itag, "filesize": stream.filesize}
+	if stream.isVideo:
+		data["quality"] = stream.res
+		data["extra"] = stream.fps
+		data["codec"] = stream.videoCodec.split(".")[0]
+		data["extension"] = stream.videoExt
+	elif stream.isAudio:
+		data["quality"] = stream.abr
+		data["extra"] = stream.lang
+		data["codec"] = stream.audioCodec.split(".")[0]
+		data["extension"] = stream.audioExt
+	return data
+
 def streams_to_list(streams):
-	output = []
-	for stream in streams:
-		data = {"itag": stream.itag, "filesize": stream.filesize}
-		if stream.isVideo:
-			data["quality"] = stream.res
-			data["extra"] = stream.fps
-			data["codec"] = stream.videoCodec.split(".")[0]
-			data["extension"] = stream.videoExt
-		elif stream.isAudio:
-			data["quality"] = stream.abr
-			data["extra"] = stream.lang
-			data["codec"] = stream.audioCodec.split(".")[0]
-			data["extension"] = stream.audioExt
-		output.append(data)
-	return output
+	return [stream_to_json(stream) for stream in streams]
 
 def get_user_cookies():
 	driver = uc.Chrome()
