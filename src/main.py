@@ -13,7 +13,7 @@ from utils import *
 import traceback
 
 
-__version__ = "0.7.5"
+__version__ = "0.7.6"
 @eel.expose
 def get_app_version(): return __version__
 
