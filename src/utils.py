@@ -73,8 +73,11 @@ def get_user_cookies():
 
 	while True:
 		time.sleep(1)
-		if driver.current_url == "https://www.youtube.com/":
-			break
+		try:
+			if driver.current_url == "https://www.youtube.com/":
+				break
+		except:
+			return
 
 	cookies = driver.get_cookies()
 	driver.quit()

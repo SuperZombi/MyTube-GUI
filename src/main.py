@@ -13,7 +13,7 @@ from utils import *
 import traceback
 
 
-__version__ = "0.7.6"
+__version__ = "0.7.7"
 @eel.expose
 def get_app_version(): return __version__
 
@@ -205,8 +205,8 @@ def login_user():
 			with open(COOKIES_FILE, 'w') as f:
 				f.write(json.dumps(cookies))
 			return True
-	except:
-		None
+	except Exception as e:
+		raiseError(getattr(e, "msg", e))
 
 
 def run():
