@@ -23,6 +23,8 @@
 	"confirm_logout": "Вы уверены, что хотите выйти?",
 
 	"output_folder": "Папка сохранения",
+	"video_quality": "Качество видео",
+	"video_quality_best": "Лучшее",
 	"select": "Выбрать",
 
 	"stream_video": "Видео",

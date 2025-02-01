@@ -23,6 +23,8 @@
 	"confirm_logout": "Are you sure want to log out?",
 
 	"output_folder": "Output Folder",
+	"video_quality": "Video quality",
+	"video_quality_best": "Best",
 	"select": "Select",
 
 	"stream_video": "Video",
