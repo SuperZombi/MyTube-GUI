@@ -11,9 +11,10 @@ from tkinter.filedialog import askdirectory
 from threading import Thread
 from utils import *
 import traceback
+import socket
 
 
-__version__ = "0.7.7"
+__version__ = "0.7.8"
 @eel.expose
 def get_app_version(): return __version__
 
@@ -209,12 +210,25 @@ def login_user():
 		raiseError(getattr(e, "msg", e))
 
 
+def check_socket(host='localhost', port=8000):
+	try:
+		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		sock.bind((host, port))
+		sock.close()
+		return True
+	except OSError as e:
+		if e.args[0] == 10048:
+			print("Program already running")
+			return False
+
 def run():
 	for browser in ['chrome', 'edge', 'default']:
-		try:
-			eel.start("index.html", mode=browser, port=8090)
-			return
-		except Exception: None
+		if check_socket(port=8090):
+			try:
+				eel.start("index.html", mode=browser, port=8090)
+				return
+			except Exception: None
+		else: return
 
 if __name__ == "__main__":
 	eel.init(resource_path("web"))
