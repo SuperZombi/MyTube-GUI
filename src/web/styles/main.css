@@ -193,7 +193,7 @@ body{
 	background: var(--body-color);
 	width: 85dvw;
 	height: 85dvh;
-	max-width: 650px;
+	max-width: 600px;
 	top: 50%;
 	position: absolute;
 	left: 50%;
@@ -489,6 +489,8 @@ select {
 	padding: 20px;
 	gap: var(--gaping);
 	overflow: hidden;
+	max-width: 750px;
+	margin: auto;
 }
 #downloads-list .download-item{
 	--percent: 0;

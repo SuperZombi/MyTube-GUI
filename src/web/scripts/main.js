@@ -25,7 +25,6 @@ window.onload = _=>{
 
 		let data = await eel.get_downloader_process(url, streams, {"title": title, "author": author})()
 		document.querySelector("#search-result .close").click();
-		document.querySelector(".search-container input").value = ""
 		await checkDonateNotification()
 		createDownloadElement(data.id, data.title, data.author, data.thumb, data.time)
 		eel.download(data.id)
@@ -116,6 +115,7 @@ async function startSearch(link){
 	document.querySelector(".loader").classList.remove("anim")
 	document.querySelector(".search-container").classList.remove("disabled")
 	if (info){
+		document.querySelector(".search-container input").value = ""
 		let popup = document.querySelector("#search-result")
 		popup.classList.add("show")
 		popup.setAttribute("url", link.trim())
