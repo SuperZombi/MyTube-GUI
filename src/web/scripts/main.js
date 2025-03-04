@@ -235,7 +235,7 @@ function createDownloadElement(id, title, author, cover, time){
 	div.innerHTML = `
 		<img class="cover" src="${cover}"><div class="progress"></div>
 		<div class="info">
-			<div>
+			<div class="metadata">
 				<div class="title">${title}</div>
 				<div class="author">${author}</div>
 				<div class="sub">

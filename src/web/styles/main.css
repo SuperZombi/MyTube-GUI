@@ -540,6 +540,9 @@ select {
 	padding: 12px;
 	box-shadow: 0 0 25px black inset;
 }
+#downloads-list .download-item .metadata{
+	filter: drop-shadow(0 0 4px black);
+}
 #downloads-list .download-item .author{
 	font-size: 0.9rem;
 	color: lightgrey;
