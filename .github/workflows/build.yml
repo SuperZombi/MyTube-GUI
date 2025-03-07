@@ -6,9 +6,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-
+  build_portable:
     runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+        working-directory: ./src
     steps:
     - name: Checkout the repo
       uses: actions/checkout@v4
@@ -34,6 +37,23 @@ jobs:
       # with:
       #   name: MyTube_portable
       #   path: ./src/dist/MyTube Downloader.exe
+
+  build_installer:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+        working-directory: ./src
+    - name: Checkout the repo
+      uses: actions/checkout@v4
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r ./github/requirements.txt
 
     - name: Build installer
       run: pyinstaller --noconfirm --onedir --noconsole --icon="../github/build/icon.ico" --name="MyTube Downloader" --contents-directory="." --noupx --version-file="../github/build/ver.txt" --add-data="web\\;.\\web" --add-data="locales\\;.\\locales" --add-data="../github/build/ffmpeg.exe;." main.py
