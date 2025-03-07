@@ -431,6 +431,43 @@ select {
 	flex-direction: column;
 	gap: 5px;
 }
+.select.show:has(details){
+	gap: 6px;
+}
+
+.select details{
+	background: #bbb;
+	border-radius: 20px;
+	z-index: 0;
+	order: 1;
+}
+.select details summary{
+	font-size: 14pt;
+	padding: 5px;
+	user-select: none;
+	cursor: pointer;
+	background: #bbb;
+	border-radius: 10px;
+	position: relative;
+}
+.select details.selected {
+	order: 0;
+}
+.select details.selected:not([open]) summary:before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	margin: -2px;
+	border-radius: 12px;
+	background: linear-gradient(45deg, #c700ff, #00a3ff);
+}
+.select details .data{
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	margin: 5px;
+}
 
 
 #search-result .download{

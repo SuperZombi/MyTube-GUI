@@ -14,7 +14,7 @@ import traceback
 import socket
 
 
-__version__ = "0.7.8"
+__version__ = "0.8.0"
 @eel.expose
 def get_app_version(): return __version__
 
@@ -99,6 +99,11 @@ def get_vid_info(url):
 		video_streams = yt.streams.filter(only_video=True, no_muxed=True).order_by("res", "fps")
 		audio_streams = yt.streams.filter(only_audio=True).order_by("abr")
 
+		a_streams_by_lang = {}
+		for a_stream in audio_streams:
+			lang_code = a_stream.lang if a_stream.lang else "_"
+			a_streams_by_lang.setdefault(lang_code, []).append(a_stream)
+
 		def filter_streams(streams, kwargs):
 			temp = streams.filter(**kwargs)
 			return temp if len(temp) > 0 else streams
@@ -115,7 +120,7 @@ def get_vid_info(url):
 			"type": yt.type,
 			"streams": {
 				"video": streams_to_list(video_streams),
-				"audio": streams_to_list(audio_streams)
+				"audio": streams_to_dict(a_streams_by_lang)
 			},
 			"select": {
 				"video": stream_to_json(temp_videos.first())

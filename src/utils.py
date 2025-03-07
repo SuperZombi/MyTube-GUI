@@ -66,6 +66,9 @@ def stream_to_json(stream):
 def streams_to_list(streams):
 	return [stream_to_json(stream) for stream in streams]
 
+def streams_to_dict(streams):
+	return {lang_code: [stream_to_json(stream) for stream in streams[lang_code]] for lang_code in streams}
+
 def get_user_cookies():
 	driver = uc.Chrome()
 	driver.set_window_size(620,720)

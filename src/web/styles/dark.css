@@ -21,6 +21,12 @@
 		background: #282c35;
 		color: white;
 	}
+	.select details{
+		background: #272b35;
+	}
+	.select details summary{
+		background: #272b35;
+	}
 	.stream{
 		background: #313541;
 	}

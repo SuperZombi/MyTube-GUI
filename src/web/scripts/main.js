@@ -150,12 +150,18 @@ function processResults(results, element){
 	radio_input.onchange();
 }
 
-function createSelect(streams, type, default_stream=null){
-	let selected_el = document.createElement("div")
-	selected_el.setAttribute("name", type)
-	selected_el.appendChild(createStreamElement(default_stream || streams[0], type))
-	document.querySelector(".stream-selectors").appendChild(selected_el)
+function isElementInViewport (el, parrent) {
+	let rect = el.getBoundingClientRect();
+	return (
+		rect.top >= 0 &&
+		rect.bottom <= parrent.clientHeight
+	);
+}
 
+function createSelect(streams, type, default_stream=null){
+	if (Object.keys(streams).includes("_")){
+		streams = streams["_"]
+	}
 	let left_menu = document.querySelector("#search-result .left-menu")
 	let menu_el = document.createElement("div")
 	menu_el.className = "select"
@@ -168,31 +174,95 @@ function createSelect(streams, type, default_stream=null){
 	else {
 		menu_el.innerHTML = `<h3>Select the Stream:</h3>`
 	}
-	streams.forEach(stream=>{
-		let raw_stream = createStreamElement(stream, type)
-		let stream_el = raw_stream.cloneNode(true)
-		menu_el.appendChild(stream_el)
-		stream_el.onclick = _=>{
-			menu_el.querySelectorAll(".stream.selected").forEach(x=>{
-				x.classList.remove("selected")
-			})
-			stream_el.classList.add("selected")
-			selected_el.innerHTML = ""
-			selected_el.appendChild(raw_stream.cloneNode(true))
-			left_menu.classList.remove("open")
-		}
-	})
 	left_menu.appendChild(menu_el)
 
-	let default_itag = default_stream ? default_stream.itag : streams[0].itag;
-	menu_el.querySelector(`.stream[itag="${default_itag}"]`).classList.add("selected")
-
+	let selected_el = document.createElement("div")
+	selected_el.setAttribute("name", type)
+	document.querySelector(".stream-selectors").appendChild(selected_el)
 	selected_el.onclick = _=>{
 		left_menu.querySelectorAll(".select.show").forEach(x=>{
 			x.classList.remove("show")
 		})
 		left_menu.classList.add("open")
 		menu_el.classList.add("show")
+
+		menu_el.querySelectorAll("details").forEach(x=>{
+			x.open = x.classList.contains("selected")
+		})
+
+		left_menu.scrollTop = 0
+		let selected_stream = menu_el.querySelector(".stream.selected")
+		if (!isElementInViewport(selected_stream, left_menu)){
+			selected_stream.scrollIntoView({"block": "center"})
+		}
+	}
+	let default_stream_auto;
+
+	if (Array.isArray(streams)){
+		default_stream_auto = default_stream || streams[0]
+		
+		streams.forEach(stream=>{
+			let raw_stream = createStreamElement(stream, type)
+			let stream_el = raw_stream.cloneNode(true)
+			menu_el.appendChild(stream_el)
+			stream_el.onclick = _=>{
+				menu_el.querySelectorAll(".stream.selected").forEach(x=>{
+					x.classList.remove("selected")
+				})
+				stream_el.classList.add("selected")
+				selected_el.innerHTML = ""
+				selected_el.appendChild(raw_stream.cloneNode(true))
+				left_menu.classList.remove("open")
+			}
+		})
+	} else {
+		default_stream_auto = default_stream || streams[Object.keys(streams)[0]][0]
+
+		for (const [lang, value] of Object.entries(streams)){
+			let details = document.createElement("details")
+			let summary = document.createElement("summary")
+			let content = document.createElement("div")
+			content.className = "data"
+			summary.innerHTML = lang
+			details.appendChild(summary)
+			details.appendChild(content)
+			details.onclick = _=>{
+				left_menu.querySelectorAll("details[open]").forEach(x=>{
+					if (x != details){
+						x.open = false
+					}
+				})
+			}
+
+			value.forEach(stream=>{
+				let raw_stream = createStreamElement(stream, type)
+				let stream_el = raw_stream.cloneNode(true)
+				content.appendChild(stream_el)
+				stream_el.onclick = _=>{
+					menu_el.querySelectorAll(".stream.selected").forEach(x=>{
+						x.classList.remove("selected")
+					})
+					menu_el.querySelectorAll("details.selected").forEach(x=>{
+						x.classList.remove("selected")
+					})
+					stream_el.classList.add("selected")
+					details.classList.add("selected")
+					selected_el.innerHTML = ""
+					selected_el.appendChild(raw_stream.cloneNode(true))
+					left_menu.classList.remove("open")
+				}
+			})
+			menu_el.appendChild(details)
+		}
+		left_menu.appendChild(menu_el)
+	}
+
+	selected_el.appendChild(createStreamElement(default_stream_auto, type))
+	menu_el.querySelector(`.stream[itag="${default_stream_auto.itag}"]`).classList.add("selected")
+
+	let details_selected = menu_el.querySelector(`details:has(.stream[itag="${default_stream_auto.itag}"])`)
+	if (details_selected){
+		details_selected.classList.add("selected")
 	}
 }
 function createStreamElement(stream, type){
