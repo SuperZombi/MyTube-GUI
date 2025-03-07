@@ -5,12 +5,8 @@ on:
     types: [published]
   workflow_dispatch:
 
-permissions:
-  contents: read
-
 jobs:
-  build:
-
+  prepare:
     runs-on: windows-latest
     defaults:
       run:
@@ -28,6 +24,14 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r ../github/requirements.txt
 
+  build_portable:
+    runs-on: windows-latest
+    needs: prepare
+    defaults:
+      run:
+        shell: pwsh
+        working-directory: ./src
+    steps:
     - name: Build portable
       run: pyinstaller --noconfirm --onefile --noconsole --icon="../github/build/icon.ico" --name="MyTube_portable" --upx-dir="../github/build/upx" --version-file="../github/build/ver.txt" --add-data="web\\;.\\web" --add-data="locales\\;.\\locales" --add-data="../github/build/ffmpeg.exe;." main.py
 
@@ -42,6 +46,14 @@ jobs:
       #   name: MyTube_portable
       #   path: ./src/dist/MyTube Downloader.exe
 
+  build_installer:
+    runs-on: windows-latest
+    needs: prepare
+    defaults:
+      run:
+        shell: pwsh
+        working-directory: ./src
+    steps:
     - name: Build installer
       run: pyinstaller --noconfirm --onedir --noconsole --icon="../github/build/icon.ico" --name="MyTube Downloader" --contents-directory="." --noupx --version-file="../github/build/ver.txt" --add-data="web\\;.\\web" --add-data="locales\\;.\\locales" --add-data="../github/build/ffmpeg.exe;." main.py
 
