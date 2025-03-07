@@ -5,17 +5,10 @@ on:
     types: [published]
   workflow_dispatch:
 
-permissions:
-  contents: read
-
 jobs:
   build:
 
     runs-on: windows-latest
-    defaults:
-      run:
-        shell: pwsh
-        working-directory: ./src
     steps:
     - name: Checkout the repo
       uses: actions/checkout@v4
@@ -26,7 +19,7 @@ jobs:
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r ../github/requirements.txt
+        pip install -r ./github/requirements.txt
 
     - name: Build portable
       run: pyinstaller --noconfirm --onefile --noconsole --icon="../github/build/icon.ico" --name="MyTube_portable" --upx-dir="../github/build/upx" --version-file="../github/build/ver.txt" --add-data="web\\;.\\web" --add-data="locales\\;.\\locales" --add-data="../github/build/ffmpeg.exe;." main.py
