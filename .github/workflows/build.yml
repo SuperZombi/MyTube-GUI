@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_portable:
+  build-portable:
     runs-on: windows-latest
     defaults:
       run:
@@ -22,7 +22,7 @@ jobs:
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r ./github/requirements.txt
+        pip install -r ../github/requirements.txt
 
     - name: Build portable
       run: pyinstaller --noconfirm --onefile --noconsole --icon="../github/build/icon.ico" --name="MyTube_portable" --upx-dir="../github/build/upx" --version-file="../github/build/ver.txt" --add-data="web\\;.\\web" --add-data="locales\\;.\\locales" --add-data="../github/build/ffmpeg.exe;." main.py
@@ -33,17 +33,14 @@ jobs:
         file: "./src/dist/MyTube_portable.exe"
         overwrite: true
         update_latest_release: true
-      # uses: actions/upload-artifact@v4
-      # with:
-      #   name: MyTube_portable
-      #   path: ./src/dist/MyTube Downloader.exe
 
-  build_installer:
+  build-installer:
     runs-on: windows-latest
     defaults:
       run:
         shell: pwsh
         working-directory: ./src
+    steps:
     - name: Checkout the repo
       uses: actions/checkout@v4
     - name: Set up Python 3.12
@@ -53,7 +50,7 @@ jobs:
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r ./github/requirements.txt
+        pip install -r ../github/requirements.txt
 
     - name: Build installer
       run: pyinstaller --noconfirm --onedir --noconsole --icon="../github/build/icon.ico" --name="MyTube Downloader" --contents-directory="." --noupx --version-file="../github/build/ver.txt" --add-data="web\\;.\\web" --add-data="locales\\;.\\locales" --add-data="../github/build/ffmpeg.exe;." main.py
@@ -70,7 +67,3 @@ jobs:
         file: "./github/build/MyTube_setup.exe"
         overwrite: true
         update_latest_release: true
-      # uses: actions/upload-artifact@v4
-      # with:
-      #   name: MyTube_setup
-      #   path: ./github/build/MyTube_setup.exe
