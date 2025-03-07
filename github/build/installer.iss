@@ -26,10 +26,10 @@ AllowNoIcons=yes
 ; Remove the following line to run in administrative install mode (install for all users.)
 PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
-OutputDir=C:\Users\rost\Downloads
-OutputBaseFilename=mytube_setup
-SetupIconFile=C:\Users\rost\Python\MyTube Downloader\GUI\build\icon.ico
-UninstallDisplayIcon=C:\Users\rost\Python\MyTube Downloader\GUI\build\icon.ico
+OutputDir="."
+OutputBaseFilename=MyTube_setup
+SetupIconFile="..\..\github\build\icon.ico"
+UninstallDisplayIcon="{app}\MyTube Downloader.exe"
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -43,8 +43,9 @@ Name: "ukrainian"; MessagesFile: "compiler:Languages\Ukrainian.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "C:\Users\rost\Python\auto-py-to-exe-master\output\MyTube Downloader\MyTube Downloader.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\rost\Python\auto-py-to-exe-master\output\MyTube Downloader\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\..\src\dist\MyTube Downloader\MyTube Downloader.exe"; DestDir: "{app}"; Flags: ignoreversion
+
+Source: "..\..\src\dist\MyTube Downloader\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

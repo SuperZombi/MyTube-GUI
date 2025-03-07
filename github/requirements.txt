@@ -1,0 +1,5 @@
+Eel
+MyTube_dlp
+requests
+undetected-chromedriver
+pyinstaller
