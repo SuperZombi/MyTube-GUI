@@ -443,6 +443,8 @@ async function initSettings(){
 	let area = document.querySelector("#settings .content")
 	let app_ver = await eel.get_app_version()()
 	document.querySelector("#app_version").innerHTML = app_ver
+	let yt_dlp_ver = await eel.get_yt_dlp_version()()
+	document.querySelector("#yt_dlp_version").innerHTML = yt_dlp_ver
 
 	let SETTINGS = await eel.request_settings()()
 

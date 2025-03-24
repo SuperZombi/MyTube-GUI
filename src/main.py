@@ -12,11 +12,14 @@ from threading import Thread
 from utils import *
 import traceback
 import socket
+from yt_dlp.version import __version__ as YT_DLP_VERSION
 
 
-__version__ = "0.8.0"
+__version__ = "0.8.1"
 @eel.expose
 def get_app_version(): return __version__
+@eel.expose
+def get_yt_dlp_version(): return YT_DLP_VERSION
 
 APPDATA = local()
 SETTINGS_FILE = os.path.join(APPDATA, "app.settings.json")
