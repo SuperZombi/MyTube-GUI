@@ -57,4 +57,10 @@
 	.tiny-button:active{
 		background: #444;
 	}
+	input[type="checkbox"]{
+		background-color: grey;
+	}
+	input[type="checkbox"]:hover {
+		background-color: #aaa;
+	}
 }

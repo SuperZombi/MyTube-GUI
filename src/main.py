@@ -15,7 +15,7 @@ import socket
 from yt_dlp.version import __version__ as YT_DLP_VERSION
 
 
-__version__ = "0.8.1"
+__version__ = "0.8.2"
 @eel.expose
 def get_app_version(): return __version__
 @eel.expose
@@ -26,7 +26,8 @@ SETTINGS_FILE = os.path.join(APPDATA, "app.settings.json")
 SETTINGS = {
 	"output_folder": get_downloads_folder(),
 	"theme": "auto",
-	"language": "en"
+	"language": "en",
+	"check_updates": True
 }
 @eel.expose
 def request_settings(): return SETTINGS
@@ -56,8 +57,11 @@ def check_updates():
 	if r.ok:
 		remote_version = Version(r.json()['tag_name'])
 		current_version = Version(__version__)
-		if remote_version > current_version: return True
-
+		if remote_version > current_version:
+			return {
+				"current": str(current_version),
+				"new": str(remote_version)
+			}
 
 @eel.expose
 def request_folder():

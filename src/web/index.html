@@ -88,22 +88,23 @@
 				<span>yt-dlp</span>:
 				<span class="version" id="yt_dlp_version"></span>
 			</h4>
+			<div class="grid">
+				<i class="fa-solid fa-circle-up"></i>
+				<span lang_="check_updates">Check updates</span>
+				<input type="checkbox" name="check_updates">
+			</div>
 			<hr>
 			<div class="grid">
-				<span>
-					<i class="fa-solid fa-brush"></i>
-					<span lang_="theme">Theme</span>
-				</span>
+				<i class="fa-solid fa-brush"></i>
+				<span lang_="theme">Theme</span>
 				<select name="theme">
 					<option value="auto" lang_="theme_auto" selected>Auto</option>
 					<option value="light" lang_="theme_light">Light</option>
 					<option value="dark" lang_="theme_dark">Dark</option>
 				</select>
 
-				<span>
-					<i class="fa-solid fa-globe"></i>
-					<span lang_="language">Language</span>
-				</span>
+				<i class="fa-solid fa-globe"></i>
+				<span lang_="language">Language</span>
 				<select name="language">
 					<option value="en" selected>English</option>
 					<option value="ru">Русский</option>
@@ -112,10 +113,8 @@
 			</div>
 			<hr>
 			<div class="grid">
-				<span>
-					<i class="fa-solid fa-video"></i>
-					<span lang_="video_quality">Video quality</span>
-				</span>
+				<i class="fa-solid fa-video"></i>
+				<span lang_="video_quality">Video quality</span>
 				<select name="video_quality">
 					<option value="max" selected lang_="video_quality_best">Best</option>
 					<option value="1080">1080p</option>
@@ -124,6 +123,7 @@
 			</div>
 			<hr>
 			<div class="grid">
+				<i class="fa-solid fa-folder"></i>
 				<span lang_="output_folder">Output Folder</span>
 				<div class="row">
 					<input type="text" dir="rtl" name="output_folder" readonly>
@@ -132,10 +132,8 @@
 			</div>
 			<hr>
 			<div class="grid">
-				<div>
-					<i class="fa-solid fa-circle-user" style="vertical-align:text-top;"></i>
-					<span lang_="account">Account</span>
-				</div>
+				<i class="fa-solid fa-circle-user"></i>
+				<span lang_="account">Account</span>
 				<button class="simple-button" id="login_button">
 					<span>Sign in</span>
 					<i class="fa-solid fa-right-to-bracket"></i>
@@ -149,6 +147,18 @@
 	<div class="popup-wrapper">
 		<i class="fa-regular fa-circle-xmark close" lang_title="close"></i>
 		<div class="content"></div>
+	</div>
+</div>
+
+<div class="popup" id="new-version-popup">
+	<div class="popup-wrapper">
+		<i class="fa-regular fa-circle-xmark close" lang_title="close"></i>
+		<div class="content">
+			<div class="update-icon"><i class="fa-solid fa-circle-up"></i></div>
+			<span lang_="update_avalible">Update available!</span>
+			<div class="versions"></div>
+			<a class="simple-button" href="https://github.com/SuperZombi/MyTube-GUI/releases" target="_blank" lang_="download_button">Download</a>
+		</div>
 	</div>
 </div>
 

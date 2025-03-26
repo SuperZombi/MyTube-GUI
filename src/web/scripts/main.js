@@ -7,7 +7,6 @@ window.onload = _=>{
 	initPopups()
 	initStreamTypeRadios()
 	initAccountLogin()
-	check_updates()
 
 	document.querySelector("#search-result .download").onclick = async _=>{
 		let results = document.querySelector("#search-result")
@@ -432,6 +431,21 @@ async function check_updates(){
 		let el = document.querySelector("#update_avalible")
 		el.classList.add("show")
 		LANG.set(el, "update_avalible", "title")
+
+		let createVersion = ver=>{
+			let e = document.createElement("span")
+			e.className = "version"
+			e.innerHTML = ver
+			return e
+		}
+
+		let versions = document.querySelector("#new-version-popup .versions")
+		versions.innerHTML = ""
+		versions.appendChild(createVersion(avaliable.current))
+		versions.innerHTML += " ⮕ "
+		versions.appendChild(createVersion(avaliable.new))
+
+		document.querySelector("#new-version-popup").classList.add("show")
 	}
 }
 
@@ -476,5 +490,20 @@ async function initSettings(){
 			await eel.change_setting("output_folder", answ)
 			out_inp.value = answ
 		}
+	}
+
+	area.querySelectorAll('input[type="checkbox"]').forEach(checkbox=>{
+		if (SETTINGS[checkbox.name]){
+			checkbox.checked = SETTINGS[checkbox.name]
+			selects_actions(checkbox.name, SETTINGS[checkbox.name])
+		}
+		checkbox.onchange = async _=>{
+			selects_actions(checkbox.name, checkbox.checked)
+			await eel.change_setting(checkbox.name, checkbox.checked)
+		}
+	})
+
+	if (SETTINGS.check_updates){
+		check_updates()
 	}
 }
