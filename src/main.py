@@ -234,7 +234,7 @@ def check_socket(host='localhost', port=8000):
 			return False
 
 def run():
-	for browser in ['chrome', 'edge', 'default']:
+	for browser in ['chrome', 'default']:
 		if check_socket(port=8090):
 			try:
 				eel.start("index.html", mode=browser, port=8090)
