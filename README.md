@@ -4,7 +4,7 @@
     (User Interface for <a href="https://github.com/SuperZombi/MyTube">MyTube</a>)
 </p>
 <p align="center">
-    <img src="github/images/icon.png" height="128px">
+    <img src="github/images/icon.png" width="128px">
 </p>
 <p align="center">
     <img src="https://shields.io/badge/version-0.8.2-blue"><br>
