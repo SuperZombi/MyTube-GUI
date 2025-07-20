@@ -63,4 +63,8 @@
 	input[type="checkbox"]:hover {
 		background-color: #aaa;
 	}
+	#search-result .download{
+		background: linear-gradient(135deg, #33a036, #147917);
+		background-size: 100%;
+	}
 }

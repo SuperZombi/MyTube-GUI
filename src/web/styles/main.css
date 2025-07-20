@@ -512,21 +512,16 @@ select {
 
 #search-result .download{
 	padding: 8px 10px;
-	padding-left: 0;
 	font-size: 18px;
 	display: flex;
 	align-items: center;
 	border: none;
 	outline: none;
-	background: linear-gradient(
-		180deg,
-		rgb(56, 56, 56) 0%,
-		rgb(36, 36, 36) 66%,
-		rgb(41, 41, 41) 100%
-	);
-	color: rgb(218, 218, 218);
+	background: linear-gradient(135deg, #52c755, #33a036);
+	background-size: 100%;
+	color: rgb(220, 220, 220);
+	box-shadow: 0 0 2px rgb(0, 200, 0);
 	border-radius: 12px;
-	border: 2px solid grey;
 	margin: 10px auto;
 	cursor: pointer;
 	position: relative;
@@ -535,13 +530,16 @@ select {
 }
 #search-result .download i{
 	position: absolute;
-	left: 0;
-	width: 32px;
+	left: 10px;
 	transition: 0.2s;
 }
 #search-result .download span{
-	margin-left: 32px;
+	margin-left: 25px;
 	transition: 0.2s;
+}
+#search-result .download:hover {
+	background-size: 200% !important;
+	box-shadow: 0 0 5px rgb(0, 200, 0), inset 0 0 2px rgb(200, 255, 200, 0.6);
 }
 #search-result .download:hover i{
 	left: 50%;
