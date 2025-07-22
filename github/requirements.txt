@@ -4,3 +4,4 @@ requests
 undetected-chromedriver
 pyinstaller
 comtypes
+pywin32
