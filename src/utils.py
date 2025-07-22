@@ -3,7 +3,7 @@ import re
 import time
 import undetected_chromedriver as uc
 from comtypes.client import GetModule, CreateObject
-from comtypes.gen.TaskbarLib import ITaskbarList3
+import comtypes.gen.TaskbarLib as tbl
 from win32gui import GetForegroundWindow
 from pythoncom import CoInitialize
 GetModule("./TaskbarLib.tlb")
@@ -26,7 +26,7 @@ class Progress:
 		CoInitialize()
 		self.taskbar = CreateObject(
 			"{56FDF344-FD6D-11d0-958A-006097C9A090}",
-			interface=ITaskbarList3)
+			interface=tbl.ITaskbarList3)
 		self.taskbar.ActivateTab(self.window_handle)
 		self.taskbar.HrInit()
 
