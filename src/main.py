@@ -15,7 +15,7 @@ import socket
 from yt_dlp.version import __version__ as YT_DLP_VERSION
 
 
-__version__ = "0.8.3"
+__version__ = "0.9.0"
 @eel.expose
 def get_app_version(): return __version__
 @eel.expose
