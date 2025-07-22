@@ -155,16 +155,24 @@ def update_taskbar_progress(op_id, percent, work_type):
 	global Taskbar
 	if not Taskbar: Taskbar = Progress()
 
-	if work_type == "download":
-		real_progress = percent / 2
-	elif work_type == "merge":
-		real_progress = (percent + 100) / 2
-	OPERATIONS[op_id] = int(real_progress)
-	active = [v for v in OPERATIONS.values() if v < 100]
-	if active:
-		Taskbar.set_progress(int(sum(active) / len(active)))
-	else:
-		Taskbar.reset()
+	if op_id in OPERATIONS.keys():
+		if work_type == "download":
+			real_progress = percent / 2
+		elif work_type == "merge":
+			real_progress = (percent + 100) / 2
+		else:
+			real_progress = percent
+
+		OPERATIONS[op_id] = int(real_progress)
+
+		if work_type == "finish":
+			del OPERATIONS[op_id]
+
+		active = [v for v in OPERATIONS.values() if v < 100]
+		if active:
+			Taskbar.set_progress(int(sum(active) / len(active)))
+		else:
+			Taskbar.reset()
 
 
 Taskbar = None
@@ -174,6 +182,7 @@ DOWNLOADERS = {}
 def download(downloader_id):
 	downloader = DOWNLOADERS[downloader_id]
 	downloader.FFMPEG = resource_path("ffmpeg.exe")
+	OPERATIONS[downloader_id] = 0
 	def handler():
 		try:
 			asyncio.run(downloader(
@@ -217,6 +226,7 @@ def get_downloader_process(url, streams, metadata):
 def abort_download(downloader_id):
 	downloader = DOWNLOADERS.get(downloader_id)
 	if downloader: downloader.abort()
+	update_taskbar_progress(downloader_id, 100, "finish")
 
 @eel.expose
 def open_output_file(file):
