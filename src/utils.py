@@ -2,6 +2,11 @@ import sys, os
 import re
 import time
 import undetected_chromedriver as uc
+from comtypes.client import GetModule, CreateObject
+from comtypes.gen.TaskbarLib import ITaskbarList3
+from win32gui import GetForegroundWindow
+from pythoncom import CoInitialize
+GetModule("./TaskbarLib.tlb")
 
 
 class Version:
@@ -13,6 +18,24 @@ class Version:
 	def __repr__(self):return str(self)
 	def __lt__(self, other): return self.version_value < other
 	def __gt__(self, other): return self.version_value > other
+
+
+class Progress:
+	def __init__(self):
+		self.window_handle = GetForegroundWindow()
+		CoInitialize()
+		self.taskbar = CreateObject(
+			"{56FDF344-FD6D-11d0-958A-006097C9A090}",
+			interface=ITaskbarList3)
+		self.taskbar.ActivateTab(self.window_handle)
+		self.taskbar.HrInit()
+
+	def set_progress(self, value: int, max: int = 100):
+		self.taskbar.setProgressValue(self.window_handle, value, max)
+
+	def reset(self):
+		self.taskbar.SetProgressState(self.window_handle, 0)
+		self.set_progress(0)
 
 
 def resource_path(relative_path):

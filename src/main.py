@@ -15,7 +15,7 @@ import socket
 from yt_dlp.version import __version__ as YT_DLP_VERSION
 
 
-__version__ = "0.8.2"
+__version__ = "0.8.3"
 @eel.expose
 def get_app_version(): return __version__
 @eel.expose
@@ -141,15 +141,34 @@ class ProgressMyTube:
 	def __init__(self, downloader_id):
 		self.id = downloader_id
 	async def __call__(self, current, total):
+		update_taskbar_progress(self.id, round(current * 100 / total), "download")
 		eel.download_progress(self.id, current, total)
 
 class FFmpegProgress:
 	def __init__(self, downloader_id):
 		self.id = downloader_id
 	async def __call__(self, current, total):
+		update_taskbar_progress(self.id, round(current * 100 / total), "merge")
 		eel.ffmpeg_progress(self.id, current, total)
 
+def update_taskbar_progress(op_id, percent, work_type):
+	global Taskbar
+	if not Taskbar: Taskbar = Progress()
 
+	if work_type == "download":
+		real_progress = percent / 2
+	elif work_type == "merge":
+		real_progress = (percent + 100) / 2
+	OPERATIONS[op_id] = int(real_progress)
+	active = [v for v in OPERATIONS.values() if v < 100]
+	if active:
+		Taskbar.set_progress(int(sum(active) / len(active)))
+	else:
+		Taskbar.reset()
+
+
+Taskbar = None
+OPERATIONS = {}
 DOWNLOADERS = {}
 @eel.expose
 def download(downloader_id):
