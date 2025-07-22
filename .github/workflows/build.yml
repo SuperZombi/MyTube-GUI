@@ -25,7 +25,7 @@ jobs:
         pip install -r ../github/requirements.txt
 
     - name: Build portable
-      run: pyinstaller --noconfirm --onefile --noconsole --icon="../github/build/icon.ico" --name="MyTube_portable" --upx-dir="../github/build/upx" --version-file="../github/build/ver.txt" --add-data="web\\;.\\web" --add-data="locales\\;.\\locales" --add-data="../github/build/ffmpeg.exe;." main.py
+      run: pyinstaller --noconfirm --onefile --noconsole --icon="../github/build/icon.ico" --name="MyTube_portable" --upx-dir="../github/build/upx" --version-file="../github/build/ver.txt" --add-data="web\\;.\\web" --add-data="locales\\;.\\locales" --add-data="../github/build/ffmpeg.exe;." --add-data="../github/build/TaskbarLib.tlb;." main.py
 
     - name: Upload the portable
       uses: xresloader/upload-to-github-release@v1
@@ -53,7 +53,7 @@ jobs:
         pip install -r ../github/requirements.txt
 
     - name: Build installer
-      run: pyinstaller --noconfirm --onedir --noconsole --icon="../github/build/icon.ico" --name="MyTube Downloader" --contents-directory="." --noupx --version-file="../github/build/ver.txt" --add-data="web\\;.\\web" --add-data="locales\\;.\\locales" --add-data="../github/build/ffmpeg.exe;." main.py
+      run: pyinstaller --noconfirm --onedir --noconsole --icon="../github/build/icon.ico" --name="MyTube Downloader" --contents-directory="." --noupx --version-file="../github/build/ver.txt" --add-data="web\\;.\\web" --add-data="locales\\;.\\locales" --add-data="../github/build/ffmpeg.exe;." --add-data="../github/build/TaskbarLib.tlb;." main.py
 
     - name: Compile installer
       uses: Minionguyjpro/Inno-Setup-Action@v1.2.4
