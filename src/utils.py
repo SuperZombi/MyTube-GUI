@@ -3,10 +3,10 @@ import re
 import time
 import undetected_chromedriver as uc
 import comtypes.client as cc
-import comtypes.gen.TaskbarLib as tbl
 from win32gui import GetForegroundWindow
 from pythoncom import CoInitialize
 cc.GetModule("./TaskbarLib.tlb")
+import comtypes.gen.TaskbarLib as tbl
 
 
 class Version:
