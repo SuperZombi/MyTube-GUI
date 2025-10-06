@@ -58,7 +58,7 @@ jobs:
     - name: Compile installer
       uses: Minionguyjpro/Inno-Setup-Action@v1.2.7
       with:
-        path: ".\github\build\installer.iss"
+        path: "./github/build/installer.iss"
         options: /O+
 
     - name: Upload the installer
