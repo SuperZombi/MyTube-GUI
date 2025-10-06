@@ -56,9 +56,9 @@ jobs:
       run: pyinstaller --noconfirm --onedir --noconsole --icon="../github/build/icon.ico" --name="MyTube Downloader" --contents-directory="." --noupx --version-file="../github/build/ver.txt" --add-data="web\\;.\\web" --add-data="locales\\;.\\locales" --add-data="../github/build/ffmpeg.exe;." --add-data="../github/build/TaskbarLib.tlb;." main.py
 
     - name: Compile installer
-      uses: Minionguyjpro/Inno-Setup-Action@v1.2.4
+      uses: Minionguyjpro/Inno-Setup-Action@v1.2.7
       with:
-        path: .\github\build\installer.iss
+        path: ".\github\build\installer.iss"
         options: /O+
 
     - name: Upload the installer
