@@ -153,6 +153,7 @@ def get_remote_ytdlp():
 
 
 def check_ytdlp(local_dlp):
+	errors = []
 	remote_dlp = get_remote_ytdlp()
 	if remote_dlp:
 		local_dlp_ver = Version(local_dlp) if local_dlp else Version("0")
@@ -161,8 +162,19 @@ def check_ytdlp(local_dlp):
 			print(f"Current yt-dlp version: {local_dlp_ver}")
 			print(f"Downloading yt-dlp {remote_dlp_ver}")
 			ytdlp_path = os.path.join(os.getcwd(), "yt-dlp.exe")
-			download_file(remote_dlp["url"], ytdlp_path)
+			try:
+				download_file(remote_dlp["url"], ytdlp_path)
+			except PermissionError:
+				print("[Failed to download yt-dlp]")
+				print("[PermissionError] Run the program as administrator")
+				errors.append("PermissionError")
+			except Exception as e:
+				print("[Failed to download yt-dlp]")
+				print(e)
+				print("---------")
 	else:
 		if not local_dlp:
 			print("App can not work without yt-dlp")
-			return True
+			errors.append("no_yt-dlp")
+
+	return errors

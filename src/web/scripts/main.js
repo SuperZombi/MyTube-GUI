@@ -455,12 +455,24 @@ async function check_ytdlp_version(){
 }
 async function check_ytdlp_updates(){
 	let fail = await eel.check_ytdlp_updates()()
-	if (fail){
-		displayError("Internet Connection Error:\n\nFailed to download yt-dlp!\nApp can not work without yt-dlp!", "", _=>{
-			window.location.reload()
-		})
+	if (fail.lenght > 0){
+		if (fail.includes("no_yt-dlp") && fail.includes("PermissionError")){
+			displayError("Permission Error:\n\nFailed to install yt-dlp!\nRun the program as administrator!", "", _=>{
+				window.location.reload()
+			})
+		}
+		else if (fail.includes("no_yt-dlp")){
+			displayError("Internet Connection Error:\n\nFailed to download yt-dlp!\nApp can not work without yt-dlp!", "", _=>{
+				window.location.reload()
+			})
+		}
+		else if (fail.includes("PermissionError")){
+			displayError("Permission Error:\n\nFailed to update yt-dlp!\nRun the program as administrator!")
+		}
 	}
-	await check_ytdlp_version()
+	else {
+		await check_ytdlp_version()
+	}
 }
 
 async function initSettings(){
