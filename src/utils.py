@@ -125,13 +125,7 @@ def get_remote_version():
 		print("[Failed to check app updates]")
 		print(e)
 		print("---------")
-		return Version("0")
-
-
-def ytdlp():
-	ytdlp_path = os.path.join(os.getcwd(), "yt-dlp.exe")
-	if os.path.exists(ytdlp_path):
-		return ytdlp_path
+	return Version("0")
 
 def get_remote_ytdlp():
 	try:
