@@ -17,6 +17,9 @@
 	.search-container i:hover{
 		background: #414656;
 	}
+	.search-container.disabled{
+		opacity: 1;
+	}
 	input[type="text"]{
 		background: #282c35;
 		color: white;

@@ -451,10 +451,14 @@ async function check_updates(){
 async function check_ytdlp_version(){
 	let yt_dlp_ver = await eel.get_yt_dlp_version()()
 	document.querySelector("#yt_dlp_version").innerHTML = yt_dlp_ver ? yt_dlp_ver : '<span style="color:red">undefined</span>'
+	if (yt_dlp_ver){
+		document.querySelector(".search-container").classList.remove("disabled")
+	}
 	return yt_dlp_ver
 }
 async function check_ytdlp_updates(){
 	let fail = await eel.check_ytdlp_updates()()
+	document.querySelector(".loader").classList.remove("anim")
 	if (fail.length > 0){
 		if (fail.includes("no_yt-dlp") && fail.includes("PermissionError")){
 			displayError("Permission Error:\n\nFailed to install yt-dlp!\nRun the program as administrator!", "", _=>{
