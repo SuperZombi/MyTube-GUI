@@ -56,6 +56,7 @@ Name: "{autodesktop}\MyTube Downloader"; Filename: "{app}\MyTube Downloader.exe"
 [UninstallDelete]
 Type: files; Name: "{app}\app.settings.json"
 Type: files; Name: "{app}\cookies.json"
+Type: files; Name: "{app}\yt-dlp.exe"
 Type: filesandordirs; Name: "{userappdata}\MyTube"
 
 [Run]
