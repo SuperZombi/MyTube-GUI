@@ -38,5 +38,8 @@
 	"open_file": "Open file",
 
 	"donate_button": "Donate",
-	"donate_text": "Enjoying this free program?<br>Support development with a small donation!"
+	"donate_text": "Enjoying this free program?<br>Support development with a small donation!",
+	
+	"PermissionError": "Permission Error:\n\nFailed to install yt-dlp!\nRun the program as administrator!",
+	"InternetError": "Internet Connection Error:\n\nFailed to download yt-dlp!"
 }

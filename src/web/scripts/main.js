@@ -461,17 +461,17 @@ async function check_ytdlp_updates(){
 	document.querySelector(".loader").classList.remove("anim")
 	if (fail.length > 0){
 		if (fail.includes("no_yt-dlp") && fail.includes("PermissionError")){
-			displayError("Permission Error:\n\nFailed to install yt-dlp!\nRun the program as administrator!", "", _=>{
+			displayError(LANG.get("PermissionError"), "", _=>{
 				window.location.reload()
 			})
 		}
 		else if (fail.includes("no_yt-dlp")){
-			displayError("Internet Connection Error:\n\nFailed to download yt-dlp!\nApp can not work without yt-dlp!", "", _=>{
+			displayError(LANG.get("InternetError"), "", _=>{
 				window.location.reload()
 			})
 		}
 		else if (fail.includes("PermissionError")){
-			displayError("Permission Error:\n\nFailed to update yt-dlp!\nRun the program as administrator!")
+			displayError(LANG.get("PermissionError"))
 		}
 	}
 	else {
