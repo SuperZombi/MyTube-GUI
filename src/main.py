@@ -12,14 +12,17 @@ from threading import Thread
 from utils import *
 import traceback
 import socket
-from yt_dlp.version import __version__ as YT_DLP_VERSION
 
 
-__version__ = "0.9.0"
+__version__ = Version("1.0.0")
 @eel.expose
-def get_app_version(): return __version__
+def get_app_version(): return str(__version__)
 @eel.expose
-def get_yt_dlp_version(): return YT_DLP_VERSION
+def get_yt_dlp_version():
+	try:
+		return MyTube.ytdlp_version()
+	except:
+		return
 
 APPDATA = local()
 SETTINGS_FILE = os.path.join(APPDATA, "app.settings.json")
@@ -53,15 +56,21 @@ def get_lang_data(lang_code):
 
 @eel.expose
 def check_updates():
-	r = requests.get('https://api.github.com/repos/SuperZombi/MyTube-GUI/releases/latest')
-	if r.ok:
-		remote_version = Version(r.json()['tag_name'])
-		current_version = Version(__version__)
-		if remote_version > current_version:
-			return {
-				"current": str(current_version),
-				"new": str(remote_version)
-			}
+	remote_version = get_remote_version()
+	if remote_version > __version__:
+		return {
+			"current": str(__version__),
+			"new": str(remote_version)
+		}
+
+@eel.expose
+def check_ytdlp_updates():
+	try:
+		local_dlp = MyTube.ytdlp_version()
+	except:
+		local_dlp = None
+	return check_ytdlp(local_dlp)
+
 
 @eel.expose
 def request_folder():

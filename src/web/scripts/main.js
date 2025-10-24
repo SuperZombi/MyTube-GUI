@@ -448,6 +448,20 @@ async function check_updates(){
 		document.querySelector("#new-version-popup").classList.add("show")
 	}
 }
+async function check_ytdlp_version(){
+	let yt_dlp_ver = await eel.get_yt_dlp_version()()
+	document.querySelector("#yt_dlp_version").innerHTML = yt_dlp_ver ? yt_dlp_ver : '<span style="color:red">undefined</span>'
+	return yt_dlp_ver
+}
+async function check_ytdlp_updates(){
+	let fail = await eel.check_ytdlp_updates()()
+	if (fail){
+		displayError("Internet Connection Error:\n\nFailed to download yt-dlp!\nApp can not work without yt-dlp!", "", _=>{
+			window.location.reload()
+		})
+	}
+	await check_ytdlp_version()
+}
 
 async function initSettings(){
 	document.querySelector(".settings-button").onclick = _=>{
@@ -457,8 +471,6 @@ async function initSettings(){
 	let area = document.querySelector("#settings .content")
 	let app_ver = await eel.get_app_version()()
 	document.querySelector("#app_version").innerHTML = app_ver
-	let yt_dlp_ver = await eel.get_yt_dlp_version()()
-	document.querySelector("#yt_dlp_version").innerHTML = yt_dlp_ver
 
 	let SETTINGS = await eel.request_settings()()
 
@@ -503,7 +515,14 @@ async function initSettings(){
 		}
 	})
 
+	let yt_dlp_ver = await check_ytdlp_version()
+
 	if (SETTINGS.check_updates){
 		check_updates()
+		check_ytdlp_updates()
+	} else {
+		if (!yt_dlp_ver){
+			check_ytdlp_updates()
+		}
 	}
 }

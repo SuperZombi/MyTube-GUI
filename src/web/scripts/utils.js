@@ -111,7 +111,7 @@ function initPopups(){
 }
 
 eel.expose(displayError)
-function displayError(message, traceback=""){
+function displayError(message, traceback="", on_close=null){
 	let popup = document.querySelector("#error-popup")
 	let area = popup.querySelector(".content")
 
@@ -137,6 +137,7 @@ function displayError(message, traceback=""){
 	const errorHandler = _=>{
 		popup.removeEventListener("close", errorHandler, true);
 		area.innerHTML = ""
+		if (on_close){on_close()}
 	}
 	popup.addEventListener("close", errorHandler, true)
 }

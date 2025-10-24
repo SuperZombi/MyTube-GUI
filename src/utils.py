@@ -1,4 +1,5 @@
 import sys, os
+import requests
 import re
 import time
 import undetected_chromedriver as uc
@@ -108,3 +109,60 @@ def get_user_cookies():
 	cookies = driver.get_cookies()
 	driver.quit()
 	return cookies
+
+def download_file(url, filename, chunk_size=8192):
+	with requests.get(url, stream=True) as r:
+		r.raise_for_status()
+		with open(filename, "wb") as f:
+			for chunk in r.iter_content(chunk_size):
+				f.write(chunk)
+
+def get_remote_version():
+	try:
+		r = requests.get('https://api.github.com/repos/SuperZombi/MyTube-GUI/releases/latest')
+		if r.ok: return Version(r.json()['tag_name'])
+	except Exception as e:
+		print("[Failed to check app updates]")
+		print(e)
+		print("---------")
+		return Version("0")
+
+
+def ytdlp():
+	ytdlp_path = os.path.join(os.getcwd(), "yt-dlp.exe")
+	if os.path.exists(ytdlp_path):
+		return ytdlp_path
+
+def get_remote_ytdlp():
+	try:
+		r = requests.get("https://api.github.com/repos/yt-dlp/yt-dlp/releases/latest")
+		if r.ok:
+			data = r.json()
+			ver = data['tag_name']
+			assets = data.get("assets")
+			target_asset = next((d for d in assets if d.get("name") == "yt-dlp.exe"), None)
+			target_url = target_asset.get("browser_download_url")
+			return {
+				"version": ver,
+				"url": target_url
+			}
+	except Exception as e:
+		print("[Failed to check yt-dlp updates]")
+		print(e)
+		print("---------")
+
+
+def check_ytdlp(local_dlp):
+	remote_dlp = get_remote_ytdlp()
+	if remote_dlp:
+		local_dlp_ver = Version(local_dlp) if local_dlp else Version("0")
+		remote_dlp_ver = Version(remote_dlp["version"])
+		if remote_dlp_ver > local_dlp_ver:
+			print(f"Current yt-dlp version: {local_dlp_ver}")
+			print(f"Downloading yt-dlp {remote_dlp_ver}")
+			ytdlp_path = os.path.join(os.getcwd(), "yt-dlp.exe")
+			download_file(remote_dlp["url"], ytdlp_path)
+	else:
+		if not local_dlp:
+			print("App can not work without yt-dlp")
+			return True
