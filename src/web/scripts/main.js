@@ -455,7 +455,7 @@ async function check_ytdlp_version(){
 }
 async function check_ytdlp_updates(){
 	let fail = await eel.check_ytdlp_updates()()
-	if (fail.lenght > 0){
+	if (fail.length > 0){
 		if (fail.includes("no_yt-dlp") && fail.includes("PermissionError")){
 			displayError("Permission Error:\n\nFailed to install yt-dlp!\nRun the program as administrator!", "", _=>{
 				window.location.reload()
