@@ -168,13 +168,12 @@ def check_ytdlp(local_dlp):
 				print("[Failed to download yt-dlp]")
 				print("[PermissionError] Run the program as administrator")
 				errors.append("PermissionError")
+				if not local_dlp: errors.append("no_yt-dlp")
 			except Exception as e:
 				print("[Failed to download yt-dlp]")
 				print(e)
 				print("---------")
+				if not local_dlp: errors.append("no_yt-dlp")
 	else:
-		if not local_dlp:
-			print("App can not work without yt-dlp")
-			errors.append("no_yt-dlp")
-
+		if not local_dlp: errors.append("no_yt-dlp")
 	return errors
