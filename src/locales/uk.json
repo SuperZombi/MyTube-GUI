@@ -37,6 +37,8 @@
 	"abort_download": "Скасувати",
 	"open_file": "Відкрити файл",
 
+	"yt_dlp_updated": "yt-dlp оновлено до версії:<br><code>$</code>",
+
 	"donate_button": "Пожертвувати",
 	"donate_text": "Подобається ця програма?<br>Підтримайте розробку донатом!",
 	

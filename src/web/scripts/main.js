@@ -453,12 +453,12 @@ async function check_ytdlp_version(){
 	document.querySelector("#yt_dlp_version").innerHTML = yt_dlp_ver ? yt_dlp_ver : '<span style="color:red">undefined</span>'
 	if (yt_dlp_ver){
 		document.querySelector(".search-container").classList.remove("disabled")
+		document.querySelector(".loader").classList.remove("anim")
 	}
 	return yt_dlp_ver
 }
-async function check_ytdlp_updates(){
+async function check_ytdlp_updates(old_version){
 	let fail = await eel.check_ytdlp_updates()()
-	document.querySelector(".loader").classList.remove("anim")
 	if (fail.length > 0){
 		if (fail.includes("no_yt-dlp") && fail.includes("PermissionError")){
 			displayError(LANG.get("PermissionError"), "", _=>{
@@ -475,7 +475,10 @@ async function check_ytdlp_updates(){
 		}
 	}
 	else {
-		await check_ytdlp_version()
+		let new_version = await check_ytdlp_version()
+		if (old_version != new_version){
+			Toast(LANG.get("yt_dlp_updated").replace("$", new_version))
+		}
 	}
 }
 
@@ -535,10 +538,10 @@ async function initSettings(){
 
 	if (SETTINGS.check_updates){
 		check_updates()
-		check_ytdlp_updates()
+		check_ytdlp_updates(yt_dlp_ver)
 	} else {
 		if (!yt_dlp_ver){
-			check_ytdlp_updates()
+			check_ytdlp_updates(yt_dlp_ver)
 		}
 	}
 }
