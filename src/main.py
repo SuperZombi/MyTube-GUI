@@ -247,6 +247,8 @@ def is_user_logined():
 	return os.path.exists(COOKIES_FILE)
 @eel.expose
 def logout_user():
+	global COOKIES_DATA
+	COOKIES_DATA = None
 	if os.path.exists(COOKIES_FILE): os.remove(COOKIES_FILE)
 @eel.expose
 def login_user():
