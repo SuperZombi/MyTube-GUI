@@ -86,15 +86,15 @@
 			</h3>
 			<h4>
 				<span>yt-dlp</span>:
-				<span class="version" id="yt_dlp_version"></span>
+				<span class="version" id="yt_dlp_version">...</span>
 			</h4>
 			<div class="grid">
 				<i class="fa-solid fa-circle-up"></i>
 				<span lang_="check_updates">Check updates</span>
-				<input type="checkbox" name="check_updates">
-			</div>
-			<hr>
-			<div class="grid">
+				<input type="checkbox" name="check_updates" style="margin:auto">
+
+				<div class="line"></div>
+			
 				<i class="fa-solid fa-brush"></i>
 				<span lang_="theme">Theme</span>
 				<select name="theme">
@@ -110,9 +110,9 @@
 					<option value="ru">Русский</option>
 					<option value="uk">Українська</option>
 				</select>
-			</div>
-			<hr>
-			<div class="grid">
+
+				<div class="line"></div>
+			
 				<i class="fa-solid fa-video"></i>
 				<span lang_="video_quality">Video quality</span>
 				<select name="video_quality">
@@ -120,18 +120,16 @@
 					<option value="1080">1080p</option>
 					<option value="720">720p</option>
 				</select>
-			</div>
-			<hr>
-			<div class="grid">
+			
 				<i class="fa-solid fa-folder"></i>
 				<span lang_="output_folder">Output Folder</span>
 				<div class="row">
-					<input type="text" dir="rtl" name="output_folder" readonly>
+					<input type="text" name="output_folder" readonly>
 					<button class="tiny-button" id="output_folder" lang_title="select"><i class="fa-solid fa-folder"></i></button>
 				</div>
-			</div>
-			<hr>
-			<div class="grid">
+
+				<div class="line"></div>
+			
 				<i class="fa-solid fa-circle-user"></i>
 				<span lang_="account">Account</span>
 				<button class="simple-button" id="login_button">

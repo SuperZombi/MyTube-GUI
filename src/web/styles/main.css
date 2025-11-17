@@ -112,6 +112,7 @@ body{
 .simple-button {
 	display: flex;
 	align-items: center;
+	justify-content: center;
 	gap: 8px;
 	background: #0276FF;
 	border-radius: 8px;
@@ -126,7 +127,7 @@ body{
 	text-decoration: none;
 }
 .simple-button:hover {
-	background: #1C84FF;
+	background: #2589ff;
 }
 .simple-button:active {
 	background: #006AE8;
@@ -206,17 +207,35 @@ input[type="checkbox"]:checked:hover {
 #settings .grid{
 	margin: 10px;
 	display: grid;
-	grid-template-columns: 30px 1fr 1fr;
+	grid-template-columns: auto 1fr 1fr;
 	align-items: center;
-	justify-items: center;
+	justify-items: start;
 	row-gap: 12px;
-	column-gap: 6px;
+	column-gap: 10px;
 	font-size: 18px;
 	white-space: nowrap;
+	border: 1px solid gray;
+	padding: 10px;
+	border-radius: 12px;
+	min-width: fit-content;
+}
+#settings .grid i {
+	justify-self: center;
 }
 #settings .row {
 	display: flex;
 	gap: 5px;
+	width: 100%;
+}
+#settings .grid .line {
+	grid-column: 1 / -1;
+	height: 1px;
+	width: 100%;
+	background: linear-gradient(90deg, transparent, gray, transparent);
+}
+
+#login_button {
+	width: 100%;
 }
 
 
@@ -359,6 +378,8 @@ select {
 	padding: 5px;
 	border-radius: 8px;
 	cursor: pointer;
+	width: 100%;
+	user-select: none;
 }
 
 
@@ -812,7 +833,6 @@ select {
 	background: lightgrey;
 	padding: 4px 6px;
 	border-radius: 12px;
-	user-select: none;
 }
 #update_avalible{
 	display: none;
