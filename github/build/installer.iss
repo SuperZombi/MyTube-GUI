@@ -6,8 +6,8 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{D4F2B9A2-8809-43BF-B170-9F0B52508B00}
 AppName=MyTube Downloader
-AppVersion=1.0.1
-;AppVerName=MyTube Downloader 1.0.1
+AppVersion=1.0.2
+;AppVerName=MyTube Downloader 1.0.2
 AppPublisher=Super Zombi
 AppPublisherURL=https://github.com/SuperZombi/MyTube-GUI
 AppSupportURL=https://github.com/SuperZombi/MyTube-GUI
