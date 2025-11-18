@@ -25,6 +25,9 @@
     <p align="center">
         <img src="github/images/downloading.gif" width="400px">
     </p>
+    <p align="center">
+        <img src="github/images/settings.png" width="400px">
+    </p>
 </details>
 
 ## Advantages:
