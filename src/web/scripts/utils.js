@@ -124,7 +124,7 @@ function displayError(message, traceback="", on_close=null){
 		let details = document.createElement("details")
 		details.innerHTML = `
 			<summary style="display:flex;margin-top:10px">
-				<div class="simple-button">${LANG.get("details","Details")}</div>
+				<div class="simple-button" style="margin:auto">${LANG.get("details","Details")}</div>
 			</summary>
 		`
 		let error_detail = document.createElement("code")

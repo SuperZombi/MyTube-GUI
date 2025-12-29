@@ -18,10 +18,12 @@
 
 	"language": "Language",
 	"account": "Account",
-	"account_signin": "Sign in",
+	"account_signin": "Add account",
 	"account_signout": "Sign out",
 	"login_success_msg": "Login successfully!",
 	"confirm_logout": "Are you sure want to log out?",
+	"guest_user": "Guest",
+	"user_with_name": "User $",
 
 	"output_folder": "Output Folder",
 	"video_quality": "Video quality",

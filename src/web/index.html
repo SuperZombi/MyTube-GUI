@@ -19,8 +19,25 @@
 		<img src="images/icon.png">
 		<span>MyTube</span>
 	</a>
-	<div class="settings-button" lang_title="settings_button">
-		<i class="fa-solid fa-gear"></i>
+	<div class="right-header">
+		<div class="profile-button">
+			<img id="active-user">
+			<i class="fa-solid fa-circle-user"></i>
+		</div>
+		<div class="settings-button" lang_title="settings_button">
+			<i class="fa-solid fa-gear"></i>
+		</div>
+	</div>
+	<div class="account_menu">
+		<button class="simple-button" id="login_button">
+			<i class="fa-solid fa-right-to-bracket"></i>
+			<span lang_="account_signin">Add account</span>
+		</button>
+		<button class="simple-button danger" id="logout_button">
+			<i class="fa-solid fa-right-from-bracket"></i>
+			<span lang_="account_signout">Sign out</span>
+		</button>
+		<div id="users-list"></div>
 	</div>
 </div>
 
@@ -127,15 +144,6 @@
 					<input type="text" name="output_folder" readonly>
 					<button class="tiny-button" id="output_folder" lang_title="select"><i class="fa-solid fa-folder"></i></button>
 				</div>
-
-				<div class="line"></div>
-			
-				<i class="fa-solid fa-circle-user"></i>
-				<span lang_="account">Account</span>
-				<button class="simple-button" id="login_button">
-					<span>Sign in</span>
-					<i class="fa-solid fa-right-to-bracket"></i>
-				</button>
 			</div>
 		</div>
 	</div>
@@ -159,7 +167,6 @@
 		</div>
 	</div>
 </div>
-
 
 </body>
 </html>

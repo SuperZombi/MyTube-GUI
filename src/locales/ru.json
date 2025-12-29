@@ -18,10 +18,12 @@
 
 	"language": "Язык",
 	"account": "Аккаунт",
-	"account_signin": "Войти",
+	"account_signin": "Добавить аккаунт",
 	"account_signout": "Выйти",
 	"login_success_msg": "Авторизация прошла успешно!",
 	"confirm_logout": "Вы уверены, что хотите выйти?",
+	"guest_user": "Гость",
+	"user_with_name": "Пользователь $",
 
 	"output_folder": "Папка сохранения",
 	"video_quality": "Качество видео",

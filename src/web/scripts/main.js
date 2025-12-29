@@ -1,8 +1,8 @@
 window.resizeTo(window.screen.width/3,window.screen.height);
 applyTheme()
 var LANG = new Language_Engine()
-window.onload = _=>{
-	initSettings()
+window.onload = async _=>{
+	await initSettings()
 	initSearch()
 	initPopups()
 	initStreamTypeRadios()
@@ -388,41 +388,91 @@ async function checkDonateNotification(){
 }
 
 
-async function logout_user(){
-	if (confirm(LANG.get("confirm_logout", "Are you sure?"))){
-		await eel.logout_user()
-		initLoginButton(false)
-	}
-}
-async function login_user(){
-	let button = document.querySelector("#login_button")
-	button.disabled = true
-	let result = await eel.login_user()()
-	if (result){
-		Toast(LANG.get("login_success_msg", "Login successfully"), "ok")
-		initLoginButton(true)
-	}
-	button.disabled = false
-}
-function initLoginButton(logined=false){
-	let button = document.querySelector("#login_button")
-	let text = button.querySelector("span")
-	let icon = button.querySelector("i")
-	if (logined){
-		LANG.set(text, "account_signout")
-		icon.className = "fa-solid fa-right-from-bracket"
-		button.classList.add("danger")
-		button.onclick = _=>{logout_user()}
-	} else {
-		LANG.set(text, "account_signin")
-		icon.className = "fa-solid fa-right-to-bracket"
-		button.classList.remove("danger")
-		button.onclick = _=>{login_user()}
-	}
-}
 async function initAccountLogin(){
-	let logined = await eel.is_user_logined()()
-	initLoginButton(logined)
+	let profile_but = document.querySelector(".profile-button")
+	let account_menu = document.querySelector(".account_menu")
+	profile_but.onclick = _=>{
+		account_menu.classList.toggle("open")
+	}
+	window.addEventListener("click", e=>{
+		if (!(e.target.closest(".account_menu") || e.target.closest(".profile-button"))){
+			account_menu.classList.remove("open")
+		}
+	})
+	updateAccounts()
+	let login_button = document.querySelector("#login_button")
+	login_button.onclick = async _=>{
+		login_button.disabled = true
+		let result = await eel.login_user()()
+		if (result){
+			Toast(LANG.get("login_success_msg", "Login successfully"), "ok")
+			await updateAccounts()
+		}
+		login_button.disabled = false
+	}
+}
+async function updateAccounts(){
+	function createUser(name, avatar=null){
+		let el = document.createElement("button")
+		el.className = "simple-button gray"
+		let img;
+		if (avatar){
+			img = document.createElement("img")
+			img.src = avatar
+		} else {
+			img = document.createElement("i")
+			img.className = "fa-solid fa-circle-user"
+		}
+		let span = document.createElement("span")
+		span.textContent = name
+		el.appendChild(img)
+		el.appendChild(span)
+		return el
+	}
+
+	let users = await eel.get_users()()
+	let users_list = document.querySelector("#users-list")
+	let logout_button = document.querySelector("#logout_button")
+	users_list.innerHTML = ""
+	document.querySelector("#active-user").src = ""
+	document.querySelector(".profile-button").title = LANG.get("guest_user", "Guest")
+	logout_button.style.display = "none"
+	logout_button.onclick = null
+
+	if (users.active){
+		let activeUser = users.users.find(
+			user => user.id === users.active
+		)
+		if (activeUser){
+			document.querySelector("#active-user").src = activeUser.avatar
+			document.querySelector(".profile-button").title = LANG.get("user_with_name").replace("$", activeUser.name)
+			let guest = createUser("Guest")
+			LANG.set(guest.querySelector("span"), "guest_user")
+			guest.onclick = async _=>{
+				await eel.set_active_user(null)()
+				await updateAccounts()
+			}
+			users_list.appendChild(guest)
+			logout_button.style.display = ""
+			logout_button.onclick = async _=>{
+				if (confirm(LANG.get("confirm_logout", "Are you sure?"))){
+					await eel.logout_user(activeUser.id)()
+					await updateAccounts()
+				}
+			}
+		}
+	}
+	
+	users.users.forEach(user=>{
+		if (user.id != users.active){
+			let el = createUser(LANG.get("user_with_name").replace("$", user.name), user.avatar)
+			el.onclick = async _=>{
+				await eel.set_active_user(user.id)()
+				await updateAccounts()
+			}
+			users_list.appendChild(el)
+		}
+	})
 }
 
 async function check_updates(){
@@ -534,14 +584,16 @@ async function initSettings(){
 		}
 	})
 
-	let yt_dlp_ver = await check_ytdlp_version()
-
-	if (SETTINGS.check_updates){
-		check_updates()
-		check_ytdlp_updates(yt_dlp_ver)
-	} else {
-		if (!yt_dlp_ver){
+	async function after(){
+		let yt_dlp_ver = await check_ytdlp_version()
+		if (SETTINGS.check_updates){
+			check_updates()
 			check_ytdlp_updates(yt_dlp_ver)
+		} else {
+			if (!yt_dlp_ver){
+				check_ytdlp_updates(yt_dlp_ver)
+			}
 		}
 	}
+	setTimeout(_=>after(), 0)
 }

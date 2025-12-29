@@ -14,7 +14,7 @@ import traceback
 import socket
 
 
-__version__ = Version("1.0.2")
+__version__ = Version("1.1.0")
 @eel.expose
 def get_app_version(): return str(__version__)
 @eel.expose
@@ -88,23 +88,14 @@ def raiseError(msg, traceback=""):
 	)
 
 
-COOKIES_FILE = os.path.join(APPDATA, "cookies.json")
-COOKIES_DATA = None
-def get_cookies():
-	global COOKIES_DATA
-	if not COOKIES_DATA:
-		if os.path.exists(COOKIES_FILE):
-			with open(COOKIES_FILE, 'r') as f:
-				COOKIES_DATA = json.loads(f.read())
-	return COOKIES_DATA
-
-
 CACHED_QUERIES = {}
 def get_yt_obj(url):
-	obj = CACHED_QUERIES.get(url, None)
+	user = get_active_user()
+	key = (url, user["id"]) if user else (url, None)
+	obj = CACHED_QUERIES.get(key, None)
 	if not obj:
-		obj = MyTube.YouTube(url, cookies=get_cookies())
-		CACHED_QUERIES[url] = obj
+		obj = MyTube.YouTube(url, cookies=(user["cookies"] if user else None))
+		CACHED_QUERIES[key] = obj
 	return obj
 
 @eel.expose
@@ -242,21 +233,81 @@ def open_output_file(file):
 	subprocess.run(["explorer", '/select,', file])
 
 
+USERS_FILE = os.path.join(APPDATA, "users.data.json")
+def get_active_user():
+	if os.path.exists(USERS_FILE):
+		with open(USERS_FILE, 'r', encoding="utf-8") as f:
+			users_data = json.loads(f.read())
+			return next(
+				(user for user in users_data['users'] if user['id'] == users_data.get('active')),
+				None
+			)
+	return None
+
 @eel.expose
-def is_user_logined():
-	return os.path.exists(COOKIES_FILE)
+def get_users():
+	if os.path.exists(USERS_FILE):
+		with open(USERS_FILE, 'r', encoding="utf-8") as f:
+			users_data = json.loads(f.read())
+			users = [
+				{
+					**{key: value for key, value in user.items() if key != 'cookies'},
+					'name': f'{index}'
+				}
+				for index, user in enumerate(users_data["users"], start=1)
+			]
+			return {
+				"active": users_data["active"],
+				"users": users
+			}
+	return {"active": None, "users": []}
+
+def add_user(avatar, cookies):
+	users_data = {"active": None, "users": []}
+	if os.path.exists(USERS_FILE):
+		with open(USERS_FILE, 'r', encoding="utf-8") as f:
+			users_data = json.loads(f.read())
+	user_id = uuid.uuid4().hex
+	users_data["users"].append({
+		"id": user_id,
+		"avatar": avatar,
+		"cookies": cookies
+	})
+	users_data["active"] = user_id
+	with open(USERS_FILE, 'w', encoding="utf-8") as f:
+		f.write(json.dumps(users_data))
+
 @eel.expose
-def logout_user():
-	global COOKIES_DATA
-	COOKIES_DATA = None
-	if os.path.exists(COOKIES_FILE): os.remove(COOKIES_FILE)
+def logout_user(user_id):
+	users_data = {"active": None, "users": []}
+	if os.path.exists(USERS_FILE):
+		with open(USERS_FILE, 'r', encoding="utf-8") as f:
+			users_data = json.loads(f.read())
+	users_data["users"] = [user for user in users_data["users"] if user.get('id') != user_id]
+	users_data["active"] = users_data["active"] if users_data["active"] != user_id else None
+
+	with open(USERS_FILE, 'w', encoding="utf-8") as f:
+		f.write(json.dumps(users_data))
+
+@eel.expose
+def set_active_user(user_id):
+	users_data = {"active": None, "users": []}
+	if os.path.exists(USERS_FILE):
+		with open(USERS_FILE, 'r', encoding="utf-8") as f:
+			users_data = json.loads(f.read())
+	users_data["active"] = user_id
+	with open(USERS_FILE, 'w', encoding="utf-8") as f:
+		f.write(json.dumps(users_data))
+
 @eel.expose
 def login_user():
 	try:
-		cookies = get_user_cookies()
-		if cookies:
-			with open(COOKIES_FILE, 'w') as f:
-				f.write(json.dumps(cookies))
+		data = login_to_youtube()
+		if data:
+			add_user(
+				avatar=data.get("avatar"),
+				cookies=data.get("cookies")
+			)
 			return True
 	except Exception as e:
 		raiseError(getattr(e, "msg", e))

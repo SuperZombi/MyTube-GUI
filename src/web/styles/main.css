@@ -17,9 +17,9 @@ body{
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	font-size: 18pt;
 	height: 50px;
 	padding: 0 10px;
+	position: relative;
 }
 
 .logo{
@@ -30,6 +30,7 @@ body{
 	user-select: none;
 	color: var(--text-color);
 	text-decoration: none;
+	font-size: 18pt;
 }
 .logo:hover{
 	text-decoration: underline;
@@ -38,15 +39,68 @@ body{
 	height: 60%;
 }
 
-.settings-button{
+
+.right-header {
+	display: flex;
+	align-items: center;
+	gap: 12px;
 	font-size: 24pt;
+	height: 100%;
+}
+.right-header > * {
 	cursor: pointer;
 }
+
 .settings-button i{
 	transition: 0.25s;
 }
 .settings-button:hover i{
 	transform: rotate(90deg);
+}
+
+.profile-button {
+	height: 100%;
+	display: flex;
+	align-items: center;
+}
+.profile-button img{
+	height: 70%;
+	border-radius: 50%;
+}
+.profile-button img[src]:not([src=""]) + i{
+	display: none;
+}
+
+.account_menu{
+	position: absolute;
+	right: 4px;
+	bottom: 0;
+	translate: 0 100%;
+	background: var(--body-color);
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	padding: 4px;
+	border-radius: 10px;
+	filter: drop-shadow(-2px 4px 4px rgb(0, 0, 0, 0.4));
+	transition: 0.5s;
+	transform-origin: top center;
+	scale: 0;
+	max-height: 75vh;
+	overflow: auto;
+	scrollbar-width: thin;
+}
+.account_menu.open {
+	scale: 1;
+}
+.account_menu button img {
+	height: 16px;
+	border-radius: 50%;
+}
+
+#users-list{
+	display: contents;
 }
 
 .search-wrapper {
@@ -112,7 +166,6 @@ body{
 .simple-button {
 	display: flex;
 	align-items: center;
-	justify-content: center;
 	gap: 8px;
 	background: #0276FF;
 	border-radius: 8px;
@@ -123,7 +176,6 @@ body{
 	padding: 8px 14px;
 	transition: all 0.15s ease-in-out;
 	user-select: none;
-	margin: auto;
 	text-decoration: none;
 }
 .simple-button:hover {
@@ -140,6 +192,15 @@ body{
 }
 .simple-button.danger:active{
 	background: #b30000;
+}
+.simple-button.gray{
+	background: #999;
+}
+.simple-button.gray:hover{
+	background: gray;
+}
+.simple-button.gray:active{
+	background: dimgray;
 }
 .simple-button[disabled]{
 	cursor: not-allowed;

@@ -3,6 +3,7 @@ import requests
 import re
 import time
 import undetected_chromedriver as uc
+from selenium.webdriver.common.by import By
 import comtypes.client as cc
 from win32gui import GetForegroundWindow
 from pythoncom import CoInitialize
@@ -93,7 +94,7 @@ def streams_to_list(streams):
 def streams_to_dict(streams):
 	return {lang_code: [stream_to_json(stream) for stream in streams[lang_code]] for lang_code in streams}
 
-def get_user_cookies():
+def login_to_youtube():
 	driver = uc.Chrome()
 	driver.set_window_size(620,720)
 	driver.get("https://accounts.google.com/ServiceLogin?continue=https%3A%2F%2Fwww.youtube.com")
@@ -107,8 +108,17 @@ def get_user_cookies():
 			return
 
 	cookies = driver.get_cookies()
+
+	avatar_btn = driver.find_element(By.ID, "avatar-btn")
+	avatar_img = avatar_btn.find_element(By.TAG_NAME, "img")
+	avatar_url = avatar_img.get_attribute("src")
+
 	driver.quit()
-	return cookies
+
+	return {
+		"avatar": avatar_url,
+		"cookies": cookies
+	}
 
 def download_file(url, filename, chunk_size=8192):
 	with requests.get(url, stream=True) as r:
