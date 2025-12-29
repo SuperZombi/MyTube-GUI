@@ -445,7 +445,7 @@ async function updateAccounts(){
 		)
 		if (activeUser){
 			document.querySelector("#active-user").src = activeUser.avatar
-			document.querySelector(".profile-button").title = LANG.get("user_with_name").replace("$", activeUser.name)
+			document.querySelector(".profile-button").title = activeUser.name
 			let guest = createUser("Guest")
 			LANG.set(guest.querySelector("span"), "guest_user")
 			guest.onclick = async _=>{
@@ -465,7 +465,7 @@ async function updateAccounts(){
 	
 	users.users.forEach(user=>{
 		if (user.id != users.active){
-			let el = createUser(LANG.get("user_with_name").replace("$", user.name), user.avatar)
+			let el = createUser(user.name, user.avatar)
 			el.onclick = async _=>{
 				await eel.set_active_user(user.id)()
 				await updateAccounts()

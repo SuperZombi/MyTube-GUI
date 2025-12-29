@@ -23,7 +23,6 @@
 	"login_success_msg": "Login successfully!",
 	"confirm_logout": "Are you sure want to log out?",
 	"guest_user": "Guest",
-	"user_with_name": "User $",
 
 	"output_folder": "Output Folder",
 	"video_quality": "Video quality",

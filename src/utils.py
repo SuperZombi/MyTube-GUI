@@ -4,6 +4,8 @@ import re
 import time
 import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import comtypes.client as cc
 from win32gui import GetForegroundWindow
 from pythoncom import CoInitialize
@@ -110,12 +112,19 @@ def login_to_youtube():
 	cookies = driver.get_cookies()
 
 	avatar_btn = driver.find_element(By.ID, "avatar-btn")
+	avatar_btn.click()
 	avatar_img = avatar_btn.find_element(By.TAG_NAME, "img")
 	avatar_url = avatar_img.get_attribute("src")
 
+	wait = WebDriverWait(driver, 5)
+	account_name_el = wait.until(
+		EC.visibility_of_element_located((By.ID, "account-name"))
+	)
+	account_name = account_name_el.text
 	driver.quit()
 
 	return {
+		"name": account_name,
 		"avatar": avatar_url,
 		"cookies": cookies
 	}

@@ -23,7 +23,6 @@
 	"login_success_msg": "Авторизація пройшла успішно!",
 	"confirm_logout": "Ви впевнені, що бажаєте вийти?",
 	"guest_user": "Гість",
-	"user_with_name": "Користувач $",
 
 	"output_folder": "Папка збереження",
 	"video_quality": "Якість відео",

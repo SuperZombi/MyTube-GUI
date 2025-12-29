@@ -251,10 +251,9 @@ def get_users():
 			users_data = json.loads(f.read())
 			users = [
 				{
-					**{key: value for key, value in user.items() if key != 'cookies'},
-					'name': f'{index}'
+					**{key: value for key, value in user.items() if key != 'cookies'}
 				}
-				for index, user in enumerate(users_data["users"], start=1)
+				for user in users_data["users"]
 			]
 			return {
 				"active": users_data["active"],
@@ -262,7 +261,7 @@ def get_users():
 			}
 	return {"active": None, "users": []}
 
-def add_user(avatar, cookies):
+def add_user(name, avatar, cookies):
 	users_data = {"active": None, "users": []}
 	if os.path.exists(USERS_FILE):
 		with open(USERS_FILE, 'r', encoding="utf-8") as f:
@@ -270,6 +269,7 @@ def add_user(avatar, cookies):
 	user_id = uuid.uuid4().hex
 	users_data["users"].append({
 		"id": user_id,
+		"name": name,
 		"avatar": avatar,
 		"cookies": cookies
 	})
@@ -305,6 +305,7 @@ def login_user():
 		data = login_to_youtube()
 		if data:
 			add_user(
+				name=data.get("name"),
 				avatar=data.get("avatar"),
 				cookies=data.get("cookies")
 			)
