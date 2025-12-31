@@ -111,6 +111,7 @@ async function startSearch(link){
 	document.querySelector(".search-container").classList.add("disabled")
 
 	let info = await eel.get_vid_info(link.trim())()
+	console.log(info)
 	document.querySelector(".loader").classList.remove("anim")
 	document.querySelector(".search-container").classList.remove("disabled")
 	if (info){
@@ -139,10 +140,15 @@ function processResults(results, element){
 	document.querySelector(".stream-selectors").innerHTML = ""
 	createSelect(results.streams.video, "video", results.select.video)
 	createSelect(results.streams.audio, "audio", results.select.audio)
+	createSelect(results.streams.combined, "combined", results.select.combined)
 	let radio_input = null
 	if (results.type == "music"){
 		radio_input = document.querySelector(".radio-tabs input[value=music]")
-	} else {
+	}
+	else if (results.type == "combined"){
+		radio_input = document.querySelector(".radio-tabs input[value=combined]")
+	}
+	else {
 		radio_input = document.querySelector(".radio-tabs input[value=video]")
 	}
 	radio_input.checked = true;
@@ -173,6 +179,7 @@ function createSelect(streams, type, default_stream=null){
 	else {
 		menu_el.innerHTML = `<h3>Select the Stream:</h3>`
 	}
+	// TODO
 	left_menu.appendChild(menu_el)
 
 	let selected_el = document.createElement("div")
@@ -273,15 +280,25 @@ function createStreamElement(stream, type){
 	if (type == "video"){
 		icon = 'fa-video'
 		quality = `${stream.quality}<sub>p</sub>`
-		if (stream.extra){
-			extra = `<span>•</span><span>${stream.extra}<sub>fps</sub></span>`
+		if (stream.fps){
+			extra = `<span>•</span><span>${stream.fps}<sub>fps</sub></span>`
 		}
 	}
 	else if (type == "audio"){
 		icon = 'fa-music'
 		quality = `${stream.quality}<sub>kbps</sub>`
-		if (stream.extra){
-			extra = `<span>•</span><span style="font-size:smaller">${stream.extra.toUpperCase()}</span>`
+		if (stream.lang){
+			extra = `<span>•</span><span style="font-size:smaller">${stream.lang.toUpperCase()}</span>`
+		}
+	}
+	else if (type == "combined"){
+		icon = 'fa-video'
+		quality = `${stream.quality}<sub>p</sub>`
+		if (stream.fps){
+			extra += `<span>•</span><span>${stream.fps}<sub>fps</sub></span>`
+		}
+		if (stream.lang){
+			extra += `<span>•</span><span style="font-size:smaller">${stream.lang.toUpperCase()}</span>`
 		}
 	}
 	div.innerHTML = `
@@ -291,7 +308,9 @@ function createStreamElement(stream, type){
 				<span>${quality}</span>${extra}
 			</div>
 			<div class="container-details-tags">
-				<span class="filesize">${humanFileSize(stream.filesize)}</span><span>${stream.codec}</span>
+				${stream.filesize ? `<span class="filesize">${humanFileSize(stream.filesize)}</span>` : ""}
+				${stream.type ? `<span class="type">${stream.type}</span>` : ""}
+				<span>${stream.codec}</span>
 			</div>
 		</div>`
 	return div;

@@ -2,171 +2,31 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>MyTube Downloader</title>
 	<link rel="icon" href="images/icon.png">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>
 	<script type="text/javascript" src="/eel.js"></script>
 	<link rel='stylesheet' href="styles/fontawesome/css/all.min.css">
 	<link rel="stylesheet" href="styles/main.css">
 	<link rel="stylesheet" href="styles/dark.css">
+
+	<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+	<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+	<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+	<!-- <script type="text/babel" data-presets="react" src="src/context.jsx"></script> -->
+	<script type="text/babel" data-presets="react" src="scripts/header.jsx"></script>
+	<script type="text/babel" data-presets="react" src="scripts/search.jsx"></script>
+	<script type="text/babel" data-presets="react" src="scripts/results.jsx"></script>
+	<script type="text/babel" data-presets="react" src="scripts/app.jsx"></script>
+
+
+
 	<script src="scripts/utils.js"></script>
-	<script src="scripts/main.js"></script>
+	<!-- <script src="scripts/main.js"></script> -->
 </head>
 <body>
-
-<div class="header">
-	<a class="logo" href="https://github.com/SuperZombi/MyTube-GUI" target="_blank">
-		<img src="images/icon.png">
-		<span>MyTube</span>
-	</a>
-	<div class="right-header">
-		<div class="profile-button">
-			<img id="active-user">
-			<i class="fa-solid fa-circle-user"></i>
-		</div>
-		<div class="settings-button" lang_title="settings_button">
-			<i class="fa-solid fa-gear"></i>
-		</div>
-	</div>
-	<div class="account_menu">
-		<button class="simple-button" id="login_button">
-			<i class="fa-solid fa-right-to-bracket"></i>
-			<span lang_="account_signin">Add account</span>
-		</button>
-		<button class="simple-button danger" id="logout_button">
-			<i class="fa-solid fa-right-from-bracket"></i>
-			<span lang_="account_signout">Sign out</span>
-		</button>
-		<div id="users-list"></div>
-	</div>
-</div>
-
-<div class="loader anim"></div>
-<div id="snackbar"></div>
-
-<div class="search-wrapper">
-	<div class="search-container disabled">
-		<i class="fa-solid fa-magnifying-glass search" lang_title="search_action"></i>
-		<input placeholder="Search URL" lang_placeholder="search_placeholder"/>
-		<i class="fa-regular fa-clipboard paste" lang_title="search_paste"></i>
-		<i class="fa-solid fa-xmark close" lang_title="search_clear"></i>
-	</div>
-</div>
-
-<div id="downloads-list"></div>
-
-<div class="popup" id="search-result">
-	<div class="popup-wrapper">
-		<i class="fa-regular fa-circle-xmark close" lang_title="close"></i>
-		<div class="left-menu">
-			<i class="fa-regular fa-circle-xmark close" lang_title="close"></i>
-		</div>
-		<div class="content">
-			<img class="video-thumb">
-			<div class="metadata">
-				<span>
-					<span lang_="video_title">Title</span>:
-				</span>
-				<span><input name="video-title" type="text" required></span>
-				<span>
-					<span lang_="video_author">Author</span>:
-				</span>
-				<span><input name="video-author" type="text" required></span>
-			</div>
-			<hr>
-
-			<div class="radio-tabs">
-				<label>
-					<input type="radio" name="container-type" value="video" checked>
-					<span lang_="stream_video">Video</span>
-				</label>
-				<label>
-					<input type="radio" name="container-type" value="music">
-					<span lang_="stream_music">Music</span>
-				</label>
-			</div>
-
-			<div class="stream-selectors"></div>
-			<button class="download"><i class="fa-solid fa-circle-down"></i><span lang_="download_button">Download</span></button>
-		</div>
-	</div>
-</div>
-
-<div class="popup" id="settings">
-	<div class="popup-wrapper">
-		<i class="fa-regular fa-circle-xmark close" lang_title="close"></i>
-		<div class="content">
-			<h3>
-				<span lang_="version">Version</span>:
-				<span class="version" id="app_version"></span>
-				<a id="update_avalible" href="https://github.com/SuperZombi/MyTube-GUI/releases" target="_blank"><i class="fa-solid fa-circle-up"></i></a>
-			</h3>
-			<h4>
-				<span>yt-dlp</span>:
-				<span class="version" id="yt_dlp_version">...</span>
-			</h4>
-			<div class="grid">
-				<i class="fa-solid fa-circle-up"></i>
-				<span lang_="check_updates">Check updates</span>
-				<input type="checkbox" name="check_updates" style="margin:auto">
-
-				<div class="line"></div>
-			
-				<i class="fa-solid fa-brush"></i>
-				<span lang_="theme">Theme</span>
-				<select name="theme">
-					<option value="auto" lang_="theme_auto" selected>Auto</option>
-					<option value="light" lang_="theme_light">Light</option>
-					<option value="dark" lang_="theme_dark">Dark</option>
-				</select>
-
-				<i class="fa-solid fa-globe"></i>
-				<span lang_="language">Language</span>
-				<select name="language">
-					<option value="en" selected>English</option>
-					<option value="ru">Русский</option>
-					<option value="uk">Українська</option>
-				</select>
-
-				<div class="line"></div>
-			
-				<i class="fa-solid fa-video"></i>
-				<span lang_="video_quality">Video quality</span>
-				<select name="video_quality">
-					<option value="max" selected lang_="video_quality_best">Best</option>
-					<option value="1080">1080p</option>
-					<option value="720">720p</option>
-				</select>
-			
-				<i class="fa-solid fa-folder"></i>
-				<span lang_="output_folder">Output Folder</span>
-				<div class="row">
-					<input type="text" name="output_folder" readonly>
-					<button class="tiny-button" id="output_folder" lang_title="select"><i class="fa-solid fa-folder"></i></button>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="popup" id="error-popup">
-	<div class="popup-wrapper">
-		<i class="fa-regular fa-circle-xmark close" lang_title="close"></i>
-		<div class="content"></div>
-	</div>
-</div>
-
-<div class="popup" id="new-version-popup">
-	<div class="popup-wrapper">
-		<i class="fa-regular fa-circle-xmark close" lang_title="close"></i>
-		<div class="content">
-			<div class="update-icon"><i class="fa-solid fa-circle-up"></i></div>
-			<span lang_="update_avalible">Update available!</span>
-			<div class="versions"></div>
-			<a class="simple-button" href="https://github.com/SuperZombi/MyTube-GUI/releases" target="_blank" lang_="download_button">Download</a>
-		</div>
-	</div>
-</div>
-
+	<div id="root"></div>
 </body>
 </html>
