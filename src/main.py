@@ -275,7 +275,7 @@ def add_user(name, avatar, cookies):
 	})
 	users_data["active"] = user_id
 	with open(USERS_FILE, 'w', encoding="utf-8") as f:
-		f.write(json.dumps(users_data))
+		f.write(json.dumps(users_data, ensure_ascii=False))
 
 @eel.expose
 def logout_user(user_id):
@@ -287,7 +287,7 @@ def logout_user(user_id):
 	users_data["active"] = users_data["active"] if users_data["active"] != user_id else None
 
 	with open(USERS_FILE, 'w', encoding="utf-8") as f:
-		f.write(json.dumps(users_data))
+		f.write(json.dumps(users_data, ensure_ascii=False))
 
 @eel.expose
 def set_active_user(user_id):
@@ -297,7 +297,7 @@ def set_active_user(user_id):
 			users_data = json.loads(f.read())
 	users_data["active"] = user_id
 	with open(USERS_FILE, 'w', encoding="utf-8") as f:
-		f.write(json.dumps(users_data))
+		f.write(json.dumps(users_data, ensure_ascii=False))
 
 @eel.expose
 def login_user():
