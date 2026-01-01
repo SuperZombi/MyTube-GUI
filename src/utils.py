@@ -78,23 +78,19 @@ def strip_ansi(text):
 
 def stream_to_json(stream):
 	data = {"itag": stream.itag, "filesize": stream.filesize}
-	if stream.isVideo:
-		data["quality"] = stream.res
-		data["extra"] = stream.fps
-		data["codec"] = stream.videoCodec.split(".")[0]
-		data["extension"] = stream.videoExt
-	elif stream.isAudio:
-		data["quality"] = stream.abr
-		data["extra"] = stream.lang
-		data["codec"] = stream.audioCodec.split(".")[0]
-		data["extension"] = stream.audioExt
+	data["quality"] = stream.abr if stream.isAudio else stream.res
+	data["codec"] = stream.audioCodec.split(".")[0] if stream.isAudio else stream.videoCodec.split(".")[0]
+	data["extension"] = stream.audioExt if stream.isAudio else stream.videoExt
+	if stream.isVideo or stream.isMuxed or stream.isM3U8:
+		data["fps"] = stream.fps
+	if stream.isAudio or stream.isMuxed or stream.isM3U8:
+		data["lang"] = stream.lang
+	if stream.isM3U8:
+		data["type"] = "m3u8"
 	return data
 
 def streams_to_list(streams):
 	return [stream_to_json(stream) for stream in streams]
-
-def streams_to_dict(streams):
-	return {lang_code: [stream_to_json(stream) for stream in streams[lang_code]] for lang_code in streams}
 
 def login_to_youtube():
 	driver = uc.Chrome()

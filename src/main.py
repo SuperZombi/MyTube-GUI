@@ -105,12 +105,10 @@ def get_vid_info(url):
 		yt = get_yt_obj(url)
 		video_streams = yt.streams.filter(only_video=True, no_muxed=True).order_by("res", "fps")
 		audio_streams = yt.streams.filter(only_audio=True).order_by("abr")
-
-		a_streams_by_lang = {}
-		for a_stream in audio_streams:
-			lang_code = a_stream.lang if a_stream.lang else "_"
-			a_streams_by_lang.setdefault(lang_code, []).append(a_stream)
-
+		direct_video_streams = (
+			yt.streams.filter(only_muxed=True) + yt.streams.filter(only_m3u8=True)
+		).order_by("res", "fps")
+		
 		def filter_streams(streams, kwargs):
 			temp = streams.filter(**kwargs)
 			return temp if len(temp) > 0 else streams
@@ -127,7 +125,8 @@ def get_vid_info(url):
 			"type": yt.type,
 			"streams": {
 				"video": streams_to_list(video_streams),
-				"audio": streams_to_dict(a_streams_by_lang)
+				"audio": streams_to_list(audio_streams),
+				"combined": streams_to_list(direct_video_streams)
 			},
 			"select": {
 				"video": stream_to_json(temp_videos.first())
@@ -329,7 +328,7 @@ def run():
 	for browser in ['chrome', 'default']:
 		if check_socket(port=8090):
 			try:
-				eel.start("index.html", mode=browser, port=8090)
+				eel.start("index.html", mode=browser, port=8090, size=(500, 800))
 				return
 			except Exception: None
 		else: return
