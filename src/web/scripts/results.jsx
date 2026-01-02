@@ -8,14 +8,51 @@ const ResultsPopup = ({
 	const handleChangeType = event => {
 		setType(event.target.value)
 	}
+	const [pickerOpen, setPickerOpen] = React.useState(false)
+	const [pickerType, setPickerType] = React.useState(null)
+	const closePicker = _=>{
+		setPickerOpen(false)
+	}
+	const openPicker = (type) => {
+		setPickerOpen(true)
+		setPickerType(type)
+	}
+
+	const [selectedVideo, setSelectedVideo] = React.useState(null)
+	const [selectedAudio, setSelectedAudio] = React.useState(null)
+	const [selectedCombined, setSelectedCombined] = React.useState(null)
+
+	React.useEffect(_=>{
+		setSelectedVideo(streams.video?.[0])
+		setSelectedAudio(streams.audio?.[0])
+		setSelectedCombined(streams.combined?.[0])
+	}, [streams])
+
+	const downloadAction = _=> {
+		const result = type == "video" ? {
+			"video": selectedVideo,
+			"audio": selectedAudio
+		} : type == "music" ? {
+			"audio": selectedAudio
+		} : type == "combined" ? {
+			"video": selectedCombined
+		} : null
+		console.log(result)
+	}
 
 	return (
 		<div className={`popup ${show ? "show" : ""}`} id="search-result">
 			<div className="popup-wrapper">
 				<i className="fa-regular fa-circle-xmark close" onClick={_=>setShow(false)}></i>
-				{/*<div className="left-menu">
-					<i className="fa-regular fa-circle-xmark close"></i>
-				</div>*/}
+				<div className={`left-menu ${pickerOpen ? "open" : ""}`}>
+					<i className="fa-regular fa-circle-xmark close" onClick={closePicker}></i>
+					<StreamPicker
+						streams={streams} type={pickerType} setPickerOpen={setPickerOpen}
+						selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo}
+						selectedAudio={selectedAudio} setSelectedAudio={setSelectedAudio}
+						selectedCombined={selectedCombined} setSelectedCombined={setSelectedCombined}
+					/>
+				</div>
 				<div className="content">
 					<img className="video-thumb" src={image} draggable={false}/>
 					<div className="metadata">
@@ -67,51 +104,90 @@ const ResultsPopup = ({
 							(type == "video" && streams.video?.length > 0 && streams.audio?.length > 0) ? (
 								<React.Fragment>
 									<StreamCard
-										info={streams.video?.[0]}
+										info={selectedVideo}
 										type="video"
+										onClick={_=>openPicker("video")}
 									/>
 									<StreamCard
-										info={streams.audio?.[0]}
+										info={selectedAudio}
 										type="audio"
+										onClick={_=>openPicker("audio")}
 									/>
 								</React.Fragment>
 							) : (type == "music" && streams.audio?.length > 0) ? (
 								<React.Fragment>
 									<StreamCard
-										info={streams.audio?.[0]}
+										info={selectedAudio}
 										type="audio"
+										onClick={_=>openPicker("audio")}
 									/>
 								</React.Fragment>
 							) : (type == "combined" && streams.combined?.length > 0) ? (
 								<React.Fragment>
 									<StreamCard
-										info={streams.combined?.[0]}
+										info={selectedCombined}
 										type="video"
+										onClick={_=>openPicker("combined")}
 									/>
 								</React.Fragment>
-							) : null
+							) : <h3>No streams</h3>
 						}
 					</div>
-					<button className="download"><i className="fa-solid fa-circle-down"></i><span lang_="download_button">Download</span></button>
+					<button className="download" onClick={downloadAction}>
+						<i className="fa-solid fa-circle-down"></i>
+						<span lang_="download_button">Download</span>
+					</button>
 				</div>
 			</div>
 		</div>
 	)
 }
 
-const StreamCard = ({
-	info, type
+const StreamPicker = ({
+	streams, type, setPickerOpen,
+	selectedVideo, setSelectedVideo,
+	selectedAudio, setSelectedAudio,
+	selectedCombined, setSelectedCombined
 }) => {
+	const array = type == "video" ? streams.video : type == "audio" ? streams.audio : type == "combined" ? streams.combined : null
+	const selectedStream = type == "video" ? selectedVideo : type == "audio" ? selectedAudio : type == "combined" ? selectedCombined : null
+	const setSelected = type == "video" ? setSelectedVideo : type == "audio" ? setSelectedAudio : type == "combined" ? setSelectedCombined : null
 	return (
-		<div className="stream">
+		<React.Fragment>
+			<h3>
+				{(type == "video" || type == "combined") ? "Select the Video:" : type == "audio" ? "Select the Audio:" : "Select the Stream:"}
+			</h3>
+			<div className="select show">
+				{
+					array?.length > 0 ? array.map(stream=>{
+						return (
+							<StreamCard info={stream} type={type}
+								key={stream.itag}
+								selected={selectedStream.itag == stream.itag}
+								onClick={_=>{setSelected(stream);setPickerOpen(false)}}
+							/>
+						)
+					}) : null
+				}
+			</div>
+		</React.Fragment>
+	)
+}
+
+const StreamCard = ({
+	info, type, selected, onClick
+}) => {
+	if (!info) return
+	return (
+		<div className={`stream ${selected ? "selected" : ""}`} onClick={onClick}>
 			<div className="container">
-				<i className={`fa-solid ${type == "video" ? "fa-video" : "fa-music"}`}></i>
+				<i className={`fa-solid ${(type == "video" || type == "combined") ? "fa-video" : "fa-music"}`}></i>
 			</div>
 			<div className="container-details">
 				<div className="container-details-head">
 					<span>
 						{info.quality}
-						<sub>{type == "video" ? "p" : "kbps"}</sub>
+						<sub>{(type == "video" || type == "combined") ? "p" : "kbps"}</sub>
 					</span>
 					{info.fps ? (
 						<React.Fragment>
