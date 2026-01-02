@@ -13,6 +13,10 @@ const App = () => {
 	const [resultsType, setResultsType] = React.useState("video")
 	const [resultsUrl, setResultsUrl] = React.useState("")
 
+	const [selectedVideo, setSelectedVideo] = React.useState(null)
+	const [selectedAudio, setSelectedAudio] = React.useState(null)
+	const [selectedCombined, setSelectedCombined] = React.useState(null)
+
 	const [downloadItems, setDownloadItems] = React.useState([])
 
 	const [showSettings, setShowSettings] = React.useState(false)
@@ -70,6 +74,11 @@ const App = () => {
 				}
 			})
 		}
+
+		eel.expose(displayError)
+		function displayError(message, traceback="", on_close=null){
+			console.error(message)
+		}
 	}, [])
 
 	React.useEffect(_=>{
@@ -81,9 +90,11 @@ const App = () => {
 		setIsLoading(true)
 		setCanSearch(false)
 		let info = await eel.get_vid_info(val)()
+		if (info){
+			processResults(info)
+		}
 		setIsLoading(false)
 		setCanSearch(true)
-		processResults(info)
 		setSearch("")
 	}
 
@@ -95,6 +106,10 @@ const App = () => {
 		setResultsType(results.type)
 		setResultsStreams(results.streams)
 		setResultsUrl(results.url)
+
+		setSelectedVideo(results.select.video || results.streams.video?.[0])
+		setSelectedAudio(results.select.audio || results.streams.audio?.[0])
+		setSelectedCombined(results.select.combined || results.streams.combined?.[0])
 	}
 	const onDownload = async (url, streams, metadata) => {
 		let data = await eel.get_downloader_process(url, streams, metadata)()
@@ -121,6 +136,9 @@ const App = () => {
 				type={resultsType}
 				setType={setResultsType}
 				onDownload={onDownload}
+				selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo}
+				selectedAudio={selectedAudio} setSelectedAudio={setSelectedAudio}
+				selectedCombined={selectedCombined} setSelectedCombined={setSelectedCombined}
 			/>
 			<DownloadList items={downloadItems}/>
 			<Settings show={showSettings} setShow={setShowSettings}/>

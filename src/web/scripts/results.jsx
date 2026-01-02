@@ -4,7 +4,10 @@ const ResultsPopup = ({
 	title, author, image,
 	setTitle, setAuthor,
 	type, setType,
-	onDownload
+	onDownload,
+	selectedVideo, setSelectedVideo,
+	selectedAudio, setSelectedAudio,
+	selectedCombined, setSelectedCombined,
 }) => {
 	const handleChangeType = event => {
 		setType(event.target.value)
@@ -19,14 +22,10 @@ const ResultsPopup = ({
 		setPickerType(type)
 	}
 
-	const [selectedVideo, setSelectedVideo] = React.useState(null)
-	const [selectedAudio, setSelectedAudio] = React.useState(null)
-	const [selectedCombined, setSelectedCombined] = React.useState(null)
-
 	React.useEffect(_=>{
-		setSelectedVideo(streams.video?.[0])
-		setSelectedAudio(streams.audio?.[0])
-		setSelectedCombined(streams.combined?.[0])
+		if ((type == "video" && streams.video?.length == 0) || (type == "music" && streams?.audio.length == 0)){
+			setType("combined")
+		}
 	}, [streams])
 
 	const downloadAction = _=> {

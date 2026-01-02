@@ -114,11 +114,14 @@ def get_vid_info(url):
 			return temp if len(temp) > 0 else streams
 
 		temp_videos = video_streams
+		temp_combined = direct_video_streams
 		if SETTINGS.get("video_quality", "").isnumeric():
 			prefer_q = int(SETTINGS.get("video_quality"))
 			temp_videos = filter_streams(temp_videos, {"max_res": prefer_q})
+			temp_combined = filter_streams(temp_combined, {"max_res": prefer_q})
 
 		return {
+			"url": url,
 			"title": yt.title,
 			"author": yt.author,
 			"thumb": yt.thumbnail.url,
@@ -129,7 +132,8 @@ def get_vid_info(url):
 				"combined": streams_to_list(direct_video_streams)
 			},
 			"select": {
-				"video": stream_to_json(temp_videos.first())
+				"video": stream_to_json(temp_videos.first()) if temp_videos else None,
+				"combined": stream_to_json(temp_combined.first()) if temp_combined else None
 			}
 		}
 	except Exception as e:
