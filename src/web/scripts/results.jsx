@@ -159,15 +159,41 @@ const StreamPicker = ({
 			</h3>
 			<div className="select show">
 				{
-					array?.length > 0 ? array.map(stream=>{
-						return (
-							<StreamCard info={stream} type={type}
-								key={stream.itag}
-								selected={selectedStream.itag == stream.itag}
-								onClick={_=>{setSelected(stream);setPickerOpen(false)}}
-							/>
-						)
-					}) : null
+					array?.length > 0 ? type == "audio" ? (
+						Object.entries(array.reduce((acc, item) => {
+							if (!acc[item.lang]) {
+								acc[item.lang] = []
+							}
+							acc[item.lang].push(item)
+							return acc
+						}, {})).map(([lang, elements]) => (
+							<details key={lang} name="lang-picker"
+								className={
+									elements.some(stream => stream.itag == selectedStream?.itag) ? "selected" : ""
+								}
+								open={elements.some(
+									stream => stream.itag == selectedStream?.itag
+								)}
+							>
+								<summary>{lang}</summary>
+								<div className="data">
+									{elements.map(stream => (
+										<StreamCard info={stream} type={type}
+											key={stream.itag}
+											selected={selectedStream?.itag == stream.itag}
+											onClick={_=>{setSelected(stream);setPickerOpen(false)}}
+										/>
+									))}
+								</div>
+							</details>
+						))
+					) : array.map(stream=>(
+						<StreamCard info={stream} type={type}
+							key={stream.itag}
+							selected={selectedStream?.itag == stream.itag}
+							onClick={_=>{setSelected(stream);setPickerOpen(false)}}
+						/>
+					)) : null
 				}
 			</div>
 		</React.Fragment>
