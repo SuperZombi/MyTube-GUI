@@ -204,7 +204,7 @@ body{
 }
 .simple-button[disabled]{
 	cursor: not-allowed;
-	filter: grayscale(1);
+	background: dimgray;
 }
 
 .tiny-button {
