@@ -11,6 +11,64 @@ const App = () => {
 	const [resultsImage, setResultsImage] = React.useState("")
 	const [resultsStreams, setResultsStreams] = React.useState([])
 	const [resultsType, setResultsType] = React.useState("video")
+	const [resultsUrl, setResultsUrl] = React.useState("")
+
+	const [downloadItems, setDownloadItems] = React.useState([])
+
+	React.useEffect(() => {
+		eel.expose(download_progress)
+		function download_progress(id, current, total){
+			setDownloadItems(prev => {
+				const exists = prev.find(item => item.id === id)
+				if (exists){
+					return prev.map(item =>
+						item.id === id
+							? { ...item, status: "download", progress: Math.round(current * 100 / total) }
+							: item
+					)
+				}
+			})
+		}
+		eel.expose(ffmpeg_progress)
+		function ffmpeg_progress(id, current, total){
+			setDownloadItems(prev => {
+				const exists = prev.find(item => item.id === id)
+				if (exists){
+					return prev.map(item =>
+						item.id === id
+							? { ...item, status: "ffmpeg", progress: Math.round(current * 100 / total) }
+							: item
+					)
+				}
+			})
+		}
+		eel.expose(finish_download)
+		function finish_download(id, result){
+			setDownloadItems(prev => {
+				const exists = prev.find(item => item.id === id)
+				if (exists){
+					return prev.map(item =>
+						item.id === id
+							? { ...item, status: "finished", file: result}
+							: item
+					)
+				}
+			})
+		}
+		eel.expose(abort_download)
+		function abort_download(id){
+			setDownloadItems(prev => {
+				const exists = prev.find(item => item.id === id)
+				if (exists){
+					return prev.map(item =>
+						item.id === id
+							? { ...item, status: "aborted"}
+							: item
+					)
+				}
+			})
+		}
+	}, [])
 
 	React.useEffect(_=>{
 		setIsLoading(false)
@@ -28,13 +86,19 @@ const App = () => {
 	}
 
 	const processResults = results=>{
-		console.log(results)
 		setShowResults(true)
 		setResultsTitle(results.title)
 		setResultsAuthor(results.author)
 		setResultsImage(results.thumb)
 		setResultsType(results.type)
 		setResultsStreams(results.streams)
+		setResultsUrl(results.url)
+	}
+	const onDownload = async (url, streams, metadata) => {
+		let data = await eel.get_downloader_process(url, streams, metadata)()
+		setDownloadItems(prev=>[...prev, data])
+		setShowResults(false)
+		eel.download(data.id)
 	}
 
 	return (
@@ -43,6 +107,7 @@ const App = () => {
 			<div className={`loader ${isLoading ? "anim" : ""}`}></div>
 			<Search value={search} setValue={setSearch} canSearch={canSearch} onSearch={onSearch}/>
 			<ResultsPopup
+				url={resultsUrl}
 				show={showResults}
 				setShow={setShowResults}
 				streams={resultsStreams}
@@ -53,7 +118,9 @@ const App = () => {
 				setAuthor={setResultsAuthor}
 				type={resultsType}
 				setType={setResultsType}
+				onDownload={onDownload}
 			/>
+			<DownloadList items={downloadItems}/>
 		</React.Fragment>
 	)
 }

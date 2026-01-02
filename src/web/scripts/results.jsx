@@ -1,9 +1,10 @@
 const ResultsPopup = ({
 	show, setShow,
-	streams,
+	url, streams,
 	title, author, image,
 	setTitle, setAuthor,
-	type, setType
+	type, setType,
+	onDownload
 }) => {
 	const handleChangeType = event => {
 		setType(event.target.value)
@@ -30,116 +31,114 @@ const ResultsPopup = ({
 
 	const downloadAction = _=> {
 		const result = type == "video" ? {
-			"video": selectedVideo,
-			"audio": selectedAudio
+			"video": selectedVideo.itag,
+			"audio": selectedAudio.itag
 		} : type == "music" ? {
-			"audio": selectedAudio
+			"audio": selectedAudio.itag
 		} : type == "combined" ? {
-			"video": selectedCombined
+			"video": selectedCombined.itag
 		} : null
-		console.log(result)
+
+		onDownload(url, result, {"title": title, "author": author})
 	}
 
 	return (
-		<div className={`popup ${show ? "show" : ""}`} id="search-result">
-			<div className="popup-wrapper">
-				<i className="fa-regular fa-circle-xmark close" onClick={_=>setShow(false)}></i>
-				<div className={`left-menu ${pickerOpen ? "open" : ""}`}>
-					<i className="fa-regular fa-circle-xmark close" onClick={closePicker}></i>
-					<StreamPicker
-						streams={streams} type={pickerType} setPickerOpen={setPickerOpen}
-						selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo}
-						selectedAudio={selectedAudio} setSelectedAudio={setSelectedAudio}
-						selectedCombined={selectedCombined} setSelectedCombined={setSelectedCombined}
-					/>
-				</div>
-				<div className="content">
-					<img className="video-thumb" src={image} draggable={false}/>
-					<div className="metadata">
-						<span>
-							<span lang_="video_title">Title</span>:
-						</span>
-						<span>
-							<input name="video-title" type="text"
-								value={title} onInput={e=>setTitle(e.target.value)}
-							/>
-						</span>
-						<span>
-							<span lang_="video_author">Author</span>:
-						</span>
-						<span>
-							<input name="video-author" type="text"
-								value={author} onInput={e=>setAuthor(e.target.value)}
-							/>
-						</span>
-					</div>
-					<hr/>
-
-					<div className="radio-tabs">
-						<label>
-							<input type="radio" name="container-type" value="video"
-								checked={type == "video"}
-								onChange={handleChangeType}
-							/>
-							<span lang_="stream_video">Video</span>
-						</label>
-						<label>
-							<input type="radio" name="container-type" value="music"
-								checked={type == "music"}
-								onChange={handleChangeType}
-							/>
-							<span lang_="stream_music">Music</span>
-						</label>
-						<label>
-							<input type="radio" name="container-type" value="combined"
-								checked={type == "combined"}
-								onChange={handleChangeType}
-							/>
-							<span>Combined</span>
-						</label>
-					</div>
-
-					<div className="stream-selectors">
-						{
-							(type == "video" && streams.video?.length > 0 && streams.audio?.length > 0) ? (
-								<React.Fragment>
-									<StreamCard
-										info={selectedVideo}
-										type="video"
-										onClick={_=>openPicker("video")}
-									/>
-									<StreamCard
-										info={selectedAudio}
-										type="audio"
-										onClick={_=>openPicker("audio")}
-									/>
-								</React.Fragment>
-							) : (type == "music" && streams.audio?.length > 0) ? (
-								<React.Fragment>
-									<StreamCard
-										info={selectedAudio}
-										type="audio"
-										onClick={_=>openPicker("audio")}
-									/>
-								</React.Fragment>
-							) : (type == "combined" && streams.combined?.length > 0) ? (
-								<React.Fragment>
-									<StreamCard
-										info={selectedCombined}
-										type="video"
-										onClick={_=>openPicker("combined")}
-									/>
-								</React.Fragment>
-							) : <h3>No streams</h3>
-						}
-					</div>
-					<button className="download" onClick={downloadAction}>
-						<i className="fa-solid fa-circle-down"></i>
-						<span lang_="download_button">Download</span>
-					</button>
-				</div>
+		<Popup id="search-result" show={show} setShow={setShow}>
+			<div className={`left-menu ${pickerOpen ? "open" : ""}`}>
+				<i className="fa-regular fa-circle-xmark close" onClick={closePicker}></i>
+				<StreamPicker
+					streams={streams} type={pickerType} setPickerOpen={setPickerOpen}
+					selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo}
+					selectedAudio={selectedAudio} setSelectedAudio={setSelectedAudio}
+					selectedCombined={selectedCombined} setSelectedCombined={setSelectedCombined}
+				/>
 			</div>
-		</div>
+			<div className="content">
+				<img className="video-thumb" src={image} draggable={false}/>
+				<div className="metadata">
+					<span>
+						<span lang_="video_title">Title</span>:
+					</span>
+					<span>
+						<input name="video-title" type="text"
+							value={title} onInput={e=>setTitle(e.target.value)}
+						/>
+					</span>
+					<span>
+						<span lang_="video_author">Author</span>:
+					</span>
+					<span>
+						<input name="video-author" type="text"
+							value={author} onInput={e=>setAuthor(e.target.value)}
+						/>
+					</span>
+				</div>
+				<hr/>
+
+				<div className="radio-tabs">
+					<label>
+						<input type="radio" name="container-type" value="video"
+							checked={type == "video"}
+							onChange={handleChangeType}
+						/>
+						<span lang_="stream_video">Video</span>
+					</label>
+					<label>
+						<input type="radio" name="container-type" value="music"
+							checked={type == "music"}
+							onChange={handleChangeType}
+						/>
+						<span lang_="stream_music">Music</span>
+					</label>
+					<label>
+						<input type="radio" name="container-type" value="combined"
+							checked={type == "combined"}
+							onChange={handleChangeType}
+						/>
+						<span>Combined</span>
+					</label>
+				</div>
+
+				<div className="stream-selectors">
+					{
+						(type == "video" && streams.video?.length > 0 && streams.audio?.length > 0) ? (
+							<React.Fragment>
+								<StreamCard
+									info={selectedVideo}
+									type="video"
+									onClick={_=>openPicker("video")}
+								/>
+								<StreamCard
+									info={selectedAudio}
+									type="audio"
+									onClick={_=>openPicker("audio")}
+								/>
+							</React.Fragment>
+						) : (type == "music" && streams.audio?.length > 0) ? (
+							<React.Fragment>
+								<StreamCard
+									info={selectedAudio}
+									type="audio"
+									onClick={_=>openPicker("audio")}
+								/>
+							</React.Fragment>
+						) : (type == "combined" && streams.combined?.length > 0) ? (
+							<React.Fragment>
+								<StreamCard
+									info={selectedCombined}
+									type="video"
+									onClick={_=>openPicker("combined")}
+								/>
+							</React.Fragment>
+						) : <h3>No streams</h3>
+					}
+				</div>
+				<button className="download" onClick={downloadAction}>
+					<i className="fa-solid fa-circle-down"></i>
+					<span lang_="download_button">Download</span>
+				</button>
+			</div>
+		</Popup>
 	)
 }
 
