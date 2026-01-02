@@ -34,6 +34,7 @@ const App = () => {
 		setResultsAuthor(results.author)
 		setResultsImage(results.thumb)
 		setResultsType(results.type)
+		setResultsStreams(results.streams)
 	}
 
 	return (

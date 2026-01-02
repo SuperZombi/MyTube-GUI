@@ -62,8 +62,80 @@ const ResultsPopup = ({
 						</label>
 					</div>
 
-					<div className="stream-selectors"></div>
+					<div className="stream-selectors">
+						{
+							(type == "video" && streams.video?.length > 0 && streams.audio?.length > 0) ? (
+								<React.Fragment>
+									<StreamCard
+										info={streams.video?.[0]}
+										type="video"
+									/>
+									<StreamCard
+										info={streams.audio?.[0]}
+										type="audio"
+									/>
+								</React.Fragment>
+							) : (type == "music" && streams.audio?.length > 0) ? (
+								<React.Fragment>
+									<StreamCard
+										info={streams.audio?.[0]}
+										type="audio"
+									/>
+								</React.Fragment>
+							) : (type == "combined" && streams.combined?.length > 0) ? (
+								<React.Fragment>
+									<StreamCard
+										info={streams.combined?.[0]}
+										type="video"
+									/>
+								</React.Fragment>
+							) : null
+						}
+					</div>
 					<button className="download"><i className="fa-solid fa-circle-down"></i><span lang_="download_button">Download</span></button>
+				</div>
+			</div>
+		</div>
+	)
+}
+
+const StreamCard = ({
+	info, type
+}) => {
+	return (
+		<div className="stream">
+			<div className="container">
+				<i className={`fa-solid ${type == "video" ? "fa-video" : "fa-music"}`}></i>
+			</div>
+			<div className="container-details">
+				<div className="container-details-head">
+					<span>
+						{info.quality}
+						<sub>{type == "video" ? "p" : "kbps"}</sub>
+					</span>
+					{info.fps ? (
+						<React.Fragment>
+							<span>•</span>
+							<span>
+								{info.fps}
+								<sub>fps</sub>
+							</span>
+						</React.Fragment>
+					) : null}
+					{info.lang ? (
+						<React.Fragment>
+							<span>•</span>
+							<span>{info.lang.toUpperCase()}</span>
+						</React.Fragment>
+					) : null}
+				</div>
+				<div className="container-details-tags">
+					{info.filesize ? (
+						<span className="filesize">{humanFileSize(info.filesize)}</span>
+					) : null}
+					{info.codec ? (
+						<span>{info.codec}</span>
+					) : null}
 				</div>
 			</div>
 		</div>

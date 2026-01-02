@@ -85,8 +85,6 @@ def stream_to_json(stream):
 		data["fps"] = stream.fps
 	if stream.isAudio or stream.isMuxed or stream.isM3U8:
 		data["lang"] = stream.lang
-	if stream.isM3U8:
-		data["type"] = "m3u8"
 	return data
 
 def streams_to_list(streams):
