@@ -15,6 +15,8 @@ const App = () => {
 
 	const [downloadItems, setDownloadItems] = React.useState([])
 
+	const [showSettings, setShowSettings] = React.useState(false)
+
 	React.useEffect(() => {
 		eel.expose(download_progress)
 		function download_progress(id, current, total){
@@ -103,7 +105,7 @@ const App = () => {
 
 	return (
 		<React.Fragment>
-			<Header/>
+			<Header setShowSettings={setShowSettings}/>
 			<div className={`loader ${isLoading ? "anim" : ""}`}></div>
 			<Search value={search} setValue={setSearch} canSearch={canSearch} onSearch={onSearch}/>
 			<ResultsPopup
@@ -121,6 +123,7 @@ const App = () => {
 				onDownload={onDownload}
 			/>
 			<DownloadList items={downloadItems}/>
+			<Settings show={showSettings} setShow={setShowSettings}/>
 		</React.Fragment>
 	)
 }

@@ -1,4 +1,6 @@
-const Header = () => {
+const Header = ({
+	setShowSettings
+}) => {
 	return (
 		<div className="header">
 			<a className="logo" href="https://github.com/SuperZombi/MyTube-GUI" target="_blank" draggable={false}>
@@ -10,7 +12,7 @@ const Header = () => {
 					<img id="active-user" draggable={false}/>
 					<i className="fa-solid fa-circle-user"></i>
 				</div>
-				<div className="settings-button" lang_title="settings_button">
+				<div className="settings-button" onClick={_=>setShowSettings(true)}>
 					<i className="fa-solid fa-gear"></i>
 				</div>
 			</div>
