@@ -81,10 +81,10 @@ const App = () => {
 		}
 	}, [])
 
-	React.useEffect(_=>{
+	const onReady = _=>{
 		setIsLoading(false)
 		setCanSearch(true)
-	}, [])
+	}
 
 	const onSearch = async val=>{
 		setIsLoading(true)
@@ -141,7 +141,7 @@ const App = () => {
 				selectedCombined={selectedCombined} setSelectedCombined={setSelectedCombined}
 			/>
 			<DownloadList items={downloadItems}/>
-			<Settings show={showSettings} setShow={setShowSettings}/>
+			<Settings show={showSettings} setShow={setShowSettings} onReady={onReady}/>
 		</React.Fragment>
 	)
 }
