@@ -894,6 +894,12 @@ select {
 	border-radius: 10px 0 0 10px;
 }
 
+.versions{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 5px;
+}
 .version{
 	font-family: monospace;
 	background: lightgrey;

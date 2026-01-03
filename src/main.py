@@ -14,7 +14,7 @@ import traceback
 import socket
 
 
-__version__ = Version("1.1.0")
+__version__ = Version("2.0.0")
 @eel.expose
 def get_app_version(): return str(__version__)
 @eel.expose
