@@ -161,6 +161,15 @@ const StreamPicker = ({
 	const array = type == "video" ? streams.video : type == "audio" ? streams.audio : type == "combined" ? streams.combined : null
 	const selectedStream = type == "video" ? selectedVideo : type == "audio" ? selectedAudio : type == "combined" ? selectedCombined : null
 	const setSelected = type == "video" ? setSelectedVideo : type == "audio" ? setSelectedAudio : type == "combined" ? setSelectedCombined : null
+
+	const grouped = array?.reduce((acc, item) => {
+		const lang = item.lang ?? "__single__"
+		if (!acc[lang]) acc[lang] = []
+		acc[lang].push(item)
+		return acc
+	}, {})
+	const entries = Object.entries(grouped || {})
+	const hasMultipleLangs = entries.length > 1 && entries[0][0] !== "__single__"
 	return (
 		<React.Fragment>
 			<h3>
@@ -168,34 +177,27 @@ const StreamPicker = ({
 			</h3>
 			<div className="select show">
 				{
-					array?.length > 0 ? (type == "audio" || type == "combined") ? (
-						Object.entries(array.reduce((acc, item) => {
-							if (!acc[item.lang]) {
-								acc[item.lang] = []
-							}
-							acc[item.lang].push(item)
-							return acc
-						}, {})).map(([lang, elements]) => (
-							<details key={lang} name="lang-picker"
-								className={
-									elements.some(stream => stream.itag == selectedStream?.itag) ? "selected" : ""
-								}
-								open={elements.some(
-									stream => stream.itag == selectedStream?.itag
-								)}
-							>
-								<summary>{lang}</summary>
-								<div className="data">
-									{elements.map(stream => (
-										<StreamCard info={stream} type={type}
-											key={stream.itag}
-											selected={selectedStream?.itag == stream.itag}
-											onClick={_=>{setSelected(stream);setPickerOpen(false)}}
-										/>
-									))}
-								</div>
-							</details>
-						))
+					array?.length > 0 ? ((type == "audio" || type == "combined") && hasMultipleLangs) ? (
+						entries.map(([lang, elements]) => {
+							const selected = elements.some(stream => stream.itag == selectedStream?.itag)
+							return (
+								<details key={lang} name={`lang-picker-${type}`}
+									className={selected ? "selected" : ""}
+									open={selected ? true : false}
+								>
+									<summary>{lang}</summary>
+									<div className="data">
+										{elements.map(stream => (
+											<StreamCard info={stream} type={type}
+												key={stream.itag}
+												selected={selectedStream?.itag == stream.itag}
+												onClick={_=>{setSelected(stream);setPickerOpen(false)}}
+											/>
+										))}
+									</div>
+								</details>
+							)
+						})
 					) : array.map(stream=>(
 						<StreamCard info={stream} type={type}
 							key={stream.itag}
