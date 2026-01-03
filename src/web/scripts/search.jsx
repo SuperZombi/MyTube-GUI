@@ -21,11 +21,12 @@ const Search = ({value, setValue, canSearch, onSearch}) => {
 			}
 		})
 	}
+	const {langData} = useApp()
 	return (
 		<div className="search-wrapper">
 			<div className={`search-container ${canSearch ? "" : "disabled"}`}>
 				<i className="fa-solid fa-magnifying-glass search" onClick={searchHandler}></i>
-				<input placeholder="Search URL"
+				<input placeholder={langData["search_placeholder"]}
 					value={value}
 					onInput={e=>setValue(e.target.value)}
 					onKeyDown={handleKeyDown}

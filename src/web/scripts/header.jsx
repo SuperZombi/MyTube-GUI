@@ -42,8 +42,9 @@ const Header = ({
 		}
 		setLoginDisabled(false)
 	}
+	const {langData} = useApp()
 	const onLogOut = async _=>{
-		if (confirm("Log out?")){
+		if (confirm(langData["confirm_logout"])){
 			await eel.logout_user(activeUser.id)()
 			setUsersLoader(false)
 		}
@@ -71,12 +72,12 @@ const Header = ({
 			<div className={`account_menu ${showAccount ? "open" : ""}`}>
 				<button className="simple-button" disabled={loginDisabled} onClick={onLogin}>
 					<i className="fa-solid fa-right-to-bracket"></i>
-					<span lang_="account_signin">Add account</span>
+					<span><LANG id="account_signin"/></span>
 				</button>
 				{activeUser ? (
 					<button className="simple-button danger" onClick={onLogOut}>
 						<i className="fa-solid fa-right-from-bracket"></i>
-						<span lang_="account_signout">Sign out</span>
+						<span><LANG id="account_signout"/></span>
 					</button>
 				) : null}
 				<div id="users-list">
@@ -85,7 +86,7 @@ const Header = ({
 							onClick={_=>changeUser(null)}
 						>
 							<i className="fa-solid fa-circle-user"></i>
-							<span>Guest</span>
+							<span><LANG id="guest_user"/></span>
 						</button>
 					) : null}
 					{users.filter(u=>u.id!==activeUser?.id).map(user=>(

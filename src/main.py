@@ -47,14 +47,6 @@ def change_setting(name, value):
 load_settings()
 
 @eel.expose
-def get_lang_data(lang_code):
-	lang_file = resource_path(os.path.join("locales", lang_code+".json"))
-	if os.path.exists(lang_file):
-		with open(lang_file, 'r', encoding='utf-8') as f:
-			return json.loads(f.read())
-
-
-@eel.expose
 def check_updates():
 	remote_version = get_remote_version()
 	if remote_version > __version__:

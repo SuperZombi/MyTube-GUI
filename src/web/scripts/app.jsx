@@ -25,64 +25,63 @@ const App = () => {
 	const [errorTrace, setErrorTrace] = React.useState(null)
 
 	React.useEffect(() => {
-		eel.expose(download_progress)
-		function download_progress(id, current, total){
+		window.download_progress = function (id, current, total){
 			setDownloadItems(prev => {
 				const exists = prev.find(item => item.id === id)
-				if (exists){
-					return prev.map(item =>
-						item.id === id
-							? { ...item, status: "download", progress: Math.round(current * 100 / total) }
-							: item
-					)
-				}
+				if (!exists) return prev
+				return prev.map(item =>
+					item.id === id
+						? { ...item, status: "download", progress: Math.round(current * 100 / total) }
+						: item
+				)
 			})
 		}
-		eel.expose(ffmpeg_progress)
-		function ffmpeg_progress(id, current, total){
+		eel.expose(window.download_progress, "download_progress")
+		
+		window.ffmpeg_progress = function (id, current, total){
 			setDownloadItems(prev => {
 				const exists = prev.find(item => item.id === id)
-				if (exists){
-					return prev.map(item =>
-						item.id === id
-							? { ...item, status: "ffmpeg", progress: Math.round(current * 100 / total) }
-							: item
-					)
-				}
+				if (!exists) return prev
+				return prev.map(item =>
+					item.id === id
+						? { ...item, status: "ffmpeg", progress: Math.round(current * 100 / total) }
+						: item
+				)
 			})
 		}
-		eel.expose(finish_download)
-		function finish_download(id, result){
+		eel.expose(window.ffmpeg_progress, "ffmpeg_progress")
+		
+		window.finish_download = function (id, result){
 			setDownloadItems(prev => {
 				const exists = prev.find(item => item.id === id)
-				if (exists){
-					return prev.map(item =>
-						item.id === id
-							? { ...item, status: "finished", file: result}
-							: item
-					)
-				}
+				if (!exists) return prev
+				return prev.map(item =>
+					item.id === id
+						? { ...item, status: "finished", file: result}
+						: item
+				)
 			})
 		}
-		eel.expose(abort_download)
-		function abort_download(id){
+		eel.expose(window.finish_download, "finish_download")
+		
+		window.abort_download = function (id){
 			setDownloadItems(prev => {
 				const exists = prev.find(item => item.id === id)
-				if (exists){
-					return prev.map(item =>
-						item.id === id
-							? { ...item, status: "aborted"}
-							: item
-					)
-				}
+				if (!exists) return prev
+				return prev.map(item =>
+					item.id === id
+						? { ...item, status: "aborted"}
+						: item
+				)
 			})
 		}
+		eel.expose(window.abort_download, "abort_download")
 
-		eel.expose(displayError)
-		function displayError(message, traceback=null){
+		window.displayError = function (message, traceback){
 			setErrorMsg(message)
 			setErrorTrace(traceback)
 		}
+		eel.expose(window.displayError, "displayError")
 	}, [])
 
 	const onReady = _=>{
@@ -152,4 +151,8 @@ const App = () => {
 		</React.Fragment>
 	)
 }
-ReactDOM.createRoot(document.getElementById("root")).render(<App/>)
+ReactDOM.createRoot(document.getElementById("root")).render(
+	<AppProvider>
+		<App/>
+	</AppProvider>
+)

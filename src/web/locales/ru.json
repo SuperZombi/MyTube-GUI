@@ -31,9 +31,13 @@
 
 	"stream_video": "Видео",
 	"stream_music": "Музыка",
+	"stream_combined": "Видео + Аудио",
 	"video_title": "Название",
 	"video_author": "Автор",
 	"download_button": "Скачать",
+	"no_streams": "Нет потоков",
+	"select_video": "Выберите видео:",
+	"select_audio": "Выберите аудио:",
 
 	"abort_download": "Отменить",
 	"open_file": "Открыть файл",

@@ -31,9 +31,13 @@
 
 	"stream_video": "Video",
 	"stream_music": "Music",
+	"stream_combined": "Video + Audio",
 	"video_title": "Title",
 	"video_author": "Author",
 	"download_button": "Download",
+	"no_streams": "No streams",
+	"select_video": "Select the Video:",
+	"select_audio": "Select the Audio:",
 
 	"abort_download": "Abort",
 	"open_file": "Open file",

@@ -8,6 +8,7 @@ const Settings = ({
 	const [ytDlp, setYtDlp] = React.useState("...")
 	const [SETTINGS, setSETTINGS] = React.useState({})
 	const [updateAvalible, setUpdateAvalible] = React.useState(false)
+	const { setLanguage } = useApp()
 	React.useEffect(_=>{
 		(async _=>{
 			const SETTINGS = await eel.request_settings()()
@@ -23,8 +24,8 @@ const Settings = ({
 			if (SETTINGS.theme){
 				applyTheme(SETTINGS.theme)
 			}
-			else if (SETTINGS.language){
-
+			if (SETTINGS.language){
+				setLanguage(SETTINGS.language)
 			}
 		})()
 	}, [])
@@ -48,23 +49,16 @@ const Settings = ({
 					}
 				}
 			} else {
-				console.error("YT-DLP not found")
-
 				const fail = await eel.check_ytdlp_updates()()
 				if (fail.length > 0){
 					if (fail.includes("no_yt-dlp") && fail.includes("PermissionError")){
-						console.error("PermissionError")
-						// window.location.reload()
-						setErrorMsg("YT-DLP not found")
+						setErrorMsg(<LANG id="PermissionError"/>)
 					}
 					else if (fail.includes("no_yt-dlp")){
-						console.error("InternetError")
-						// window.location.reload()
-						setErrorMsg("YT-DLP not found")
+						setErrorMsg(<LANG id="InternetError"/>)
 					}
 					else if (fail.includes("PermissionError")){
-						console.error("PermissionError")
-						setErrorMsg("YT-DLP not found")
+						setErrorMsg(<LANG id="PermissionError"/>)
 					}
 				} else {
 					const new_version = await eel.get_yt_dlp_version()()
@@ -84,7 +78,7 @@ const Settings = ({
 			applyTheme(value)
 		}
 		else if (name == "language"){
-
+			setLanguage(value)
 		}
 		setSETTINGS(prev => ({
 			...prev,
@@ -107,7 +101,7 @@ const Settings = ({
 		<Popup id="settings" show={show} setShow={setShow}>
 			<div className="content">
 				<h3 className="versions">
-					<span>Version:</span>
+					<span><LANG id="version"/>:</span>
 					<span className="version">{appVer}</span>
 					<a id="update_avalible" className={updateAvalible ? "show" : ""}
 						href="https://github.com/SuperZombi/MyTube-GUI/releases" target="_blank">
@@ -120,7 +114,7 @@ const Settings = ({
 				</h4>
 				<div className="grid">
 					<i className="fa-solid fa-circle-up"></i>
-					<span lang_="check_updates">Check updates</span>
+					<span><LANG id="check_updates"/></span>
 					<input type="checkbox" name="check_updates"
 						checked={SETTINGS?.check_updates || false}
 						onChange={changeSetting}
@@ -129,18 +123,18 @@ const Settings = ({
 					<div className="line"></div>
 				
 					<i className="fa-solid fa-brush"></i>
-					<span lang_="theme">Theme</span>
+					<span><LANG id="theme"/></span>
 					<select name="theme"
 						value={SETTINGS?.theme}
 						onChange={changeSetting}
 					>
-						<option value="auto" lang_="theme_auto">Auto</option>
-						<option value="light" lang_="theme_light">Light</option>
-						<option value="dark" lang_="theme_dark">Dark</option>
+						<option value="auto"><LANG id="theme_auto"/></option>
+						<option value="light"><LANG id="theme_light"/></option>
+						<option value="dark"><LANG id="theme_dark"/></option>
 					</select>
 
 					<i className="fa-solid fa-globe"></i>
-					<span lang_="language">Language</span>
+					<span><LANG id="language"/></span>
 					<select name="language"
 						value={SETTINGS?.language}
 						onChange={changeSetting}
@@ -153,18 +147,18 @@ const Settings = ({
 					<div className="line"></div>
 				
 					<i className="fa-solid fa-video"></i>
-					<span lang_="video_quality">Video quality</span>
+					<span><LANG id="video_quality"/></span>
 					<select name="video_quality"
 						value={SETTINGS?.video_quality}
 						onChange={changeSetting}
 					>
-						<option value="max">Best</option>
+						<option value="max"><LANG id="video_quality_best"/></option>
 						<option value="1080">1080p</option>
 						<option value="720">720p</option>
 					</select>
 				
 					<i className="fa-solid fa-folder"></i>
-					<span lang_="output_folder">Output Folder</span>
+					<span><LANG id="output_folder"/></span>
 					<div className="row">
 						<input type="text" name="output_folder" readOnly
 							value={SETTINGS?.output_folder || ""}
@@ -181,13 +175,15 @@ const Settings = ({
 		<Popup id="new-version-popup" show={showUpdatePopup} setShow={_=>setShowUpdatePopup(false)}>
 			<div className="content">
 				<div className="update-icon"><i className="fa-solid fa-circle-up"></i></div>
-				<span lang_="update_avalible">Update available!</span>
+				<span><LANG id="update_avalible"/></span>
 				<div className="versions">
 					<span className="version">{appVer}</span>
 					<span>⮕</span>
 					<span className="version">{newAppVer}</span>
 				</div>
-				<a className="simple-button" href="https://github.com/SuperZombi/MyTube-GUI/releases" target="_blank" lang_="download_button">Download</a>
+				<a className="simple-button" href="https://github.com/SuperZombi/MyTube-GUI/releases" target="_blank">
+					<LANG id="download_button"/>
+				</a>
 			</div>
 		</Popup>
 		</React.Fragment>

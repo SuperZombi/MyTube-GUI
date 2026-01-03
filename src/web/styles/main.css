@@ -626,21 +626,26 @@ select {
 	margin-left: 25px;
 	transition: 0.2s;
 }
-#search-result .download:hover {
+#search-result .download:hover:not(:disabled) {
 	background-size: 200% !important;
 	box-shadow: 0 0 5px rgb(0, 200, 0), inset 0 0 2px rgb(200, 255, 200, 0.6);
 }
-#search-result .download:hover i{
+#search-result .download:hover:not(:disabled) i{
 	left: 50%;
 	transform: translateX(-50%) scale(1.25);
 }
-#search-result .download:hover span{
+#search-result .download:hover:not(:disabled) span{
 	transform: translateX(100%);
 	opacity: 0;
 }
-#search-result .download:active{
+#search-result .download:active:not(:disabled){
 	transform: translateY(1px);
 	filter: drop-shadow(0 0 3px lime);
+}
+#search-result .download:disabled{
+	background: dimgrey !important;
+	cursor: not-allowed;
+	box-shadow: none;
 }
 
 

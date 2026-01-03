@@ -56,7 +56,7 @@ const ResultsPopup = ({
 				<img className="video-thumb" src={image} draggable={false}/>
 				<div className="metadata">
 					<span>
-						<span lang_="video_title">Title</span>:
+						<span><LANG id="video_title"/></span>:
 					</span>
 					<span>
 						<input name="video-title" type="text"
@@ -64,7 +64,7 @@ const ResultsPopup = ({
 						/>
 					</span>
 					<span>
-						<span lang_="video_author">Author</span>:
+						<span><LANG id="video_author"/></span>:
 					</span>
 					<span>
 						<input name="video-author" type="text"
@@ -80,21 +80,21 @@ const ResultsPopup = ({
 							checked={type == "video"}
 							onChange={handleChangeType}
 						/>
-						<span lang_="stream_video">Video</span>
+						<span><LANG id="stream_video"/></span>
 					</label>
 					<label>
 						<input type="radio" name="container-type" value="music"
 							checked={type == "music"}
 							onChange={handleChangeType}
 						/>
-						<span lang_="stream_music">Music</span>
+						<span><LANG id="stream_music"/></span>
 					</label>
 					<label>
 						<input type="radio" name="container-type" value="combined"
 							checked={type == "combined"}
 							onChange={handleChangeType}
 						/>
-						<span>Combined</span>
+						<span><LANG id="stream_combined"/></span>
 					</label>
 				</div>
 
@@ -129,12 +129,22 @@ const ResultsPopup = ({
 									onClick={_=>openPicker("combined")}
 								/>
 							</React.Fragment>
-						) : <h3 style={{marginLeft: "1rem"}}>No streams</h3>
+						) : <h3 style={{marginLeft: "1rem"}}>
+							<LANG id="no_streams"/>
+						</h3>
 					}
 				</div>
-				<button className="download" onClick={downloadAction}>
+				
+				<button className="download" onClick={downloadAction}
+					disabled={
+					!(
+						(type == "video" && streams.video?.length > 0 && streams.audio?.length > 0) ||
+						(type == "music" && streams.audio?.length > 0) ||
+						(type == "combined" && streams.combined?.length > 0)
+					)}
+				>
 					<i className="fa-solid fa-circle-down"></i>
-					<span lang_="download_button">Download</span>
+					<span><LANG id="download_button"/></span>
 				</button>
 			</div>
 		</Popup>
@@ -153,7 +163,7 @@ const StreamPicker = ({
 	return (
 		<React.Fragment>
 			<h3>
-				{(type == "video" || type == "combined") ? "Select the Video:" : type == "audio" ? "Select the Audio:" : "Select the Stream:"}
+				{(type == "video" || type == "combined") ? <LANG id="select_video"/> : type == "audio" ? <LANG id="select_audio"/> : "Select the Stream:"}
 			</h3>
 			<div className="select show">
 				{
