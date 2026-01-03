@@ -2,7 +2,7 @@
   "name": "mytube-gui",
   "version": "2.0.0",
   "scripts": {
-    "build": "npm run node github/build/build.js"
+    "build": "node github/build/build.js"
   },
   "devDependencies": {
     "esbuild": "^0.25.8",
