@@ -76,12 +76,15 @@ const App = () => {
 			})
 		}
 		eel.expose(window.abort_download, "abort_download")
+	}, [])
 
-		window.displayError = function (message, traceback){
-			setErrorMsg(message)
-			setErrorTrace(traceback)
+	React.useEffect(() => {
+		const handler = (e) => {
+			setErrorMsg(e.detail.message)
+			setErrorTrace(e.detail.traceback)
 		}
-		eel.expose(window.displayError, "displayError")
+		window.addEventListener("displayError", handler)
+		return () => window.removeEventListener("displayError", handler)
 	}, [])
 
 	const onReady = _=>{
