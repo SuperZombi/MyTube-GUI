@@ -21,6 +21,9 @@ const App = () => {
 
 	const [showSettings, setShowSettings] = React.useState(false)
 
+	const [errorMsg, setErrorMsg] = React.useState(null)
+	const [errorTrace, setErrorTrace] = React.useState(null)
+
 	React.useEffect(() => {
 		eel.expose(download_progress)
 		function download_progress(id, current, total){
@@ -76,8 +79,9 @@ const App = () => {
 		}
 
 		eel.expose(displayError)
-		function displayError(message, traceback="", on_close=null){
-			console.error(message)
+		function displayError(message, traceback=null){
+			setErrorMsg(message)
+			setErrorTrace(traceback)
 		}
 	}, [])
 
@@ -141,7 +145,10 @@ const App = () => {
 				selectedCombined={selectedCombined} setSelectedCombined={setSelectedCombined}
 			/>
 			<DownloadList items={downloadItems}/>
-			<Settings show={showSettings} setShow={setShowSettings} onReady={onReady}/>
+			<Settings show={showSettings} setShow={setShowSettings} onReady={onReady}
+				setErrorMsg={setErrorMsg} setErrorTrace={setErrorTrace}
+			/>
+			<ErrorPopup message={errorMsg} traceback={errorTrace}/>
 		</React.Fragment>
 	)
 }

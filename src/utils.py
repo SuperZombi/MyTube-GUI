@@ -153,6 +153,8 @@ def get_remote_ytdlp():
 				"version": ver,
 				"url": target_url
 			}
+		else:
+			print(r.text)
 	except Exception as e:
 		print("[Failed to check yt-dlp updates]")
 		print(e)

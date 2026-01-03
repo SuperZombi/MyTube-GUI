@@ -129,7 +129,7 @@ const ResultsPopup = ({
 									onClick={_=>openPicker("combined")}
 								/>
 							</React.Fragment>
-						) : <h3>No streams</h3>
+						) : <h3 style={{marginLeft: "1rem"}}>No streams</h3>
 					}
 				</div>
 				<button className="download" onClick={downloadAction}>

@@ -1,5 +1,6 @@
 const Settings = ({
-	show, setShow, onReady
+	show, setShow, onReady,
+	setErrorMsg, setErrorTrace
 }) => {
 	const [appVer, setAppVer] = React.useState("...")
 	const [newAppVer, setNewAppVer] = React.useState(null)
@@ -54,13 +55,16 @@ const Settings = ({
 					if (fail.includes("no_yt-dlp") && fail.includes("PermissionError")){
 						console.error("PermissionError")
 						// window.location.reload()
+						setErrorMsg("YT-DLP not found")
 					}
 					else if (fail.includes("no_yt-dlp")){
 						console.error("InternetError")
 						// window.location.reload()
+						setErrorMsg("YT-DLP not found")
 					}
 					else if (fail.includes("PermissionError")){
 						console.error("PermissionError")
+						setErrorMsg("YT-DLP not found")
 					}
 				} else {
 					const new_version = await eel.get_yt_dlp_version()()

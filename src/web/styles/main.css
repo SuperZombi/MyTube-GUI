@@ -893,6 +893,11 @@ select {
 	background: red;
 	border-radius: 10px 0 0 10px;
 }
+#error-popup details summary{
+	display: flex;
+	margin-top: 10px;
+	justify-content: center;
+}
 
 .versions{
 	display: flex;
