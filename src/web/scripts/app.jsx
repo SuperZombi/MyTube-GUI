@@ -25,66 +25,77 @@ const App = () => {
 	const [errorTrace, setErrorTrace] = React.useState(null)
 
 	React.useEffect(() => {
-		window.download_progress = function (id, current, total){
-			setDownloadItems(prev => {
-				const exists = prev.find(item => item.id === id)
-				if (!exists) return prev
-				return prev.map(item =>
-					item.id === id
-						? { ...item, status: "download", progress: Math.round(current * 100 / total) }
-						: item
-				)
-			})
-		}
-		eel.expose(window.download_progress, "download_progress")
-		
-		window.ffmpeg_progress = function (id, current, total){
-			setDownloadItems(prev => {
-				const exists = prev.find(item => item.id === id)
-				if (!exists) return prev
-				return prev.map(item =>
-					item.id === id
-						? { ...item, status: "ffmpeg", progress: Math.round(current * 100 / total) }
-						: item
-				)
-			})
-		}
-		eel.expose(window.ffmpeg_progress, "ffmpeg_progress")
-		
-		window.finish_download = function (id, result){
-			setDownloadItems(prev => {
-				const exists = prev.find(item => item.id === id)
-				if (!exists) return prev
-				return prev.map(item =>
-					item.id === id
-						? { ...item, status: "finished", file: result}
-						: item
-				)
-			})
-		}
-		eel.expose(window.finish_download, "finish_download")
-		
-		window.abort_download = function (id){
-			setDownloadItems(prev => {
-				const exists = prev.find(item => item.id === id)
-				if (!exists) return prev
-				return prev.map(item =>
-					item.id === id
-						? { ...item, status: "aborted"}
-						: item
-				)
-			})
-		}
-		eel.expose(window.abort_download, "abort_download")
-	}, [])
-
-	React.useEffect(() => {
 		const handler = (e) => {
 			setErrorMsg(e.detail.message)
 			setErrorTrace(e.detail.traceback)
 		}
 		window.addEventListener("displayError", handler)
 		return () => window.removeEventListener("displayError", handler)
+	}, [])
+
+	React.useEffect(() => {
+		const handler = (e) => {
+			setDownloadItems(prev => {
+				const exists = prev.find(item => item.id === e.detail.id)
+				if (!exists) return prev
+				return prev.map(item =>
+					item.id === e.detail.id ? { ...item,
+						status: "download",
+						progress: Math.round(e.detail.current * 100 / e.detail.total)
+					} : item
+				)
+			})
+		}
+		window.addEventListener("download_progress", handler)
+		return () => window.removeEventListener("download_progress", handler)
+	}, [])
+
+	React.useEffect(() => {
+		const handler = (e) => {
+			setDownloadItems(prev => {
+				const exists = prev.find(item => item.id === e.detail.id)
+				if (!exists) return prev
+				return prev.map(item =>
+					item.id === e.detail.id ? {
+						...item, status: "ffmpeg",
+						progress: Math.round(e.detail.current * 100 / e.detail.total)
+					} : item
+				)
+			})
+		}
+		window.addEventListener("ffmpeg_progress", handler)
+		return () => window.removeEventListener("ffmpeg_progress", handler)
+	}, [])
+
+	React.useEffect(() => {
+		const handler = (e) => {
+			setDownloadItems(prev => {
+				const exists = prev.find(item => item.id === e.detail.id)
+				if (!exists) return prev
+				return prev.map(item =>
+					item.id === e.detail.id ? {
+						...item, status: "finished",
+						file: e.detail.result
+					} : item
+				)
+			})
+		}
+		window.addEventListener("finish_download", handler)
+		return () => window.removeEventListener("finish_download", handler)
+	}, [])
+
+	React.useEffect(() => {
+		const handler = (e) => {
+			setDownloadItems(prev => {
+				const exists = prev.find(item => item.id === e.detail.id)
+				if (!exists) return prev
+				return prev.map(item =>
+					item.id === e.detail.id ? { ...item, status: "aborted"} : item
+				)
+			})
+		}
+		window.addEventListener("abort_download", handler)
+		return () => window.removeEventListener("abort_download", handler)
 	}, [])
 
 	const onReady = _=>{
