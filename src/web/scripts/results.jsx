@@ -26,6 +26,7 @@ const ResultsPopup = ({
 		if ((type == "video" && streams.video?.length == 0) || (type == "music" && streams?.audio.length == 0)){
 			setType("combined")
 		}
+		setPickerOpen(false)
 	}, [streams])
 
 	const downloadAction = _=> {
@@ -167,7 +168,7 @@ const StreamPicker = ({
 			</h3>
 			<div className="select show">
 				{
-					array?.length > 0 ? type == "audio" ? (
+					array?.length > 0 ? (type == "audio" || type == "combined") ? (
 						Object.entries(array.reduce((acc, item) => {
 							if (!acc[item.lang]) {
 								acc[item.lang] = []
