@@ -43,9 +43,9 @@ Name: "ukrainian"; MessagesFile: "compiler:Languages\Ukrainian.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "..\..\src\dist\MyTube Downloader\MyTube Downloader.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\dist\MyTube Downloader\MyTube Downloader.exe"; DestDir: "{app}"; Flags: ignoreversion
 
-Source: "..\..\src\dist\MyTube Downloader\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\..\dist\MyTube Downloader\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
