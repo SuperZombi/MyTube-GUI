@@ -6,70 +6,93 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-portable:
-    runs-on: windows-latest
-    defaults:
-      run:
-        shell: pwsh
-        working-directory: ./src
+  build-react:
+    runs-on: ubuntu-latest
     steps:
-    - name: Checkout the repo
-      uses: actions/checkout@v4
-    - name: Set up Python 3.12
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.12"
-    - name: Install Python dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r ../github/requirements.txt
-    - name: Remove yt-dlp
-      run: |
-        pip uninstall -y yt-dlp
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Build portable
-      run: pyinstaller --noconfirm --onefile --noconsole --icon="../github/build/icon.ico" --name="MyTube_portable" --upx-dir="../github/build/upx" --version-file="../github/build/ver.txt" --add-data="web\\;.\\web" --add-data="locales\\;.\\locales" --add-data="../github/build/ffmpeg.exe;." --add-data="../github/build/TaskbarLib.tlb;." main.py
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-    - name: Upload the portable
-      uses: xresloader/upload-to-github-release@v1
-      with:
-        file: "./src/dist/MyTube_portable.exe"
-        overwrite: true
-        update_latest_release: true
+      - name: Install dependencies
+        run: npm install
 
-  build-installer:
-    runs-on: windows-latest
-    defaults:
-      run:
-        shell: pwsh
-        working-directory: ./src
-    steps:
-    - name: Checkout the repo
-      uses: actions/checkout@v4
-    - name: Set up Python 3.12
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.12"
-    - name: Install Python dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r ../github/requirements.txt
-    - name: Remove yt-dlp
-      run: |
-        pip uninstall -y yt-dlp
+      - name: Build React app
+        run: npm run build
 
-    - name: Build installer
-      run: pyinstaller --noconfirm --onedir --noconsole --icon="../github/build/icon.ico" --name="MyTube Downloader" --contents-directory="." --noupx --version-file="../github/build/ver.txt" --add-data="web\\;.\\web" --add-data="locales\\;.\\locales" --add-data="../github/build/ffmpeg.exe;." --add-data="../github/build/TaskbarLib.tlb;." main.py
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: web
+          path: web
 
-    - name: Compile installer
-      uses: Minionguyjpro/Inno-Setup-Action@v1.2.7
-      with:
-        path: "./github/build/installer.iss"
-        options: /O+
+  # build-portable:
+  #   runs-on: windows-latest
+  #   defaults:
+  #     run:
+  #       shell: pwsh
+  #       working-directory: ./src
+  #   steps:
+  #   - name: Checkout the repo
+  #     uses: actions/checkout@v4
+  #   - name: Set up Python 3.12
+  #     uses: actions/setup-python@v5
+  #     with:
+  #       python-version: "3.12"
+  #   - name: Install Python dependencies
+  #     run: |
+  #       python -m pip install --upgrade pip
+  #       pip install -r ../github/requirements.txt
+  #   - name: Remove yt-dlp
+  #     run: |
+  #       pip uninstall -y yt-dlp
 
-    - name: Upload the installer
-      uses: xresloader/upload-to-github-release@v1
-      with:
-        file: "./github/build/MyTube_setup.exe"
-        overwrite: true
-        update_latest_release: true
+  #   - name: Build portable
+  #     run: pyinstaller --noconfirm --onefile --noconsole --icon="../github/build/icon.ico" --name="MyTube_portable" --upx-dir="../github/build/upx" --version-file="../github/build/ver.txt" --add-data="web\\;.\\web" --add-data="locales\\;.\\locales" --add-data="../github/build/ffmpeg.exe;." --add-data="../github/build/TaskbarLib.tlb;." main.py
+
+  #   - name: Upload the portable
+  #     uses: xresloader/upload-to-github-release@v1
+  #     with:
+  #       file: "./src/dist/MyTube_portable.exe"
+  #       overwrite: true
+  #       update_latest_release: true
+
+  # build-installer:
+  #   runs-on: windows-latest
+  #   defaults:
+  #     run:
+  #       shell: pwsh
+  #       working-directory: ./src
+  #   steps:
+  #   - name: Checkout the repo
+  #     uses: actions/checkout@v4
+  #   - name: Set up Python 3.12
+  #     uses: actions/setup-python@v5
+  #     with:
+  #       python-version: "3.12"
+  #   - name: Install Python dependencies
+  #     run: |
+  #       python -m pip install --upgrade pip
+  #       pip install -r ../github/requirements.txt
+  #   - name: Remove yt-dlp
+  #     run: |
+  #       pip uninstall -y yt-dlp
+
+  #   - name: Build installer
+  #     run: pyinstaller --noconfirm --onedir --noconsole --icon="../github/build/icon.ico" --name="MyTube Downloader" --contents-directory="." --noupx --version-file="../github/build/ver.txt" --add-data="web\\;.\\web" --add-data="locales\\;.\\locales" --add-data="../github/build/ffmpeg.exe;." --add-data="../github/build/TaskbarLib.tlb;." main.py
+
+  #   - name: Compile installer
+  #     uses: Minionguyjpro/Inno-Setup-Action@v1.2.7
+  #     with:
+  #       path: "./github/build/installer.iss"
+  #       options: /O+
+
+  #   - name: Upload the installer
+  #     uses: xresloader/upload-to-github-release@v1
+  #     with:
+  #       file: "./github/build/MyTube_setup.exe"
+  #       overwrite: true
+  #       update_latest_release: true

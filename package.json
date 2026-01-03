@@ -1,0 +1,12 @@
+{
+  "name": "mytube-gui",
+  "version": "2.0.0",
+  "scripts": {
+    "build": "npm run node github/build/build.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.8",
+    "fs-extra": "^11.3.2",
+    "glob": "^11.0.3"
+  }
+}
