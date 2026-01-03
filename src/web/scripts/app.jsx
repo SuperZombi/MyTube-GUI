@@ -23,6 +23,7 @@ const App = () => {
 
 	const [errorMsg, setErrorMsg] = React.useState(null)
 	const [errorTrace, setErrorTrace] = React.useState(null)
+	const [reloadError, setReloadError] = React.useState(false)
 
 	React.useEffect(() => {
 		const handler = (e) => {
@@ -160,8 +161,12 @@ const App = () => {
 			<DownloadList items={downloadItems}/>
 			<Settings show={showSettings} setShow={setShowSettings} onReady={onReady}
 				setErrorMsg={setErrorMsg} setErrorTrace={setErrorTrace}
+				setShowReload={setReloadError}
 			/>
-			<ErrorPopup message={errorMsg} traceback={errorTrace}/>
+			<ErrorPopup message={errorMsg} traceback={errorTrace}
+				setMessage={setErrorMsg} setTraceback={setErrorTrace}
+				showReload={reloadError} setShowReload={setReloadError}
+			/>
 		</React.Fragment>
 	)
 }

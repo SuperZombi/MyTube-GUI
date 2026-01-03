@@ -1,6 +1,7 @@
 const Settings = ({
 	show, setShow, onReady,
-	setErrorMsg, setErrorTrace
+	setErrorMsg, setErrorTrace,
+	setShowReload
 }) => {
 	const [appVer, setAppVer] = React.useState("...")
 	const [newAppVer, setNewAppVer] = React.useState(null)
@@ -54,9 +55,11 @@ const Settings = ({
 				if (fail.length > 0){
 					if (fail.includes("no_yt-dlp") && fail.includes("PermissionError")){
 						setErrorMsg(<LANG id="PermissionError"/>)
+						setShowReload(true)
 					}
 					else if (fail.includes("no_yt-dlp")){
 						setErrorMsg(<LANG id="InternetError"/>)
+						setShowReload(true)
 					}
 					else if (fail.includes("PermissionError")){
 						setErrorMsg(<LANG id="PermissionError"/>)
