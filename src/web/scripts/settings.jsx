@@ -9,7 +9,7 @@ const Settings = ({
 	const [ytDlp, setYtDlp] = React.useState("...")
 	const [SETTINGS, setSETTINGS] = React.useState({})
 	const [updateAvalible, setUpdateAvalible] = React.useState(false)
-	const { setLanguage } = useApp()
+	const { language, setLanguage } = useApp()
 	const { showToast } = useToast()
 	React.useEffect(_=>{
 		(async _=>{
@@ -140,7 +140,7 @@ const Settings = ({
 					<i className="fa-solid fa-globe"></i>
 					<span><LANG id="language"/></span>
 					<select name="language"
-						value={SETTINGS?.language}
+						value={language}
 						onChange={changeSetting}
 					>
 						<option value="en">English</option>

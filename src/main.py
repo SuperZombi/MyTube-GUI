@@ -29,7 +29,6 @@ SETTINGS_FILE = os.path.join(APPDATA, "app.settings.json")
 SETTINGS = {
 	"output_folder": get_downloads_folder(),
 	"theme": "auto",
-	"language": "en",
 	"check_updates": True
 }
 @eel.expose
