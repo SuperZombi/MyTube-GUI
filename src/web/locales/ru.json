@@ -42,7 +42,7 @@
 	"abort_download": "Отменить",
 	"open_file": "Открыть файл",
 
-	"yt_dlp_updated": "yt-dlp обновлен до версии:<br><code>$</code>",
+	"yt_dlp_updated": "yt-dlp обновлен до версии:<br><code>{ver}</code>",
 
 	"donate_button": "Пожертвовать",
 	"donate_text": "Нравится эта программа?<br>Поддержите разработку донатом!",

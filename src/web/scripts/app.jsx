@@ -167,6 +167,8 @@ const App = () => {
 }
 ReactDOM.createRoot(document.getElementById("root")).render(
 	<AppProvider>
-		<App/>
+		<ToastProvider>
+			<App/>
+		</ToastProvider>
 	</AppProvider>
 )

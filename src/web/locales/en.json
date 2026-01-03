@@ -42,7 +42,7 @@
 	"abort_download": "Abort",
 	"open_file": "Open file",
 
-	"yt_dlp_updated": "yt-dlp updated to version:<br><code>$</code>",
+	"yt_dlp_updated": "yt-dlp updated to version:<br><code>{ver}</code>",
 
 	"donate_button": "Donate",
 	"donate_text": "Enjoying this free program?<br>Support development with a small donation!",

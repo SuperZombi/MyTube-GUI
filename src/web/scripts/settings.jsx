@@ -9,6 +9,7 @@ const Settings = ({
 	const [SETTINGS, setSETTINGS] = React.useState({})
 	const [updateAvalible, setUpdateAvalible] = React.useState(false)
 	const { setLanguage } = useApp()
+	const { showToast } = useToast()
 	React.useEffect(_=>{
 		(async _=>{
 			const SETTINGS = await eel.request_settings()()
@@ -44,7 +45,7 @@ const Settings = ({
 					if (fail.length == 0){
 						const new_version = await eel.get_yt_dlp_version()()
 						if (yt_dlp_ver != new_version){
-							console.log("yt_dlp_updated", new_version)
+							showToast({text: <LANG id="yt_dlp_updated" vars={{ver: new_version}} html={true}/>, type: "success"})
 						}
 					}
 				}

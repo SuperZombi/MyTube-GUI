@@ -1,3 +1,17 @@
+function applyTheme(name="auto"){
+	if (name == "auto"){
+		const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
+		if (darkThemeMq.matches) {
+			document.documentElement.setAttribute("theme", "dark")
+		} else {
+			document.documentElement.setAttribute("theme", "light")
+		}
+	}
+	else {
+		document.documentElement.setAttribute("theme", name)
+	}
+}
+
 const AppContext = React.createContext()
 const AppProvider = ({children}) => {
 	const supportedLangs = ["en", "ru", "uk"]
@@ -21,39 +35,70 @@ const AppProvider = ({children}) => {
 function useApp() {
 	return React.useContext(AppContext)
 }
-function LANG({ id, vars = {} }) {
+function LANG({ id, vars = {}, html = false }) {
 	const { langData } = useApp()
 	let text = langData[id] || id;
 	for (const key in vars) {
 		text = text.replaceAll(`{${key}}`, vars[key]);
 	}
-	return text
+	if (!html) { return text }
+	return (
+		<span
+			dangerouslySetInnerHTML={{ __html: text }}
+		/>
+	)
 }
 
-function applyTheme(name="auto"){
-	if (name == "auto"){
-		const darkThemeMq = window.matchMedia("(prefers-color-scheme: dark)");
-		if (darkThemeMq.matches) {
-			document.documentElement.setAttribute("theme", "dark")
-		} else {
-			document.documentElement.setAttribute("theme", "light")
-		}
-	}
-	else {
-		document.documentElement.setAttribute("theme", name)
-	}
+
+const ToastContext = React.createContext(null)
+function useToast() {
+	return React.useContext(ToastContext)
 }
-// function Toast(message, color=null){
-// 	let el = document.querySelector("#snackbar")
-// 	el.innerHTML = message
-// 	el.classList.add("show")
-// 	if (color == "ok"){
-// 		el.classList.add("success")
-// 	}
-// 	setTimeout(_=>{
-// 		el.classList.remove("show", "success", "danger")
-// 	}, 3000);
-// }
+const ToastProvider = ({ children }) => {
+	const [toasts, setToasts] = React.useState([])
+
+	function showToast({
+		text,
+		type = "info",
+		duration = 3000
+	}) {
+		const id = crypto.randomUUID();
+		setToasts(prev => [
+			...prev,
+			{ id, text, type, hidden: false }
+		])
+		setTimeout(() => {
+			setToasts(prev =>
+				prev.map(t =>
+					t.id === id
+						? { ...t, hidden: true }
+						: t
+				)
+			)
+		}, duration)
+		setTimeout(() => {
+			setToasts(prev =>
+				prev.filter(t => t.id !== id)
+			)
+		}, duration + 500)
+	}
+
+	return (
+		<ToastContext.Provider value={{ showToast }}>
+			{children}
+			<div id="snackbar">
+				{toasts.map(t => (
+					<div key={t.id} className={
+						`toast ${t.type} ${t.hidden ? "hide" : ""}`
+					}>
+						{t.text}
+					</div>
+				))}
+			</div>
+		</ToastContext.Provider>
+	)
+}
+
 function humanFileSize(size) {
 	var i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
 	return +((size / Math.pow(1024, i)).toFixed(1)) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];

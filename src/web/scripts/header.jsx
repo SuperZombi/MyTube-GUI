@@ -33,11 +33,12 @@ const Header = ({
 		})()
 	}, [usersLoaded])
 
+	const { showToast } = useToast()
 	const onLogin = async _=>{
 		setLoginDisabled(true)
 		let result = await eel.login_user()()
 		if (result){
-			console.log("Login ok")
+			showToast({text: <LANG id="login_success_msg"/>, type: "success"})
 			setUsersLoader(false)
 		}
 		setLoginDisabled(false)
