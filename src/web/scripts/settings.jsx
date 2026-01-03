@@ -54,15 +54,15 @@ const Settings = ({
 				const fail = await eel.check_ytdlp_updates()()
 				if (fail.length > 0){
 					if (fail.includes("no_yt-dlp") && fail.includes("PermissionError")){
-						setErrorMsg(<LANG id="PermissionError"/>)
+						setErrorMsg(<LANG id="PermissionError" html={true}/>)
 						setShowReload(true)
 					}
 					else if (fail.includes("no_yt-dlp")){
-						setErrorMsg(<LANG id="InternetError"/>)
+						setErrorMsg(<LANG id="InternetError" html={true}/>)
 						setShowReload(true)
 					}
 					else if (fail.includes("PermissionError")){
-						setErrorMsg(<LANG id="PermissionError"/>)
+						setErrorMsg(<LANG id="PermissionError" html={true}/>)
 					}
 				} else {
 					const new_version = await eel.get_yt_dlp_version()()
