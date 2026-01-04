@@ -8,6 +8,9 @@
 	.version{
 		background: grey;
 	}
+	.loader{
+		background: dimgray;
+	}
 	.search-container {
 		background: #282c35;
 	}

@@ -377,12 +377,11 @@ input[type="checkbox"]:checked:hover {
 }
 .loader.anim{
 	--color: #ff0000;
-	background: none;
-	background-size: 200% 100%;
+	background-size: 200% 100% !important;
 	background-image:
 		linear-gradient(to right, var(--color) 16%, transparent 16%),
 		linear-gradient(to right, var(--color) 16%, transparent 16%),
-		linear-gradient(to right, var(--color) 25%, transparent 25%);
+		linear-gradient(to right, var(--color) 25%, transparent 25%) !important;
 	animation: matter-progress-linear 1.8s infinite linear;
 }
 @keyframes matter-progress-linear {
