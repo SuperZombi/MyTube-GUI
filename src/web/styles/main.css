@@ -651,7 +651,7 @@ select {
 
 
 #downloads-list{
-	--gaping: 20px;
+	--gaping: 12px;
 	display: flex;
 	flex-direction: column-reverse;
 	padding: 20px;

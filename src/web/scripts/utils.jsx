@@ -62,7 +62,7 @@ const ToastProvider = ({ children }) => {
 		type = "info",
 		duration = 3000
 	}) {
-		const id = crypto.randomUUID();
+		const id = crypto.randomUUID()
 		setToasts(prev => [
 			...prev,
 			{ id, text, type, hidden: false }

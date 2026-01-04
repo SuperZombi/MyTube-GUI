@@ -34,6 +34,27 @@ const App = () => {
 		return () => window.removeEventListener("displayError", handler)
 	}, [])
 
+	const checkDonateNotification = _=>{
+		function checkLastNotificationTime(){
+			let currentTime = Math.floor(Date.now() / 1000)
+			let lastNotificationTime = localStorage.getItem('lastNotificationTime')
+			if (!lastNotificationTime || (currentTime - lastNotificationTime > 12*60*60)) {
+				return true
+			} else { return false }
+		}
+		if (checkLastNotificationTime()){
+			let currentTime = Math.floor(Date.now() / 1000)
+			localStorage.setItem('lastNotificationTime', currentTime)
+			setDownloadItems(prev=>[...prev, {
+				status: "ads",
+				id: crypto.randomUUID(),
+				text: <LANG id="donate_text" html={true}/>,
+				action_text: <LANG id="donate_button" html={true}/>,
+				action: _=> window.open("https://donatello.to/super_zombi","_blank")
+			}])
+		}
+	}
+
 	React.useEffect(() => {
 		const handler = (e) => {
 			setDownloadItems(prev => {
@@ -134,6 +155,7 @@ const App = () => {
 		setDownloadItems(prev=>[...prev, data])
 		setShowResults(false)
 		eel.download(data.id)
+		checkDonateNotification()
 	}
 
 	return (
