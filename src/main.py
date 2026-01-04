@@ -202,8 +202,12 @@ def get_downloader_process(url, streams, metadata):
 	if streams.get('audio'):
 		audio = yt.streams.get(streams['audio'])
 	
-	new_metadata = yt.metadata
-	new_metadata.update(metadata)
+	new_metadata = yt.metadata.copy()
+	filtered_metadata = {
+		k: v for k, v in metadata.items()
+		if v not in ("", None)
+	}
+	new_metadata.update(filtered_metadata)
 
 	downloader = yt.download(video=video, audio=audio, metadata=new_metadata)
 	id = uuid.uuid4().hex
