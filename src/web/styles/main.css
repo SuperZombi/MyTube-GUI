@@ -607,7 +607,7 @@ select {
 	outline: none;
 	background: linear-gradient(135deg, #52c755, #33a036);
 	background-size: 100%;
-	color: rgb(220, 220, 220);
+	color: white;
 	box-shadow: 0 0 2px rgb(0, 200, 0);
 	border-radius: 12px;
 	margin: 10px auto;
