@@ -49,5 +49,6 @@
 	"donate_text": "Enjoying this free program?<br>Support development with a small donation!",
 	
 	"PermissionError": "Permission Error:<br><br>Failed to install yt-dlp!<br>Run the program as administrator!",
+	"PermissionErrorUpdate": "Failed to update yt-dlp!<br><br>Run the program as administrator!",
 	"InternetError": "Internet Connection Error:<br><br>Failed to download yt-dlp!"
 }

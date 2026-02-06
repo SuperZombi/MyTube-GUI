@@ -49,6 +49,9 @@ const Settings = ({
 							showToast({text: <LANG id="yt_dlp_updated" vars={{ver: new_version}} html={true}/>, type: "success"})
 						}
 					}
+					else if (fail.includes("PermissionError")){
+						setErrorMsg(<LANG id="PermissionErrorUpdate" html={true}/>)
+					}
 				}
 			} else {
 				const fail = await eel.check_ytdlp_updates()()
