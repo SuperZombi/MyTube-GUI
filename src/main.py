@@ -14,7 +14,7 @@ import traceback
 import socket
 
 
-__version__ = Version("2.0.1")
+__version__ = Version("2.1.0")
 @eel.expose
 def get_app_version(): return str(__version__)
 @eel.expose
@@ -114,7 +114,7 @@ def get_vid_info(url):
 		return {
 			"url": url,
 			"title": yt.title,
-			"author": yt.author,
+			"author": yt.metadata.get("author") or yt.author,
 			"thumb": yt.thumbnail.url,
 			"type": yt.type,
 			"streams": {

@@ -44,6 +44,7 @@ const DownloadItem = ({
 	return (
 		<div className={`download-item ${data.status == "finished" ? "finished" : data.status == "aborted" ? "finished aborted" : ""}`}
 			style={{"--percent": data.progress}} status={data.status}
+			onClick={data.status == "finished" ? _=>openExplorer(data.file) : null}
 		>
 			<img className="cover" src={data.thumb} draggable={false}/>
 			<div className="progress"></div>
@@ -58,7 +59,6 @@ const DownloadItem = ({
 					</div>
 				</div>
 				<div className="abort" onClick={_=>onAbort(data.id)}><i className="fa-solid fa-circle-xmark"></i></div>
-				<div className="open-file" onClick={_=>openExplorer(data.file)}><i className="fa-solid fa-folder"></i></div>
 			</div>
 		</div>
 	)
