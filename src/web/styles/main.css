@@ -84,7 +84,7 @@ body{
 	padding: 4px;
 	border-radius: 10px;
 	filter: drop-shadow(-2px 4px 4px rgb(0, 0, 0, 0.4));
-	transition: 0.5s;
+	transition: 0.4s;
 	transform-origin: top center;
 	scale: 0;
 	max-height: 75vh;
@@ -305,7 +305,7 @@ input[type="checkbox"]:checked:hover {
 	background: transparent;
 	inset: 0;
 	visibility: hidden;
-	transition: 0.5s;
+	transition: 0.35s;
 	z-index: 2;
 }
 .popup.show{
@@ -322,9 +322,11 @@ input[type="checkbox"]:checked:hover {
 	left: 50%;
 	translate: -50% -50%;
 	border-radius: 16px;
-	scale: 0;
-	transition: 0.5s;
+	scale: 0.95;
+	transition: 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 	overflow: hidden;
+	opacity: 0;
+	transform: translateY(1rem);
 }
 .popup .popup-wrapper .content{
 	height: 100%;
@@ -333,7 +335,9 @@ input[type="checkbox"]:checked:hover {
 	max-height: 86vh;
 }
 .popup.show .popup-wrapper{
+	opacity: 1;
 	scale: 1;
+	transform: translateY(0);
 }
 .popup .close {
 	color: red;
@@ -514,6 +518,7 @@ select {
 	display: flex;
 	gap: 4px;
 	align-items: center;
+	padding-left: 2px;
 }
 .stream .container-details .container-details-tags{
 	display: flex;
@@ -529,8 +534,8 @@ select {
 .stream .container-details .container-details-tags .filesize{
 	background: #00bb28;
 }
-.stream .container-details .container-details-tags .type{
-	background: darkorange;
+.stream .container-details .container-details-tags .res{
+	font-family: monospace;
 }
 .stream sub{
 	vertical-align: text-bottom;

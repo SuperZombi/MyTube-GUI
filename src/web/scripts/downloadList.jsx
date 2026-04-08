@@ -29,17 +29,21 @@ const DownloadItem = ({
 			<div className={`download-item ads ${showItem ? "" : "hide"}`}>
 				<div className="content">
 					<div className="text">{data.text}</div>
-					{(data.action && data.action_text) ? (
+					{(data.action && data.action_text) && (
 						<div className="tiny-button action" onClick={data.action}>
 							{data.action_text}
 						</div>
-					) : null}
+					)}
 				</div>
 				<div className="abort" onClick={_=>setShowItem(false)}>
 					<i className="fa-solid fa-circle-xmark"></i>
 				</div>
 			</div>
 		)
+	}
+	const quality_map = {
+		"2160": "4K",
+		"1440": "2K"
 	}
 	return (
 		<div className={`download-item ${data.status == "finished" ? "finished" : data.status == "aborted" ? "finished aborted" : ""}`}
@@ -54,6 +58,11 @@ const DownloadItem = ({
 					<div className="author">{data.author}</div>
 					<div className="sub">
 						<div className="time">{data.time}</div>
+						{data.res && (
+							Object.keys(quality_map).includes(String(data.res)) ? (
+								<div className="res">[{quality_map[String(data.res)]}]</div>
+							) : <div className="res">[{data.res}p]</div>
+						)}
 						<div className="percent"></div>
 						<div className="status"></div>
 					</div>

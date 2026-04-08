@@ -14,7 +14,7 @@ import traceback
 import socket
 
 
-__version__ = Version("2.1.0")
+__version__ = Version("2.2.0")
 @eel.expose
 def get_app_version(): return str(__version__)
 @eel.expose
@@ -195,13 +195,9 @@ def download(downloader_id):
 @eel.expose
 def get_downloader_process(url, streams, metadata):
 	yt = get_yt_obj(url)
-	video = None
-	audio = None
-	if streams.get('video'):
-		video = yt.streams.get(streams['video'])
-	if streams.get('audio'):
-		audio = yt.streams.get(streams['audio'])
-	
+	video = yt.streams.get(streams.get('video')) if streams.get('video') else None
+	audio = yt.streams.get(streams.get('audio')) if streams.get('audio') else None
+
 	new_metadata = yt.metadata.copy()
 	filtered_metadata = {
 		k: v for k, v in metadata.items()
@@ -217,7 +213,8 @@ def get_downloader_process(url, streams, metadata):
 		"title": new_metadata.get("title"),
 		"author": new_metadata.get("author"),
 		"thumb": yt.thumbnail.url,
-		"time": strtime(yt.duration)
+		"time": strtime(yt.duration),
+		"res": video.res if video else None
 	}
 
 @eel.expose

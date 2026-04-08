@@ -83,6 +83,8 @@ def stream_to_json(stream):
 	data["extension"] = stream.audioExt if stream.isAudio else stream.videoExt
 	if stream.isVideo or stream.isMuxed or stream.isM3U8:
 		data["fps"] = stream.fps
+		data["width"] = stream.width
+		data["height"] = stream.height
 	if stream.isAudio or stream.isMuxed or stream.isM3U8:
 		data["lang"] = stream.lang
 	return data

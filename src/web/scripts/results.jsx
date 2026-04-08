@@ -215,6 +215,10 @@ const StreamCard = ({
 	info, type, selected, onClick
 }) => {
 	if (!info) return
+	const quality_map = {
+		"2160": "4K",
+		"1440": "2K"
+	}
 	return (
 		<div className={`stream ${selected ? "selected" : ""}`} onClick={onClick}>
 			<div className="container">
@@ -222,11 +226,14 @@ const StreamCard = ({
 			</div>
 			<div className="container-details">
 				<div className="container-details-head">
-					<span>
-						{info.quality}
-						<sub>{(type == "video" || type == "combined") ? "p" : "kbps"}</sub>
-					</span>
-					{info.fps ? (
+					{
+						(type == "video" || type == "combined") ? (
+							Object.keys(quality_map).includes(String(info.quality)) ? (
+								<span>{quality_map[String(info.quality)]}</span>
+							) : <span>{info.quality}<sub>p</sub></span>
+						) : <span>{info.quality}<sub>kbps</sub></span>
+					}
+					{info.fps && (
 						<React.Fragment>
 							<span>•</span>
 							<span>
@@ -234,21 +241,24 @@ const StreamCard = ({
 								<sub>fps</sub>
 							</span>
 						</React.Fragment>
-					) : null}
-					{info.lang ? (
+					)}
+					{info.lang && (
 						<React.Fragment>
 							<span>•</span>
 							<span>{info.lang.toUpperCase()}</span>
 						</React.Fragment>
-					) : null}
+					)}
 				</div>
 				<div className="container-details-tags">
-					{info.filesize ? (
+					{info.filesize && (
 						<span className="filesize">{humanFileSize(info.filesize)}</span>
-					) : null}
-					{info.codec ? (
+					)}
+					{info.codec && (
 						<span>{info.codec}</span>
-					) : null}
+					)}
+					{(info.width && info.height) && (
+						<span className="res">{info.width}×{info.height}</span>
+					)}
 				</div>
 			</div>
 		</div>
