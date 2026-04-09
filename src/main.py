@@ -8,10 +8,12 @@ import subprocess
 import requests
 from tkinter import Tk
 from tkinter.filedialog import askdirectory
-from threading import Thread
+from threading import Thread, Lock
 from utils import *
 import traceback
 import socket
+import win32gui
+import win32con
 
 
 __version__ = Version("2.3.2")
@@ -79,21 +81,84 @@ def raiseError(msg, traceback=""):
 	)
 
 
-PENDING_SEARCH_QUERY = None
+IPC_HOST = "127.0.0.1"
+IPC_PORT = 8091
+PENDING_SEARCH_QUERIES = []
+PENDING_SEARCH_LOCK = Lock()
+
+def focus_window():
+	target_windows = []
+
+	def collect(hwnd, _):
+		if not win32gui.IsWindowVisible(hwnd):
+			return
+		title = win32gui.GetWindowText(hwnd) or ""
+		if "MyTube Downloader" in title:
+			target_windows.append(hwnd)
+
+	try:
+		win32gui.EnumWindows(collect, None)
+		if not target_windows:
+			return
+		hwnd = target_windows[0]
+		if win32gui.IsIconic(hwnd):
+			win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
+		else:
+			win32gui.ShowWindow(hwnd, win32con.SW_SHOW)
+		win32gui.SetForegroundWindow(hwnd)
+	except Exception:
+		pass
+
+def push_search_query(query):
+	if query and query.strip():
+		with PENDING_SEARCH_LOCK:
+			PENDING_SEARCH_QUERIES.append(query.strip())
+
 def load_startup_query():
-	global PENDING_SEARCH_QUERY
 	for arg in sys.argv[1:]:
 		query = extract_search_query(arg)
 		if query:
-			PENDING_SEARCH_QUERY = query
+			push_search_query(query)
 			break
 
 @eel.expose
 def consume_startup_query():
-	global PENDING_SEARCH_QUERY
-	query = PENDING_SEARCH_QUERY
-	PENDING_SEARCH_QUERY = None
-	return query
+	with PENDING_SEARCH_LOCK:
+		if PENDING_SEARCH_QUERIES:
+			return PENDING_SEARCH_QUERIES.pop(0)
+	return None
+
+def notify_running_instance(query, host=IPC_HOST, port=IPC_PORT):
+	try:
+		payload = query.encode("utf-8")
+		with socket.create_connection((host, port), timeout=1.0) as client:
+			client.sendall(payload)
+		return True
+	except OSError:
+		return False
+
+def start_single_instance_server(host=IPC_HOST, port=IPC_PORT):
+	def handler():
+		with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+			sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+			sock.bind((host, port))
+			sock.listen(5)
+			while True:
+				try:
+					conn, _ = sock.accept()
+				except OSError:
+					continue
+				with conn:
+					try:
+						raw = conn.recv(8192).decode("utf-8").strip()
+					except Exception:
+						raw = None
+					query = extract_search_query(raw)
+					if query:
+						push_search_query(query)
+						focus_window()
+
+	Thread(target=handler, daemon=True).start()
 
 
 CACHED_QUERIES = {}
@@ -350,4 +415,9 @@ def run():
 if __name__ == "__main__":
 	eel.init(resource_path("web"))
 	load_startup_query()
+	with PENDING_SEARCH_LOCK:
+		first_query = PENDING_SEARCH_QUERIES[0] if PENDING_SEARCH_QUERIES else None
+	if first_query and notify_running_instance(first_query):
+		sys.exit(0)
+	start_single_instance_server()
 	run()
