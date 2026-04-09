@@ -12,6 +12,7 @@ from threading import Thread
 from utils import *
 import traceback
 import socket
+from urllib.parse import parse_qs, unquote, urlparse
 
 
 __version__ = Version("2.3.1")
@@ -77,6 +78,39 @@ def raiseError(msg, traceback=""):
 		strip_ansi(str(msg)),
 		strip_ansi(str(traceback))
 	)
+
+
+PENDING_SEARCH_QUERY = None
+def _extract_search_query(raw_value):
+	if not raw_value:
+		return None
+	value = unquote(str(raw_value)).strip().strip('"').strip("'")
+	if value.startswith("mytube://"):
+		parsed = urlparse(value)
+		query_url = parse_qs(parsed.query).get("url", [None])[0]
+		if query_url:
+			return _extract_search_query(query_url)
+		payload = parsed.netloc + parsed.path
+		payload = payload.lstrip("/")
+		return _extract_search_query(payload)
+	if value.startswith("mytube:"):
+		return _extract_search_query(value[len("mytube:"):])
+	return value if value else None
+
+def load_startup_query():
+	global PENDING_SEARCH_QUERY
+	for arg in sys.argv[1:]:
+		query = _extract_search_query(arg)
+		if query:
+			PENDING_SEARCH_QUERY = query
+			break
+
+@eel.expose
+def consume_startup_query():
+	global PENDING_SEARCH_QUERY
+	query = PENDING_SEARCH_QUERY
+	PENDING_SEARCH_QUERY = None
+	return query
 
 
 CACHED_QUERIES = {}
@@ -332,4 +366,5 @@ def run():
 
 if __name__ == "__main__":
 	eel.init(resource_path("web"))
+	load_startup_query()
 	run()

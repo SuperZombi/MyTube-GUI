@@ -59,6 +59,11 @@ Type: files; Name: "{app}\users.data.json"
 Type: files; Name: "{app}\yt-dlp.exe"
 Type: filesandordirs; Name: "{userappdata}\MyTube"
 
+[Registry]
+Root: HKCU; Subkey: "Software\Classes\mytube"; ValueType: string; ValueName: ""; ValueData: "URL:MyTube Downloader Protocol"; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Classes\mytube"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Classes\mytube\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\MyTube Downloader.exe,0"; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Classes\mytube\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\MyTube Downloader.exe"" ""%1"""; Flags: uninsdeletekey
+
 [Run]
 Filename: "{app}\MyTube Downloader.exe"; Description: "{cm:LaunchProgram,MyTube Downloader}"; Flags: nowait postinstall skipifsilent
-
