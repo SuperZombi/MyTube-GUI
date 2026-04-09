@@ -37,3 +37,11 @@ function abort_download(id){
 	window.dispatchEvent(event)
 }
 eel.expose(abort_download)
+
+function new_startup_query(query){
+	const event = new CustomEvent("new_startup_query", { detail: {
+		query: query
+	}})
+	window.dispatchEvent(event)
+}
+eel.expose(new_startup_query)
