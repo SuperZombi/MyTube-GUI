@@ -1,0 +1,20 @@
+{
+	"manifest_version": 3,
+	"version": "1.0",
+	"name": "MyTube Companion",
+	"description": "Share what you like with your friends.",
+	"host_permissions": [
+		"https://www.youtube.com/*",
+		"https://music.youtube.com/*"
+	],
+	"content_scripts": [
+		{
+			"matches": [
+				"https://www.youtube.com/*",
+				"https://music.youtube.com/*"
+			],
+			"js": ["content.js"],
+			"run_at": "document_idle"
+		}
+	]
+}
