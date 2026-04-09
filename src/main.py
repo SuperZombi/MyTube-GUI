@@ -111,10 +111,6 @@ def get_vid_info(url):
 			temp_videos = filter_streams(temp_videos, {"max_res": prefer_q})
 			temp_combined = filter_streams(temp_combined, {"max_res": prefer_q})
 
-		subs = yt.subtitles.filter(no_autogen=True)
-		if len(subs) == 0:
-			subs = yt.subtitles.filter(only_autogen=True)
-		
 		return {
 			"url": url,
 			"title": yt.title,
@@ -130,7 +126,7 @@ def get_vid_info(url):
 				"video": stream_to_json(temp_videos.first()) if temp_videos else None,
 				"combined": stream_to_json(temp_combined.first()) if temp_combined else None
 			},
-			"subtitles": subs_to_json(subs.values())
+			"subtitles": subs_to_json(yt.subtitles.values())
 		}
 	except Exception as e:
 		raiseError(e, traceback.format_exc())
