@@ -25,7 +25,7 @@ const App = () => {
 	const [errorMsg, setErrorMsg] = React.useState(null)
 	const [errorTrace, setErrorTrace] = React.useState(null)
 	const [reloadError, setReloadError] = React.useState(false)
-	const [startupQueryHandled, setStartupQueryHandled] = React.useState(false)
+	const pollingStartupQuery = React.useRef(false)
 
 	React.useEffect(() => {
 		const handler = (e) => {
@@ -140,17 +140,26 @@ const App = () => {
 	}
 
 	React.useEffect(() => {
-		if (!canSearch || startupQueryHandled) return
-		const applyStartupQuery = async () => {
-			const startupQuery = await eel.consume_startup_query()()
-			setStartupQueryHandled(true)
-			if (startupQuery && startupQuery.trim() !== "") {
-				setSearch(startupQuery)
-				onSearch(startupQuery.trim())
+		if (!canSearch) return
+
+		const consumePendingQuery = async () => {
+			if (pollingStartupQuery.current || !canSearch) return
+			pollingStartupQuery.current = true
+			try {
+				const startupQuery = await eel.consume_startup_query()()
+				if (startupQuery && startupQuery.trim() !== "") {
+					setSearch(startupQuery)
+					await onSearch(startupQuery.trim())
+				}
+			} finally {
+				pollingStartupQuery.current = false
 			}
 		}
-		applyStartupQuery()
-	}, [canSearch, startupQueryHandled])
+
+		consumePendingQuery()
+		const timer = setInterval(consumePendingQuery, 1200)
+		return () => clearInterval(timer)
+	}, [canSearch])
 
 	const processResults = results=>{
 		setShowResults(true)
