@@ -26,7 +26,6 @@ const App = () => {
 	const [errorTrace, setErrorTrace] = React.useState(null)
 	const [reloadError, setReloadError] = React.useState(false)
 	const [startupQueryHandled, setStartupQueryHandled] = React.useState(false)
-	const [runtimeQuery, setRuntimeQuery] = React.useState(null)
 
 	React.useEffect(() => {
 		const handler = (e) => {
@@ -139,22 +138,6 @@ const App = () => {
 		setCanSearch(true)
 		setSearch("")
 	}
-
-	React.useEffect(() => {
-		if (!runtimeQuery || !canSearch) return
-		setSearch(runtimeQuery)
-		onSearch(runtimeQuery.trim())
-		setRuntimeQuery(null)
-	}, [runtimeQuery, canSearch])
-
-	React.useEffect(() => {
-		const handler = (e) => {
-			const nextQuery = (e.detail?.query || "").trim()
-			if (nextQuery !== "") setRuntimeQuery(nextQuery)
-		}
-		window.addEventListener("new_startup_query", handler)
-		return () => window.removeEventListener("new_startup_query", handler)
-	}, [])
 
 	React.useEffect(() => {
 		if (!canSearch || startupQueryHandled) return

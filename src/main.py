@@ -12,7 +12,6 @@ from threading import Thread
 from utils import *
 import traceback
 import socket
-from queue import Queue, Empty
 
 
 __version__ = Version("2.3.2")
@@ -80,79 +79,21 @@ def raiseError(msg, traceback=""):
 	)
 
 
-SINGLE_INSTANCE_HOST = "127.0.0.1"
-SINGLE_INSTANCE_PORT = 47621
-INSTANCE_SOCKET = None
-
-PENDING_SEARCH_QUERIES = Queue()
-
-def queue_search_query(raw_value):
-	query = extract_search_query(raw_value)
-	if not query:
-		return False
-	PENDING_SEARCH_QUERIES.put(query)
-	try:
-		eel.new_startup_query(query)
-	except Exception:
-		pass
-	return True
-
+PENDING_SEARCH_QUERY = None
 def load_startup_query():
+	global PENDING_SEARCH_QUERY
 	for arg in sys.argv[1:]:
-		if queue_search_query(arg):
+		query = extract_search_query(arg)
+		if query:
+			PENDING_SEARCH_QUERY = query
 			break
 
 @eel.expose
 def consume_startup_query():
-	try:
-		return PENDING_SEARCH_QUERIES.get_nowait()
-	except Empty:
-		return None
-
-def forward_query_to_running_instance():
-	for arg in sys.argv[1:]:
-		query = extract_search_query(arg)
-		if not query:
-			continue
-		try:
-			with socket.create_connection((SINGLE_INSTANCE_HOST, SINGLE_INSTANCE_PORT), timeout=1) as sock:
-				sock.sendall((query + "\n").encode("utf-8"))
-			return True
-		except OSError:
-			return False
-	return True
-
-def start_single_instance_server():
-	global INSTANCE_SOCKET
-	INSTANCE_SOCKET = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	INSTANCE_SOCKET.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-	try:
-		INSTANCE_SOCKET.bind((SINGLE_INSTANCE_HOST, SINGLE_INSTANCE_PORT))
-	except OSError:
-		return False
-
-	INSTANCE_SOCKET.listen(5)
-
-	def server_handler():
-		while True:
-			try:
-				client, _ = INSTANCE_SOCKET.accept()
-			except OSError:
-				break
-			with client:
-				try:
-					data = b""
-					while not data.endswith(b"\n"):
-						chunk = client.recv(1024)
-						if not chunk:
-							break
-						data += chunk
-					queue_search_query(data.decode("utf-8").strip())
-				except Exception:
-					continue
-
-	Thread(target=server_handler, daemon=True).start()
-	return True
+	global PENDING_SEARCH_QUERY
+	query = PENDING_SEARCH_QUERY
+	PENDING_SEARCH_QUERY = None
+	return query
 
 
 CACHED_QUERIES = {}
@@ -408,8 +349,5 @@ def run():
 
 if __name__ == "__main__":
 	eel.init(resource_path("web"))
-	if not start_single_instance_server():
-		forward_query_to_running_instance()
-		sys.exit(0)
 	load_startup_query()
 	run()
