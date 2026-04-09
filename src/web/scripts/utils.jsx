@@ -39,7 +39,7 @@ function LANG({ id, vars = {}, html = false }) {
 	const { langData } = useApp()
 	let text = langData[id] || id;
 	for (const key in vars) {
-		text = text.replaceAll(`{${key}}`, vars[key]);
+		text = text.replaceAll(`{${key}}`, vars[key])
 	}
 	if (!html) { return text }
 	return (
@@ -48,7 +48,16 @@ function LANG({ id, vars = {}, html = false }) {
 		/>
 	)
 }
-
+function useLang() {
+	const { langData } = useApp()
+	return (id, vars = {}) => {
+		let text = langData[id] || id;
+		for (const key in vars) {
+			text = text.replaceAll(`{${key}}`, vars[key])
+		}
+		return text
+	}
+}
 
 const ToastContext = React.createContext(null)
 function useToast() {

@@ -33,6 +33,7 @@
 	"stream_video": "Video",
 	"stream_music": "Music",
 	"stream_combined": "Video + Audio",
+	"subtitles": "Subtitles",
 	"video_title": "Title",
 	"video_author": "Author",
 	"download_button": "Download",

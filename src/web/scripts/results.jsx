@@ -3,6 +3,7 @@ const ResultsPopup = ({
 	url, streams,
 	title, author, image,
 	setTitle, setAuthor,
+	subtitles,
 	type, setType,
 	onDownload,
 	selectedVideo, setSelectedVideo,
@@ -41,6 +42,7 @@ const ResultsPopup = ({
 
 		onDownload(url, result, {"title": title, "author": author})
 	}
+	const t = useLang()
 
 	return (
 		<Popup id="search-result" show={show} setShow={setShow}>
@@ -73,30 +75,41 @@ const ResultsPopup = ({
 						/>
 					</span>
 				</div>
-				<hr/>
+				<div className="line" style={{margin: "1rem 0"}}></div>
 
 				<div className="radio-tabs">
-					<label>
+					<label title={t("stream_video")}>
 						<input type="radio" name="container-type" value="video"
 							checked={type == "video"}
 							onChange={handleChangeType}
 						/>
-						<span><LANG id="stream_video"/></span>
+						<i className="fa-solid fa-video"></i>
 					</label>
-					<label>
+					{streams.combined?.length > 0 && (
+						<label title={t("stream_combined")}>
+							<input type="radio" name="container-type" value="combined"
+								checked={type == "combined"}
+								onChange={handleChangeType}
+							/>
+							<i className="fa-solid fa-film"></i>
+						</label>
+					)}
+					<label title={t("stream_music")}>
 						<input type="radio" name="container-type" value="music"
 							checked={type == "music"}
 							onChange={handleChangeType}
 						/>
-						<span><LANG id="stream_music"/></span>
+						<i className="fa-solid fa-music"></i>
 					</label>
-					<label>
-						<input type="radio" name="container-type" value="combined"
-							checked={type == "combined"}
-							onChange={handleChangeType}
-						/>
-						<span><LANG id="stream_combined"/></span>
-					</label>
+					{subtitles?.length > 0 && (
+						<label title={t("subtitles")}>
+							<input type="radio" name="container-type" value="subtitles"
+								checked={type == "subtitles"}
+								onChange={handleChangeType}
+							/>
+							<i className="fa-solid fa-closed-captioning"></i>
+						</label>
+					)}
 				</div>
 
 				<div className="stream-selectors">
@@ -130,23 +143,38 @@ const ResultsPopup = ({
 									onClick={_=>openPicker("combined")}
 								/>
 							</React.Fragment>
-						) : <h3 style={{marginLeft: "1rem"}}>
-							<LANG id="no_streams"/>
-						</h3>
+						) : (type == "subtitles" && subtitles?.length > 0) ? (
+							<React.Fragment>
+								{subtitles.map((item, index) => (
+									<StreamCard
+										key={index}
+										info={item}
+										type="sub"
+										onClick={_=>window.open(item.url, "_blank")}
+									/>
+								))}
+							</React.Fragment>
+						) : (
+							<h3 style={{marginLeft: "1rem"}}>
+								<LANG id="no_streams"/>
+							</h3>
+						)
 					}
 				</div>
-				
-				<button className="download" onClick={downloadAction}
-					disabled={
-					!(
-						(type == "video" && streams.video?.length > 0 && streams.audio?.length > 0) ||
-						(type == "music" && streams.audio?.length > 0) ||
-						(type == "combined" && streams.combined?.length > 0)
-					)}
-				>
-					<i className="fa-solid fa-circle-down"></i>
-					<span><LANG id="download_button"/></span>
-				</button>
+
+				{type != "subtitles" && (
+					<button className="download" onClick={downloadAction}
+						disabled={
+						!(
+							(type == "video" && streams.video?.length > 0 && streams.audio?.length > 0) ||
+							(type == "music" && streams.audio?.length > 0) ||
+							(type == "combined" && streams.combined?.length > 0)
+						)}
+					>
+						<i className="fa-solid fa-circle-down"></i>
+						<span><LANG id="download_button"/></span>
+					</button>
+				)}
 			</div>
 		</Popup>
 	)
@@ -219,20 +247,26 @@ const StreamCard = ({
 		"2160": "4K",
 		"1440": "2K"
 	}
+	const icons = {
+		video: "fa-video",
+		combined: "fa-video",
+		audio: "fa-music",
+		sub: "fa-closed-captioning"
+	}
 	return (
 		<div className={`stream ${selected ? "selected" : ""}`} onClick={onClick}>
 			<div className="container">
-				<i className={`fa-solid ${(type == "video" || type == "combined") ? "fa-video" : "fa-music"}`}></i>
+				<i className={`fa-solid ${icons[type] || ""}`}></i>
 			</div>
 			<div className="container-details">
 				<div className="container-details-head">
-					{
-						(type == "video" || type == "combined") ? (
-							Object.keys(quality_map).includes(String(info.quality)) ? (
-								<span>{quality_map[String(info.quality)]}</span>
-							) : <span>{info.quality}<sub>p</sub></span>
-						) : <span>{info.quality}<sub>kbps</sub></span>
-					}
+					{(type == "video" || type == "combined") && (
+						Object.keys(quality_map).includes(String(info.quality)) ? (
+							<span>{quality_map[String(info.quality)]}</span>
+						) : <span>{info.quality}<sub>p</sub></span>
+					)}
+					{type == "audio" && <span>{info.quality}<sub>kbps</sub></span>}
+					{type == "sub" && <span>{info.name}</span>}
 					{info.fps && (
 						<React.Fragment>
 							<span>•</span>
@@ -259,6 +293,7 @@ const StreamCard = ({
 					{(info.width && info.height) && (
 						<span className="res">{info.width}×{info.height}</span>
 					)}
+					{type == "sub" && <span className="filesize">{info.extension}</span>}
 				</div>
 			</div>
 		</div>

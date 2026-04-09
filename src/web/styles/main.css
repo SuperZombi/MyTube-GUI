@@ -288,7 +288,8 @@ input[type="checkbox"]:checked:hover {
 	gap: 5px;
 	width: 100%;
 }
-#settings .grid .line {
+.line {
+	flex-shrink: 0;
 	grid-column: 1 / -1;
 	height: 1px;
 	width: 100%;
@@ -298,7 +299,6 @@ input[type="checkbox"]:checked:hover {
 #login_button {
 	width: 100%;
 }
-
 
 .popup {
 	position: fixed;
@@ -415,13 +415,17 @@ input[type="checkbox"]:checked:hover {
 	text-align: center;
 	font-size: 18px;
 	max-width: min(90%, 500px);
-	margin: 10px auto;
+	margin: 10px auto 0;
 	display: grid;
 	grid-template-columns: 0.25fr 1fr;
 	align-items: center;
 	gap: 10px 5px;
 	justify-items: stretch;
 	user-select: none;
+}
+#search-result .content{
+	display: flex;
+	flex-direction: column;
 }
 input[type="text"]{
 	font-size: 1rem;
@@ -454,6 +458,8 @@ select {
 	margin: 0 28px;
 	height: 35px;
 	gap: 2px;
+	white-space: nowrap;
+	justify-content: center;
 }
 .radio-tabs label{
 	padding: 8px 16px;
@@ -462,6 +468,7 @@ select {
 	cursor: pointer;
 	user-select: none;
 	border-radius: 10px 10px 0 0;
+	border: 1px solid #1655da;
 }
 .radio-tabs label:hover{
 	background: #79a5ff;
@@ -487,6 +494,10 @@ select {
 	user-select: none;
 	cursor: pointer;
 	position: relative;
+	transition: 0.15s;
+}
+.stream:hover{
+	background: darkgray;
 }
 .stream.selected:before {
 	content: '';
@@ -551,6 +562,7 @@ select {
 	border: 1px solid #1655da;
 	padding: 5px;
 	border-radius: 20px;
+	overflow-y: auto;
 }
 .stream-selectors > .hide{
 	display: none;
@@ -620,6 +632,7 @@ select {
 	position: relative;
 	overflow: hidden;
 	transition: 0.2s;
+	flex-shrink: 0;
 }
 #search-result .download i{
 	position: absolute;

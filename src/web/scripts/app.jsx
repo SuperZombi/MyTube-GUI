@@ -12,6 +12,7 @@ const App = () => {
 	const [resultsStreams, setResultsStreams] = React.useState([])
 	const [resultsType, setResultsType] = React.useState("video")
 	const [resultsUrl, setResultsUrl] = React.useState("")
+	const [resultsSubtitles, setResultsSubtitles] = React.useState([])
 
 	const [selectedVideo, setSelectedVideo] = React.useState(null)
 	const [selectedAudio, setSelectedAudio] = React.useState(null)
@@ -145,6 +146,7 @@ const App = () => {
 		setResultsType(results.type)
 		setResultsStreams(results.streams)
 		setResultsUrl(results.url)
+		setResultsSubtitles(results.subtitles)
 
 		setSelectedVideo(results.select.video || results.streams.video?.[0])
 		setSelectedAudio(results.select.audio || results.streams.audio?.[0])
@@ -176,6 +178,7 @@ const App = () => {
 				type={resultsType}
 				setType={setResultsType}
 				onDownload={onDownload}
+				subtitles={resultsSubtitles}
 				selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo}
 				selectedAudio={selectedAudio} setSelectedAudio={setSelectedAudio}
 				selectedCombined={selectedCombined} setSelectedCombined={setSelectedCombined}

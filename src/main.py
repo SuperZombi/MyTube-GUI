@@ -14,7 +14,7 @@ import traceback
 import socket
 
 
-__version__ = Version("2.2.0")
+__version__ = Version("2.3.0")
 @eel.expose
 def get_app_version(): return str(__version__)
 @eel.expose
@@ -125,7 +125,8 @@ def get_vid_info(url):
 			"select": {
 				"video": stream_to_json(temp_videos.first()) if temp_videos else None,
 				"combined": stream_to_json(temp_combined.first()) if temp_combined else None
-			}
+			},
+			"subtitles": subs_to_json(yt.subtitles.subtitles)
 		}
 	except Exception as e:
 		raiseError(e, traceback.format_exc())

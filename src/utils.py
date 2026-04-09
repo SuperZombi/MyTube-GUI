@@ -92,6 +92,9 @@ def stream_to_json(stream):
 def streams_to_list(streams):
 	return [stream_to_json(stream) for stream in streams]
 
+def subs_to_json(array):
+	return list(map(lambda sub: vars(sub), array))
+
 def login_to_youtube():
 	driver = uc.Chrome()
 	driver.set_window_size(620,720)

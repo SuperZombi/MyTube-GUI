@@ -36,6 +36,9 @@
 	.stream{
 		background: #313541;
 	}
+	.stream:hover{
+		background: #4d5467;
+	}
 	.radio-tabs label:hover{
 		background: #0053ff;
 		color: white;
