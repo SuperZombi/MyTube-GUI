@@ -2,6 +2,7 @@ import sys, os
 import requests
 import re
 import time
+from urllib.parse import urlparse, parse_qs, unquote
 import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -75,6 +76,16 @@ def strtime(seconds):
 def strip_ansi(text):
 	ansi_escape = re.compile(r'\x1B[@-_][0-?]*[ -/]*[@-~]')
 	return ansi_escape.sub('', text)
+
+def extract_search_query(raw_value):
+	if not raw_value: return None
+	value = str(raw_value).strip().strip('"').strip("'")
+	value = unquote(value)
+	if value.startswith("mytube://"):
+		parsed = urlparse(value)
+		query_url = parse_qs(parsed.query).get("url")
+		if query_url: return query_url[0].strip() or None
+	return value or None
 
 def stream_to_json(stream):
 	data = {"itag": stream.itag, "filesize": stream.filesize}

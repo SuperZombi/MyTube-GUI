@@ -12,10 +12,9 @@ from threading import Thread
 from utils import *
 import traceback
 import socket
-from urllib.parse import urlparse, parse_qs, unquote
 
 
-__version__ = Version("2.3.1")
+__version__ = Version("2.3.2")
 @eel.expose
 def get_app_version(): return str(__version__)
 @eel.expose
@@ -81,16 +80,6 @@ def raiseError(msg, traceback=""):
 
 
 PENDING_SEARCH_QUERY = None
-def extract_search_query(raw_value):
-	if not raw_value: return None
-	value = str(raw_value).strip().strip('"').strip("'")
-	value = unquote(value)
-	if value.startswith("mytube://"):
-		parsed = urlparse(value)
-		query_url = parse_qs(parsed.query).get("url")
-		if query_url: return query_url[0].strip() or None
-	return value or None
-
 def load_startup_query():
 	global PENDING_SEARCH_QUERY
 	for arg in sys.argv[1:]:
