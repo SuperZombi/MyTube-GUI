@@ -12,6 +12,7 @@ from threading import Thread
 from utils import *
 import traceback
 import socket
+from urllib.parse import urlparse, parse_qs, unquote
 
 
 __version__ = Version("2.3.1")
@@ -77,6 +78,33 @@ def raiseError(msg, traceback=""):
 		strip_ansi(str(msg)),
 		strip_ansi(str(traceback))
 	)
+
+
+PENDING_SEARCH_QUERY = None
+def extract_search_query(raw_value):
+	if not raw_value: return None
+	value = str(raw_value).strip().strip('"').strip("'")
+	value = unquote(value)
+	if value.startswith("mytube://"):
+		parsed = urlparse(value)
+		query_url = parse_qs(parsed.query).get("url")
+		if query_url: return query_url[0].strip() or None
+	return value or None
+
+def load_startup_query():
+	global PENDING_SEARCH_QUERY
+	for arg in sys.argv[1:]:
+		query = extract_search_query(arg)
+		if query:
+			PENDING_SEARCH_QUERY = query
+			break
+
+@eel.expose
+def consume_startup_query():
+	global PENDING_SEARCH_QUERY
+	query = PENDING_SEARCH_QUERY
+	PENDING_SEARCH_QUERY = None
+	return query
 
 
 CACHED_QUERIES = {}
@@ -332,4 +360,5 @@ def run():
 
 if __name__ == "__main__":
 	eel.init(resource_path("web"))
+	load_startup_query()
 	run()
