@@ -496,7 +496,7 @@ select {
 	position: relative;
 	transition: 0.15s;
 }
-.stream:hover{
+.stream:not(.no-hover):hover{
 	background: darkgray;
 }
 .stream.selected:before {
@@ -544,6 +544,19 @@ select {
 }
 .stream .container-details .container-details-tags .filesize{
 	background: #00bb28;
+}
+.stream .container-details .container-details-tags .danger{
+	background: red;
+}
+.stream .container-details .container-details-tags .subs{
+	text-decoration: none;
+	font-family: monospace;
+	background: #00bb28;
+	transition: 0.15s;
+}
+.stream .container-details .container-details-tags .subs:hover{
+	background: green;
+	padding: 2px 10px;
 }
 .stream .container-details .container-details-tags .res{
 	font-family: monospace;

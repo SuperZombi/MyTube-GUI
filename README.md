@@ -7,7 +7,7 @@
     <img src="github/images/icon.png" width="128px">
 </p>
 <p align="center">
-    <img src="https://shields.io/badge/version-2.3.0-blue"><br>
+    <img src="https://shields.io/badge/version-2.3.1-blue"><br>
     <a href="https://github.com/SuperZombi/MyTube-GUI/releases/latest"><img src="https://shields.io/badge/⇩-Download-f9b723"></a><br/>
     <a href="#donate"><img src="https://shields.io/badge/💲-Support_Project-2ea043"></a>
 </p>

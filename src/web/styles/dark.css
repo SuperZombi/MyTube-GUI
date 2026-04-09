@@ -36,7 +36,7 @@
 	.stream{
 		background: #313541;
 	}
-	.stream:hover{
+	.stream:not(.no-hover):hover{
 		background: #4d5467;
 	}
 	.radio-tabs label:hover{
