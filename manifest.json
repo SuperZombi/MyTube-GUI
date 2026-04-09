@@ -3,6 +3,9 @@
 	"version": "1.0",
 	"name": "MyTube Companion",
 	"description": "Share what you like with your friends.",
+	"icons": {
+		"128": "icon-128.png"
+	},
 	"host_permissions": [
 		"https://www.youtube.com/*",
 		"https://music.youtube.com/*"
