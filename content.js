@@ -50,8 +50,8 @@ function createButton() {
 	const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
 	svg.setAttribute("xmlns", "http://www.w3.org/2000/svg")
 	svg.setAttribute("viewBox", "0 0 24 24")
-	svg.setAttribute("width", "18")
-	svg.setAttribute("height", "18")
+	svg.setAttribute("width", "20")
+	svg.setAttribute("height", "20")
 	const path = document.createElementNS("http://www.w3.org/2000/svg", "path")
 	path.setAttribute("d",
 		"M11 2.05v2.01A8 8 0 0 0 12 20a8 8 0 0 0 7.94-7h2.01A10 10 0 1 1 11 2.05m7.7 4.66L12 13.4 10.59 12l6.7-6.7L14 2h8v8z"
