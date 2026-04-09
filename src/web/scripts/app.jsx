@@ -148,9 +148,6 @@ const App = () => {
 			try {
 				const startupQuery = await eel.consume_startup_query()()
 				if (startupQuery && startupQuery.trim() !== "") {
-					if (typeof window.focus === "function") {
-						window.focus()
-					}
 					setSearch(startupQuery)
 					await onSearch(startupQuery.trim())
 				}
