@@ -12,7 +12,7 @@ from threading import Thread
 from utils import *
 import traceback
 import socket
-from urllib.parse import parse_qs, unquote, urlparse
+from urllib.parse import urlparse, parse_qs, unquote
 
 
 __version__ = Version("2.3.1")
@@ -81,26 +81,20 @@ def raiseError(msg, traceback=""):
 
 
 PENDING_SEARCH_QUERY = None
-def _extract_search_query(raw_value):
-	if not raw_value:
-		return None
-	value = unquote(str(raw_value)).strip().strip('"').strip("'")
+def extract_search_query(raw_value):
+	if not raw_value: return None
+	value = str(raw_value).strip().strip('"').strip("'")
+	value = unquote(value)
 	if value.startswith("mytube://"):
 		parsed = urlparse(value)
-		query_url = parse_qs(parsed.query).get("url", [None])[0]
-		if query_url:
-			return _extract_search_query(query_url)
-		payload = parsed.netloc + parsed.path
-		payload = payload.lstrip("/")
-		return _extract_search_query(payload)
-	if value.startswith("mytube:"):
-		return _extract_search_query(value[len("mytube:"):])
-	return value if value else None
+		query_url = parse_qs(parsed.query).get("url")
+		if query_url: return query_url[0].strip() or None
+	return value or None
 
 def load_startup_query():
 	global PENDING_SEARCH_QUERY
 	for arg in sys.argv[1:]:
-		query = _extract_search_query(arg)
+		query = extract_search_query(arg)
 		if query:
 			PENDING_SEARCH_QUERY = query
 			break
