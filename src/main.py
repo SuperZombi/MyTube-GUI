@@ -260,13 +260,17 @@ def download(downloader_id):
 	downloader = DOWNLOADERS[downloader_id]
 	downloader.FFMPEG = resource_path("ffmpeg.exe")
 	OPERATIONS[downloader_id] = 0
+	def on_success(file):
+		update_taskbar_progress(downloader_id, 100, "finish")
+		eel.finish_download(downloader_id, file)
+
 	def handler():
 		try:
 			asyncio.run(downloader(
 				SETTINGS.get("output_folder"),
 				on_progress=ProgressMyTube(downloader_id),
 				ffmpeg_progress=FFmpegProgress(downloader_id),
-				on_success=lambda f: eel.finish_download(downloader_id, f),
+				on_success=on_success,
 				on_abort=lambda:eel.abort_download(downloader_id)
 			))
 		except Exception as e:
