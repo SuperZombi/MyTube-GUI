@@ -122,6 +122,25 @@ const App = () => {
 		return () => window.removeEventListener("abort_download", handler)
 	}, [])
 
+	React.useEffect(() => {
+		const hasActiveDownloads = () => (
+			downloadItems.some(item => (
+				item.status !== "finished" &&
+				item.status !== "aborted" &&
+				item.status !== "ads"
+			))
+		)
+
+		const handleBeforeUnload = (event) => {
+			if (!hasActiveDownloads()) return
+			event.preventDefault()
+			event.returnValue = ""
+		}
+
+		window.addEventListener("beforeunload", handleBeforeUnload)
+		return () => window.removeEventListener("beforeunload", handleBeforeUnload)
+	}, [downloadItems])
+
 	const onReady = _=>{
 		setIsLoading(false)
 		setCanSearch(true)
