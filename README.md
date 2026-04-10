@@ -38,8 +38,8 @@
 
 ### Browser extension:
 For faster sending links from YouTube to app you can use one of the following extensions:
-#### <img width="18px" src="https://www.svgrepo.com/show/452180/chrome.svg"> [Chrome Store](https://chrome.google.com/webstore/detail/mytube-companion/abcmglijboedalipgmflpmnoamijhkhc)
-#### <img width="18px" src="https://www.svgrepo.com/show/452204/firefox.svg"> [Firefox Store](https://addons.mozilla.org/firefox/addon/mytube-web-companion/)
+* <img width="20px" src="https://www.svgrepo.com/show/452180/chrome.svg" align="center"> [Chrome Store](https://chrome.google.com/webstore/detail/mytube-companion/abcmglijboedalipgmflpmnoamijhkhc)
+* <img width="20px" src="https://www.svgrepo.com/show/452204/firefox.svg" align="center"> [Firefox Store](https://addons.mozilla.org/firefox/addon/mytube-web-companion/)
 
 
 ## 💲Donate
