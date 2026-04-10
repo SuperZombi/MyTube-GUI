@@ -34,6 +34,12 @@
 * Choice of video and audio streams in high quality.
 * Choice of language of audio streams.
 * Authorization for accessing age-restricted and account-required content.
+* Downloading subtitles.
+
+### Browser extension:
+For faster sending links from YouTube to app you can use one of the following extensions:
+#### <img width="18px" src="https://www.svgrepo.com/show/452180/chrome.svg"> [Chrome Store](https://chrome.google.com/webstore/detail/mytube-companion/abcmglijboedalipgmflpmnoamijhkhc)
+#### <img width="18px" src="https://www.svgrepo.com/show/452204/firefox.svg"> [Firefox Store](https://addons.mozilla.org/firefox/addon/mytube-web-companion/)
 
 
 ## 💲Donate
