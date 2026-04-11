@@ -549,14 +549,8 @@ select {
 	background: red;
 }
 .stream .container-details .container-details-tags .subs{
-	text-decoration: none;
 	font-family: monospace;
 	background: #00bb28;
-	transition: 0.15s;
-}
-.stream .container-details .container-details-tags .subs:hover{
-	background: green;
-	padding: 2px 10px;
 }
 .stream .container-details .container-details-tags .res{
 	font-family: monospace;

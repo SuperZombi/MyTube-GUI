@@ -17,6 +17,7 @@ const App = () => {
 	const [selectedVideo, setSelectedVideo] = React.useState(null)
 	const [selectedAudio, setSelectedAudio] = React.useState(null)
 	const [selectedCombined, setSelectedCombined] = React.useState(null)
+	const [selectedSubtitles, setSelectedSubtitles] = React.useState(null)
 
 	const [downloadItems, setDownloadItems] = React.useState([])
 
@@ -130,13 +131,11 @@ const App = () => {
 				item.status !== "ads"
 			))
 		)
-
 		const handleBeforeUnload = (event) => {
 			if (!hasActiveDownloads()) return
 			event.preventDefault()
 			event.returnValue = ""
 		}
-
 		window.addEventListener("beforeunload", handleBeforeUnload)
 		return () => window.removeEventListener("beforeunload", handleBeforeUnload)
 	}, [downloadItems])
@@ -193,6 +192,7 @@ const App = () => {
 		setSelectedVideo(results.select.video || results.streams.video?.[0])
 		setSelectedAudio(results.select.audio || results.streams.audio?.[0])
 		setSelectedCombined(results.select.combined || results.streams.combined?.[0])
+		setSelectedSubtitles(results.select.subtitles || results.subtitles?.[0])
 	}
 	const onDownload = async (url, streams, metadata) => {
 		let data = await eel.get_downloader_process(url, streams, metadata)()
@@ -224,6 +224,7 @@ const App = () => {
 				selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo}
 				selectedAudio={selectedAudio} setSelectedAudio={setSelectedAudio}
 				selectedCombined={selectedCombined} setSelectedCombined={setSelectedCombined}
+				selectedSubtitles={selectedSubtitles} setSelectedSubtitles={setSelectedSubtitles}
 			/>
 			<DownloadList items={downloadItems}/>
 			<Settings show={showSettings} setShow={setShowSettings} onReady={onReady}

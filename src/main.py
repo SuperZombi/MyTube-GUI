@@ -16,7 +16,7 @@ import win32gui
 import win32con
 
 
-__version__ = Version("2.3.3")
+__version__ = Version("2.4.0")
 @eel.expose
 def get_app_version(): return str(__version__)
 @eel.expose

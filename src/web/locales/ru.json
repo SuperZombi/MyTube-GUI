@@ -40,6 +40,7 @@
 	"no_streams": "Нет потоков",
 	"select_video": "Выберите видео:",
 	"select_audio": "Выберите аудио:",
+	"select_subtitles": "Выберите субтитры:",
 
 	"abort_download": "Отменить",
 	"open_file": "Открыть файл",

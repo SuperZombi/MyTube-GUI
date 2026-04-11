@@ -40,6 +40,7 @@
 	"no_streams": "No streams",
 	"select_video": "Select the Video:",
 	"select_audio": "Select the Audio:",
+	"select_subtitles": "Select Subtitles:",
 
 	"abort_download": "Abort",
 	"open_file": "Open file",
