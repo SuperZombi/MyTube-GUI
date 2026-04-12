@@ -16,12 +16,7 @@ const Settings = ({
 			const SETTINGS = await eel.request_settings()()
 			setSETTINGS(SETTINGS)
 			if (SETTINGS.check_updates){
-				const avaliable = await eel.check_updates()()
-				if (avaliable){
-					setUpdateAvalible(true)
-					setNewAppVer(avaliable.new)
-					setShowUpdatePopup(true)
-				}
+				check_for_updates()
 			}
 			if (SETTINGS.theme){
 				applyTheme(SETTINGS.theme)
@@ -78,6 +73,19 @@ const Settings = ({
 		})()
 	}, [])
 
+	const check_for_updates = async _=>{
+		showToast({text: <LANG id="checking_updates_toast"/>})
+		const avaliable = await eel.check_updates()()
+		if (avaliable){
+			setUpdateAvalible(true)
+			setNewAppVer(avaliable.new)
+			setShowUpdatePopup(true)
+		} else {
+			setTimeout(_=>{
+				showToast({text: <LANG id="updates_not_found_toast"/>})
+			}, 1000)
+		}
+	}
 	const changeSetting = async event=>{
 		const name = event.target.name
 		const value = event.target.type == "checkbox" ? event.target.checked : event.target.value
@@ -86,6 +94,11 @@ const Settings = ({
 		}
 		else if (name == "language"){
 			setLanguage(value)
+		}
+		else if (name == "check_updates"){
+			if (value){
+				check_for_updates()
+			}
 		}
 		setSETTINGS(prev => ({
 			...prev,

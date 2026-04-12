@@ -10,6 +10,8 @@
 	"version": "Version",
 	"update_avalible": "Update available!",
 	"check_updates": "Check updates",
+	"checking_updates_toast": "Checking for updates...",
+	"updates_not_found_toast": "No updates found",
 	"close": "Close",
 
 	"theme": "Theme",

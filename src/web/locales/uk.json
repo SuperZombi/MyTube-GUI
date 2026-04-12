@@ -10,6 +10,8 @@
 	"version": "Версія",
 	"update_avalible": "Доступне оновлення!",
 	"check_updates": "Перевіряти оновлення",
+	"checking_updates_toast": "Перевірка оновлень...",
+	"updates_not_found_toast": "Оновлень не знайдено",
 	"close": "Закрити",
 
 	"theme": "Тема",
