@@ -156,9 +156,13 @@ def get_remote_version():
 		print("---------")
 	return Version("0")
 
-def get_remote_ytdlp():
+def get_remote_ytdlp(branch="stable"):
+	branch_map = {
+		"stable": "yt-dlp",
+		"nightly": "yt-dlp-nightly-builds"
+	}
 	try:
-		r = requests.get("https://api.github.com/repos/yt-dlp/yt-dlp/releases/latest")
+		r = requests.get(f"https://api.github.com/repos/yt-dlp/{branch_map[branch]}/releases/latest")
 		if r.ok:
 			data = r.json()
 			ver = data['tag_name']
@@ -176,29 +180,23 @@ def get_remote_ytdlp():
 		print(e)
 		print("---------")
 
-
-def check_ytdlp(local_dlp):
+def download_ytdlp_main(branch="stable"):
 	errors = []
-	remote_dlp = get_remote_ytdlp()
+	remote_dlp = get_remote_ytdlp(branch)
 	if remote_dlp:
-		local_dlp_ver = Version(local_dlp) if local_dlp else Version("0")
 		remote_dlp_ver = Version(remote_dlp["version"])
-		if remote_dlp_ver > local_dlp_ver:
-			print(f"Current yt-dlp version: {local_dlp_ver}")
-			print(f"Downloading yt-dlp {remote_dlp_ver}")
-			ytdlp_path = os.path.join(os.getcwd(), "yt-dlp.exe")
-			try:
-				download_file(remote_dlp["url"], ytdlp_path)
-			except PermissionError:
-				print("[Failed to download yt-dlp]")
-				print("[PermissionError] Run the program as administrator")
-				errors.append("PermissionError")
-				if not local_dlp: errors.append("no_yt-dlp")
-			except Exception as e:
-				print("[Failed to download yt-dlp]")
-				print(e)
-				print("---------")
-				if not local_dlp: errors.append("no_yt-dlp")
-	else:
-		if not local_dlp: errors.append("no_yt-dlp")
-	return errors
+		print(f"Downloading yt-dlp-{branch} {remote_dlp_ver}")
+		ytdlp_path = os.path.join(os.getcwd(), "yt-dlp.exe")
+		try:
+			download_file(remote_dlp["url"], ytdlp_path)
+			return [True, errors]
+		except PermissionError:
+			print("[Failed to download yt-dlp]")
+			print("[PermissionError] Run the program as administrator")
+			errors.append("PermissionError")
+		except Exception as e:
+			print("[Failed to download yt-dlp]")
+			print(e)
+			print("---------")
+	errors.append("InternetError")
+	return [False, errors]

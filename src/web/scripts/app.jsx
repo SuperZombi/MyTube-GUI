@@ -140,9 +140,9 @@ const App = () => {
 		return () => window.removeEventListener("beforeunload", handleBeforeUnload)
 	}, [downloadItems])
 
-	const onReady = _=>{
-		setIsLoading(false)
-		setCanSearch(true)
+	const onReady = value=>{
+		setIsLoading(!value)
+		setCanSearch(value)
 	}
 
 	const onSearch = async val=>{

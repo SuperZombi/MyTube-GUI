@@ -16,7 +16,7 @@ import win32gui
 import win32con
 
 
-__version__ = Version("2.4.0")
+__version__ = Version("2.5.0")
 @eel.expose
 def get_app_version(): return str(__version__)
 @eel.expose
@@ -30,6 +30,7 @@ APPDATA = local()
 SETTINGS_FILE = os.path.join(APPDATA, "app.settings.json")
 SETTINGS = {
 	"output_folder": get_downloads_folder(),
+	"ytdlp_branch": "stable",
 	"theme": "auto",
 	"check_updates": True
 }
@@ -59,11 +60,21 @@ def check_updates():
 @eel.expose
 def check_ytdlp_updates():
 	try:
-		local_dlp = MyTube.ytdlp_version()
+		local_dlp = Version(MyTube.ytdlp_version())
 	except:
 		local_dlp = None
-	return check_ytdlp(local_dlp)
+	if local_dlp:
+		remote_dlp = get_remote_ytdlp(SETTINGS.get("ytdlp_branch"))
+		if remote_dlp:
+			remote_dlp_ver = Version(remote_dlp["version"])
+			if remote_dlp_ver > local_dlp:
+				return {
+					"current": str(local_dlp),
+					"new": str(remote_dlp_ver)
+				}
 
+@eel.expose
+def download_ytdlp(): return download_ytdlp_main(SETTINGS.get("ytdlp_branch"))
 
 @eel.expose
 def request_folder():

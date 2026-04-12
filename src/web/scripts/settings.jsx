@@ -27,65 +27,88 @@ const Settings = ({
 		})()
 	}, [])
 	React.useEffect(_=>{
-		(async _=>{
-			const app_ver = await eel.get_app_version()()
-			setAppVer(app_ver)
-
-			const yt_dlp_ver = await eel.get_yt_dlp_version()()
-			if (yt_dlp_ver){
-				setYtDlp(yt_dlp_ver)
-				onReady()
-				const SETTINGS = await eel.request_settings()()
-				if (SETTINGS.check_updates){
-					const fail = await eel.check_ytdlp_updates()()
-					if (fail.length == 0){
-						const new_version = await eel.get_yt_dlp_version()()
-						if (yt_dlp_ver != new_version){
-							showToast({text: <LANG id="yt_dlp_updated" vars={{ver: new_version}} html={true}/>, type: "success"})
-						}
-					}
-					else if (fail.includes("PermissionError")){
-						setErrorMsg(<LANG id="PermissionErrorUpdate" html={true}/>)
-					}
-				}
-			} else {
-				const fail = await eel.check_ytdlp_updates()()
-				if (fail.length > 0){
-					if (fail.includes("no_yt-dlp") && fail.includes("PermissionError")){
-						setErrorMsg(<LANG id="PermissionError" html={true}/>)
-						setShowReload(true)
-					}
-					else if (fail.includes("no_yt-dlp")){
-						setErrorMsg(<LANG id="InternetError" html={true}/>)
-						setShowReload(true)
-					}
-					else if (fail.includes("PermissionError")){
-						setErrorMsg(<LANG id="PermissionError" html={true}/>)
-					}
+		(_=>{
+			eel.get_app_version()().then(app_ver=>{
+				setAppVer(app_ver)
+			})
+			eel.get_yt_dlp_version()().then(yt_dlp_ver=>{
+				if (yt_dlp_ver){
+					setYtDlp(yt_dlp_ver)
+					onReady(true)
 				} else {
-					const new_version = await eel.get_yt_dlp_version()()
-					if (new_version){
-						setYtDlp(new_version)
-						onReady()
-					}
+					download_ytdlp(_=>{
+						onReady(true)
+					}, errors=>{
+						setShowReload(true)
+						if (errors.includes("PermissionError")){
+							setErrorMsg(<LANG id="PermissionError" html={true}/>)
+						}
+						else{
+							setErrorMsg(<LANG id="InternetError" html={true}/>)
+						}
+					})
 				}
-			}
+			})
 		})()
 	}, [])
 
-	const check_for_updates = async _=>{
-		showToast({text: <LANG id="checking_updates_toast"/>})
-		const avaliable = await eel.check_updates()()
-		if (avaliable){
-			setUpdateAvalible(true)
-			setNewAppVer(avaliable.new)
-			setShowUpdatePopup(true)
-		} else {
-			setTimeout(_=>{
-				showToast({text: <LANG id="updates_not_found_toast"/>})
-			}, 1000)
+	const check_for_updates = _=>{
+		let not_found = {
+			app: false,
+			yt_dlp: false
 		}
+		const check_toast = _=>{
+			if (not_found["app"] && not_found["yt_dlp"]){
+				showToast({text: <LANG id="updates_not_found_toast"/>})
+			}
+		}
+
+		showToast({text: <LANG id="checking_updates_toast"/>})
+		eel.check_updates()().then(avaliable=>{
+			if (avaliable){
+				setUpdateAvalible(true)
+				setNewAppVer(avaliable.new)
+				setShowUpdatePopup(true)
+			} else {
+				not_found["app"] = true
+				check_toast()
+			}
+		})
+		eel.check_ytdlp_updates()().then(avaliable=>{
+			if (avaliable){
+				download_ytdlp(_=>{}, errors=>{
+					if (errors.includes("PermissionError")){
+						setErrorMsg(<LANG id="PermissionErrorUpdate" html={true}/>)
+					}
+					else{
+						setErrorMsg(<LANG id="InternetError" html={true}/>)
+					}
+				})
+			} else {
+				not_found["yt_dlp"] = true
+				check_toast()
+			}
+		})
 	}
+	const download_ytdlp = (on_success, on_error)=>{
+		showToast({text: <LANG id="downloading_yt_dlp"/>})
+		eel.download_ytdlp()().then(([result, errors])=>{
+			if (result){
+				eel.get_yt_dlp_version()().then(new_version=>{
+					if (new_version){
+						setYtDlp(new_version)
+						showToast({text: <LANG id="yt_dlp_updated" vars={{ver: new_version}} html={true}/>, type: "success"})
+						on_success()
+					} else {
+						on_error(errors)
+					}
+				})
+			} else {
+				on_error(errors)
+			}
+		})
+	}
+
 	const changeSetting = async event=>{
 		const name = event.target.name
 		const value = event.target.type == "checkbox" ? event.target.checked : event.target.value
@@ -105,6 +128,22 @@ const Settings = ({
 			[name]: value
 		}))
 		await eel.change_setting(name, value)()
+
+		if (name == "ytdlp_branch"){
+			onReady(false)
+			setYtDlp("...")
+			download_ytdlp(_=>{
+				onReady(true)
+			}, errors=>{
+				setShowReload(true)
+				if (errors.includes("PermissionError")){
+					setErrorMsg(<LANG id="PermissionError" html={true}/>)
+				}
+				else{
+					setErrorMsg(<LANG id="InternetError" html={true}/>)
+				}
+			})
+		}
 	}
 	const requestOutputFolder = async _=>{
 		const answ = await eel.request_folder()()
@@ -139,6 +178,18 @@ const Settings = ({
 						checked={SETTINGS?.check_updates || false}
 						onChange={changeSetting}
 					/>
+
+					<div className="line"></div>
+
+					<i className="fa-solid fa-code-branch"></i>
+					<span>yt-dlp channel</span>
+					<select name="ytdlp_branch"
+						value={SETTINGS?.ytdlp_branch}
+						onChange={changeSetting}
+					>
+						<option value="stable">Stable</option>
+						<option value="nightly">Experimental</option>
+					</select>
 
 					<div className="line"></div>
 				
