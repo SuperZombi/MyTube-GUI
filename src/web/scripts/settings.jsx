@@ -74,19 +74,21 @@ const Settings = ({
 				check_toast()
 			}
 		})
-		eel.check_ytdlp_updates()().then(avaliable=>{
-			if (avaliable){
-				download_ytdlp(_=>{}, errors=>{
-					if (errors.includes("PermissionError")){
-						setErrorMsg(<LANG id="PermissionErrorUpdate" html={true}/>)
-					}
-					else{
-						setErrorMsg(<LANG id="InternetError" html={true}/>)
-					}
-				})
-			} else {
-				not_found["yt_dlp"] = true
-				check_toast()
+		eel.check_ytdlp_updates()().then(result=>{
+			if (result){
+				if (result.avaliable){
+					download_ytdlp(_=>{}, errors=>{
+						if (errors.includes("PermissionError")){
+							setErrorMsg(<LANG id="PermissionErrorUpdate" html={true}/>)
+						}
+						else{
+							setErrorMsg(<LANG id="InternetError" html={true}/>)
+						}
+					})
+				} else {
+					not_found["yt_dlp"] = true
+					check_toast()
+				}
 			}
 		})
 	}
@@ -112,6 +114,7 @@ const Settings = ({
 	const changeSetting = async event=>{
 		const name = event.target.name
 		const value = event.target.type == "checkbox" ? event.target.checked : event.target.value
+		const old_value = SETTINGS[name]
 		if (name == "theme"){
 			applyTheme(value)
 		}
@@ -123,10 +126,8 @@ const Settings = ({
 				check_for_updates()
 			}
 		}
-		setSETTINGS(prev => ({
-			...prev,
-			[name]: value
-		}))
+
+		setSETTINGS(prev => ({...prev, [name]: value}))
 		await eel.change_setting(name, value)()
 
 		if (name == "ytdlp_branch"){
@@ -135,13 +136,24 @@ const Settings = ({
 			download_ytdlp(_=>{
 				onReady(true)
 			}, errors=>{
-				setShowReload(true)
+				setSETTINGS(prev => ({...prev, [name]: old_value}))
+				eel.change_setting(name, old_value)()
+
 				if (errors.includes("PermissionError")){
 					setErrorMsg(<LANG id="PermissionError" html={true}/>)
 				}
 				else{
 					setErrorMsg(<LANG id="InternetError" html={true}/>)
 				}
+
+				eel.get_yt_dlp_version()().then(yt_dlp_ver=>{
+					if (yt_dlp_ver){
+						setYtDlp(yt_dlp_ver)
+						onReady(true)
+					} else {
+						setShowReload(true)
+					}
+				})
 			})
 		}
 	}

@@ -67,11 +67,11 @@ def check_ytdlp_updates():
 		remote_dlp = get_remote_ytdlp(SETTINGS.get("ytdlp_branch"))
 		if remote_dlp:
 			remote_dlp_ver = Version(remote_dlp["version"])
-			if remote_dlp_ver > local_dlp:
-				return {
-					"current": str(local_dlp),
-					"new": str(remote_dlp_ver)
-				}
+			return {
+				"current": str(local_dlp),
+				"new": str(remote_dlp_ver),
+				"avaliable": remote_dlp_ver > local_dlp
+			}
 
 @eel.expose
 def download_ytdlp(): return download_ytdlp_main(SETTINGS.get("ytdlp_branch"))
