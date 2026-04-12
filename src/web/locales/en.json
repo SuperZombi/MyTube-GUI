@@ -55,5 +55,8 @@
 	"PermissionError": "Permission Error:<br><br>Failed to install yt-dlp!<br>Run the program as administrator!",
 	"PermissionErrorUpdate": "Failed to update yt-dlp!<br><br>Run the program as administrator!",
 	"InternetError": "Internet Connection Error:<br><br>Failed to download yt-dlp!",
-	"downloading_yt_dlp": "Downloading yt-dlp..."
+	"downloading_yt_dlp": "Downloading yt-dlp...",
+	"yt_dlp_branch": "yt-dlp version",
+	"yt_dlp_stable": "Stable",
+	"yt_dlp_nightly": "Experimental"
 }

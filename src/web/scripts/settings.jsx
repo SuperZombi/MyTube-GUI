@@ -182,13 +182,13 @@ const Settings = ({
 					<div className="line"></div>
 
 					<i className="fa-solid fa-code-branch"></i>
-					<span>yt-dlp channel</span>
+					<span><LANG id="yt_dlp_branch"/></span>
 					<select name="ytdlp_branch"
 						value={SETTINGS?.ytdlp_branch}
 						onChange={changeSetting}
 					>
-						<option value="stable">Stable</option>
-						<option value="nightly">Experimental</option>
+						<option value="stable"><LANG id="yt_dlp_stable"/></option>
+						<option value="nightly"><LANG id="yt_dlp_nightly"/></option>
 					</select>
 
 					<div className="line"></div>

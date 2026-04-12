@@ -55,5 +55,8 @@
 	"PermissionError": "Відмовлено у доступі:<br><br>Не вдалось встановити yt-dlp!<br>Запустіть програму від імені адміністратора!",
 	"PermissionErrorUpdate": "Не вдалось оновити yt-dlp!<br><br>Запустіть програму від імені адміністратора!",
 	"InternetError": "Помилка підключення до Інтернету:<br><br>Не вдалось встановити yt-dlp!",
-	"downloading_yt_dlp": "Завантаження yt-dlp..."
+	"downloading_yt_dlp": "Завантаження yt-dlp...",
+	"yt_dlp_branch": "Версія yt-dlp",
+	"yt_dlp_stable": "Стабільна",
+	"yt_dlp_nightly": "Експериментальна"
 }
