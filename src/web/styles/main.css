@@ -353,9 +353,10 @@ input[type="checkbox"]:checked:hover {
 	right: 5px;
 	cursor: pointer;
 	transition: 0.2s;
+	will-change: rotate;
 }
 .popup .close:hover{
-	transform: rotate(90deg);
+	rotate: 90deg;
 }
 
 .popup .left-menu{
