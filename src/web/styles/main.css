@@ -84,14 +84,19 @@ body{
 	padding: 4px;
 	border-radius: 10px;
 	filter: drop-shadow(-2px 4px 4px rgb(0, 0, 0, 0.4));
-	transition: 0.4s;
-	transform-origin: top center;
-	scale: 0;
 	max-height: 75vh;
 	overflow: auto;
 	scrollbar-width: thin;
+	transition: 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+	scale: 0.9;
+	opacity: 0;
+	transform: translateY(10px);
+	transform-origin: bottom center;
+	will-change: scale;
 }
 .account_menu.open {
+	transform: translateY(0);
+	opacity: 1;
 	scale: 1;
 }
 .account_menu button img {
@@ -327,6 +332,7 @@ input[type="checkbox"]:checked:hover {
 	overflow: hidden;
 	opacity: 0;
 	transform: translateY(1rem);
+	will-change: scale;
 }
 .popup .popup-wrapper .content{
 	height: 100%;
