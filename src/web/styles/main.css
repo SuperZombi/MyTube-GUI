@@ -93,8 +93,10 @@ body{
 	transform: translateY(10px);
 	transform-origin: bottom center;
 	will-change: scale;
+	visibility: hidden;
 }
 .account_menu.open {
+	visibility: visible;
 	transform: translateY(0);
 	opacity: 1;
 	scale: 1;
