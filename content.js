@@ -89,7 +89,7 @@ function injectMusicButton() {
 	})
 }
 function injectShortsButton() {
-	waitForElement("ytd-reel-video-renderer #actions", container=>{
+	waitForElement("ytd-reel-video-renderer reel-action-bar-view-model", container=>{
 		if (document.getElementById("mytube-btn")) return
 		const btn = createButton()
 		btn.style.margin = "10px auto"
