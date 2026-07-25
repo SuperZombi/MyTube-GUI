@@ -1,6 +1,6 @@
 import eel
 import sys, os
-import MyTube
+import mytube
 import asyncio
 import uuid
 import json
@@ -22,7 +22,7 @@ def get_app_version(): return str(__version__)
 @eel.expose
 def get_yt_dlp_version():
 	try:
-		return MyTube.ytdlp_version()
+		return mytube.ytdlp_version()
 	except:
 		return
 
@@ -60,7 +60,7 @@ def check_updates():
 @eel.expose
 def check_ytdlp_updates():
 	try:
-		local_dlp = Version(MyTube.ytdlp_version())
+		local_dlp = Version(mytube.ytdlp_version())
 	except:
 		local_dlp = None
 	if local_dlp:
@@ -178,7 +178,7 @@ def get_yt_obj(url):
 	key = (url, user["id"]) if user else (url, None)
 	obj = CACHED_QUERIES.get(key, None)
 	if not obj:
-		obj = MyTube.YouTube(url, cookies=(user["cookies"] if user else None))
+		obj = mytube.YouTube(url, cookies=(user["cookies"] if user else None))
 		CACHED_QUERIES[key] = obj
 	return obj
 
