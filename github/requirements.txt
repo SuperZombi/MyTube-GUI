@@ -1,5 +1,5 @@
 Eel
-MyTube_dlp
+mytube-dlp
 requests
 undetected-chromedriver
 pyinstaller
