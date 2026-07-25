@@ -1,7 +1,7 @@
 <h1 align="center">MyTube GUI</h1>
 <h3 align="center">YouTube Media Downloader</h3>
 <p align="center">
-    (User Interface for <a href="https://github.com/SuperZombi/MyTube">MyTube</a>)
+    (User Interface for <a href="https://github.com/SuperZombi/mytube">MyTube</a>)
 </p>
 <p align="center">
     <img src="github/images/icon.png" width="128px">
